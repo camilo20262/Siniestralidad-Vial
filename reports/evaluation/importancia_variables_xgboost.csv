@@ -1,0 +1,41 @@
+﻿Variable,Importancia
+cat__Localidad_SUMAPAZ,0.39196917
+cat__Localidad_CIUDAD BOLÍVAR,0.054907795
+cat__Dia_Semana_Sunday,0.04575639
+remainder__Es_Festivo,0.03715492
+cat__Franja_Horaria_Madrugada,0.037145164
+cat__Localidad_CANDELARIA,0.034743853
+remainder__Accidentes_Prom_30d,0.022478538
+cat__Localidad_BOSA,0.021966357
+cat__Localidad_LOS MÁRTIRES,0.020113975
+cat__Localidad_PUENTE ARANDA,0.019934213
+cat__Localidad_USAQUÉN,0.018837368
+cat__Localidad_SUBA,0.017279059
+remainder__Es_Fin_de_Semana,0.017178679
+cat__Franja_Horaria_Mañana,0.015940163
+cat__Localidad_FONTIBÓN,0.015352567
+cat__Localidad_CHAPINERO,0.014875654
+cat__Localidad_SAN CRISTÓBAL,0.014463819
+cat__Localidad_KENNEDY,0.014361705
+cat__Localidad_BARRIOS UNIDOS,0.013491902
+cat__Localidad_ANTONIO NARIÑO,0.012475191
+cat__Franja_Horaria_Tarde,0.012208532
+cat__Franja_Horaria_Noche,0.012094337
+cat__Localidad_ENGATIVÁ,0.010880433
+cat__Localidad_USME,0.010629994
+cat__Localidad_TEUSAQUILLO,0.010485481
+cat__Dia_Semana_Friday,0.010160636
+cat__Dia_Semana_Saturday,0.009742742
+cat__Localidad_TUNJUELITO,0.00857017
+remainder__Accidentes_Prom_7d,0.0080889035
+cat__Localidad_RAFAEL URIBE URIBE,0.007936167
+remainder__Mes,0.007935855
+cat__Dia_Semana_Tuesday,0.007850341
+cat__Dia_Semana_Wednesday,0.007638182
+remainder__Accidentes_Semana_Anterior,0.0073321164
+cat__Dia_Semana_Thursday,0.007208975
+cat__Localidad_SANTA FE,0.007052285
+cat__Dia_Semana_Monday,0.006856123
+remainder__Sin_Historial_Accidentes_Semana_Anterior,0.0058398796
+remainder__Sin_Historial_Accidentes_Prom_7d,0.0010622975
+remainder__Sin_Historial_Accidentes_Prom_30d,0.0
