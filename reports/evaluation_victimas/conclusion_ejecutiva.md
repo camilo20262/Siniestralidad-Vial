@@ -1,11 +1,13 @@
-# Conclusión ejecutiva del escenario con víctimas
+# Conclusión ejecutiva del escenario con víctimas — modelo ajustado
 
-Random Forest, seleccionado con validación temporal 2018–2022 y umbral 0.55, obtiene en 2023–2024 F1=0.3982, AUC-ROC=0.6853, Average Precision=0.3038, precisión=30.11% y recall=58.77%. Detecta 6,534 positivos, genera 15,168 falsas alertas y omite 4,584 positivos.
+El Random Forest ajustado, seleccionado exclusivamente con validación temporal 2020–2022 y umbral 0.52, obtiene retrospectivamente en 2023–2024 F1=0.4058, AUC-ROC=0.6933, Average Precision=0.3098, precisión=29.41% y recall=65.44%. Detecta 7,276 positivos, genera 17,467 falsas alertas y omite 3,842 positivos.
 
-El Brier de Random Forest es 0.2304, peor que 0.1544 de la constante basada en la prevalencia de entrenamiento. El modelo supera la referencia en discriminación y ranking, pero no en exactitud probabilística; sus scores no deben mostrarse como probabilidades literales.
+Frente al Random Forest base, cambia el F1 en +0.0076, el AUC-ROC en +0.0080, la Average Precision en +0.0060 y el recall en +6.67%. La mejora es modesta y debe leerse junto con el aumento de 2,299 falsas alertas.
 
-El desempeño territorial no es uniforme: SANTA FE presenta el mayor F1 (0.4853) y CANDELARIA el menor (0.0000); estos valores deben leerse junto con prevalencia y cantidad de positivos. Por franja, Noche obtiene el mayor F1 (0.4254) y Madrugada el menor (0.2744).
+El Brier del modelo ajustado es 0.2221, frente a 0.1544 de la constante basada en la prevalencia de entrenamiento. Aunque mejora respecto al modelo base (0.2304), sigue siendo peor que la línea base: los scores sirven para ranking y priorización, no como probabilidades literales.
 
-Candelaria contiene 157 positivos, pero su score máximo es 0.3554, por debajo de 0,55 y también de 0,50. Este es un fallo territorial específico. La correlación de Spearman entre volumen histórico y recall es -0.049, por lo que no se puede generalizar que todas las localidades con bajo volumen tengan peor recall.
+El desempeño territorial no es uniforme: SANTA FE presenta el mayor F1 (0.4834) y CANDELARIA el menor (0.0000). Candelaria tiene 157 positivos, 0 detectados y recall 0.00% con el umbral global. El umbral específico analizado para Candelaria es retrospectivo y no debe adoptarse sin validación futura.
 
-La madrugada presenta el menor volumen histórico, score medio y recall (23.47%). Esta coincidencia es descriptiva y compatible con menor señal histórica, pero no demuestra causalidad. La etiqueta combina ocurrencia y superación de umbral según localidad y franja. Los resultados son retrospectivos, no causales ni confirmatorios, y el sistema no se considera listo para producción sin una evaluación futura independiente y un criterio operativo para falsas alertas y omisiones.
+Por franja, Noche obtiene el mayor F1 (0.4306) y Madrugada el menor (0.3330). La correlación de Spearman entre volumen histórico y recall es -0.065; por tanto, el volumen no explica por sí solo las diferencias territoriales.
+
+La etiqueta combina ocurrencia y superación de umbral según localidad y franja. Los resultados son retrospectivos, no causales ni confirmatorios. El sistema no está listo para producción sin evaluación futura independiente, calibración temporal y definición del costo operativo de falsas alertas y omisiones.

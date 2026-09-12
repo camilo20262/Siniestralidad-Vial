@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Siniestralidad vial con víctimas — Bogotá</title>
+  <meta name="description" content="Dashboard académico de evaluación del modelo de priorización de siniestros viales con víctimas en Bogotá.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Ir al inicio">
+      <span class="brand-mark" aria-hidden="true">SV</span>
+      <span><strong>Siniestralidad vial</strong><small>Bogotá · escenario con víctimas</small></span>
+    </a>
+    <nav aria-label="Secciones">
+      <a href="#desempeno">Desempeño</a>
+      <a href="#territorio">Territorio</a>
+      <a href="#metodologia">Metodología</a>
+    </nav>
+  </header>
+
+  <main id="inicio">
+    <section class="intro">
+      <div>
+        <p class="eyebrow">Prototipo académico · evaluación retrospectiva 2023–2024</p>
+        <h1>¿Dónde y cuándo el modelo identifica mayor señal de siniestros con víctimas?</h1>
+        <p class="lede">Explora el rendimiento del Random Forest ajustado. Los valores son puntuaciones de priorización; no son probabilidades individuales ni recomendaciones operativas.</p>
+      </div>
+      <div class="control-panel" aria-label="Filtros de exploración">
+        <label>Localidad
+          <select id="localidad"><option value="GLOBAL">Todas las localidades</option></select>
+        </label>
+        <label>Franja horaria
+          <select id="franja"><option value="GLOBAL">Todas las franjas</option></select>
+        </label>
+        <p id="scope-note">Vista global del conjunto de evaluación.</p>
+      </div>
+    </section>
+
+    <section class="kpi-grid" id="desempeno" aria-label="Indicadores principales">
+      <article class="kpi accent"><span>F1</span><strong id="kpi-f1">—</strong><small>equilibrio entre precisión y cobertura</small></article>
+      <article class="kpi"><span>AUC-ROC</span><strong id="kpi-auc">—</strong><small>capacidad de ordenamiento</small></article>
+      <article class="kpi"><span>Precisión</span><strong id="kpi-precision">—</strong><small>alertas que fueron casos positivos</small></article>
+      <article class="kpi"><span>Recall</span><strong id="kpi-recall">—</strong><small>positivos que logró detectar</small></article>
+    </section>
+
+    <section class="grid two">
+      <article class="panel confusion-panel">
+        <div class="panel-head"><div><p class="eyebrow">Umbral 0,52</p><h2>Matriz de resultados</h2></div><span class="badge">Random Forest ajustado</span></div>
+        <div class="confusion" aria-label="Matriz de confusión">
+          <div class="cell good"><span>Verdaderos negativos</span><strong id="tn">—</strong></div>
+          <div class="cell warn"><span>Falsas alertas</span><strong id="fp">—</strong></div>
+          <div class="cell miss"><span>Casos omitidos</span><strong id="fn">—</strong></div>
+          <div class="cell signal"><span>Positivos detectados</span><strong id="tp">—</strong></div>
+        </div>
+      </article>
+
+      <article class="panel calibration">
+        <div class="panel-head"><div><p class="eyebrow">Limitación central</p><h2>El score no es una probabilidad</h2></div></div>
+        <div class="brier-compare">
+          <div><span>Modelo</span><strong>0,2221</strong><i style="--w:100%"></i></div>
+          <div><span>Línea base histórica</span><strong>0,1544</strong><i style="--w:67%"></i></div>
+        </div>
+        <p>En Brier, menor es mejor. La línea base constante supera al modelo, por lo que el dashboard presenta el resultado como <b>prioridad relativa</b>, no como “probabilidad de accidente”.</p>
+      </article>
+    </section>
+
+    <section class="panel wide" id="territorio">
+      <div class="panel-head"><div><p class="eyebrow">Comparación territorial</p><h2>Desempeño por localidad</h2></div><p>Ordenado por F1</p></div>
+      <div id="locality-chart" class="bar-list" aria-live="polite"></div>
+      <div id="candelaria-note" class="callout hidden"><strong>Candelaria requiere atención:</strong> el modelo no detecta ninguno de sus 157 casos positivos con el umbral 0,52. El volumen bajo absoluto no explica por sí solo este fallo.</div>
+    </section>
+
+    <section class="grid two">
+      <article class="panel">
+        <div class="panel-head"><div><p class="eyebrow">Patrón horario</p><h2>Recall por franja</h2></div></div>
+        <div id="franja-chart" class="column-chart"></div>
+        <p class="footnote">Madrugada es la franja más débil: detecta 39,43 % de los positivos, frente a 74,42 % en Noche.</p>
+      </article>
+      <article class="panel">
+        <div class="panel-head"><div><p class="eyebrow">Variables dominantes</p><h2>Importancia por permutación</h2></div></div>
+        <div id="importance-chart" class="bar-list compact"></div>
+        <p class="footnote">La importancia indica aporte predictivo, no causalidad.</p>
+      </article>
+    </section>
+
+    <section class="method" id="metodologia">
+      <div><p class="eyebrow">Qué representa</p><h2>Una alerta cambia de significado según el territorio</h2></div>
+      <div class="method-copy">
+        <p>El modelo se entrenó con 2018–2022 y se evaluó retrospectivamente con 2023–2024. La etiqueta marca días con una frecuencia superior al umbral histórico de cada combinación localidad–franja.</p>
+        <p>En 49 de 80 combinaciones el umbral histórico es cero; allí, “alto riesgo” equivale a que ocurrió al menos un siniestro con víctima. Por eso el prototipo sirve para priorizar y comparar, no para afirmar riesgo individual.</p>
+        <p>Se excluyeron los casos de solo daños para mantener comparable el fenómeno antes y después del cambio normativo de 2022. <a href="https://www.movilidadbogota.gov.co/preguntas-frecuentes/donde-se-consultan-los-reportes-oficiales-de-accidentes-de-transito-en-los-que" target="_blank" rel="noreferrer">Consultar fuente oficial</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>Tesis de Ingeniería de Sistemas · Fundación Universitaria Konrad Lorenz</span><span>Datos 2018–2024 · Bogotá D.C.</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
