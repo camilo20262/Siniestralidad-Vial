@@ -1,0 +1,348 @@
+{
+  "tablas": [
+    {
+      "archivo": "reports/modeling_victimas/validacion_temporal_detalle.csv",
+      "filas_reconstruidas": 9,
+      "filas_oficiales": 9,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Corte": 0.0,
+        "Anio_Validacion": 0.0,
+        "N_Train": 0.0,
+        "N_Validacion": 0.0,
+        "Prevalencia_Train": 0.0,
+        "Prevalencia_Validacion": 0.0,
+        "F1": 0.0,
+        "AUC_ROC": 0.0,
+        "Average_Precision": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "Especificidad": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Brier": 0.0,
+        "TN": 0.0,
+        "FP": 0.0,
+        "FN": 0.0,
+        "TP": 0.0
+      }
+    },
+    {
+      "archivo": "reports/modeling_victimas/seleccion_umbral_2020_2022.csv",
+      "filas_reconstruidas": 181,
+      "filas_oficiales": 181,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Umbral": 0.0,
+        "F1": 0.0,
+        "AUC_ROC": 0.0,
+        "Average_Precision": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "Especificidad": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Brier": 2.7755575615628914e-17,
+        "TN": 0.0,
+        "FP": 0.0,
+        "FN": 0.0,
+        "TP": 0.0
+      }
+    },
+    {
+      "archivo": "reports/modeling_victimas/predicciones_oof_2020_2022.parquet",
+      "filas_reconstruidas": 263040,
+      "filas_oficiales": 263040,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Corte": 0.0,
+        "Anio_Validacion": 0.0,
+        "Umbral_Etiqueta": 0.0,
+        "Alto_Riesgo": 0.0,
+        "Probabilidad": 4.440892098500626e-16,
+        "Prediccion_05": 0.0
+      }
+    },
+    {
+      "archivo": "reports/modeling_victimas/predicciones_2023_2024.parquet",
+      "filas_reconstruidas": 175440,
+      "filas_oficiales": 175440,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Alto_Riesgo": 0.0,
+        "Umbral": 0.0,
+        "Probabilidad": 4.440892098500626e-16,
+        "Prediccion": 0.0
+      }
+    },
+    {
+      "archivo": "reports/tuning_victimas/busqueda_temporal_detalle.csv",
+      "filas_reconstruidas": 24,
+      "filas_oficiales": 24,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Candidato": 0.0,
+        "Train_Hasta": 0.0,
+        "Validacion": 0.0,
+        "n_estimators": 0.0,
+        "max_depth": 0.0,
+        "min_samples_leaf": 0.0,
+        "Average_Precision": 0.0,
+        "AUC_ROC": 0.0,
+        "F1": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Brier": 2.7755575615628914e-17,
+        "TN": 0.0,
+        "FP": 0.0,
+        "FN": 0.0,
+        "TP": 0.0
+      }
+    },
+    {
+      "archivo": "reports/tuning_victimas/busqueda_temporal_resumen.csv",
+      "filas_reconstruidas": 8,
+      "filas_oficiales": 8,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Candidato": 0.0,
+        "AP_Media": 0.0,
+        "AP_Std": 0.0,
+        "AUC_Media": 0.0,
+        "F1_Medio": 0.0,
+        "Recall_Medio": 0.0,
+        "Brier_Medio": 0.0,
+        "n_estimators": 0.0,
+        "max_depth": 0.0,
+        "min_samples_leaf": 0.0
+      }
+    },
+    {
+      "archivo": "reports/tuning_victimas/seleccion_umbral.csv",
+      "filas_reconstruidas": 181,
+      "filas_oficiales": 181,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Umbral": 0.0,
+        "Average_Precision": 0.0,
+        "AUC_ROC": 0.0,
+        "F1": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Brier": 0.0,
+        "TN": 0.0,
+        "FP": 0.0,
+        "FN": 0.0,
+        "TP": 0.0
+      }
+    },
+    {
+      "archivo": "reports/tuning_victimas/predicciones_oof_mejor_configuracion.parquet",
+      "filas_reconstruidas": 87680,
+      "filas_oficiales": 87680,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Alto_Riesgo": 0.0,
+        "Score": 3.885780586188048e-16
+      }
+    },
+    {
+      "archivo": "reports/evaluation_victimas/predicciones_random_forest_ajustado_2023_2024.parquet",
+      "filas_reconstruidas": 58480,
+      "filas_oficiales": 58480,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Anio": 0.0,
+        "Alto_Riesgo": 0.0,
+        "Score": 4.440892098500626e-16,
+        "Prediccion": 0.0
+      }
+    },
+    {
+      "archivo": "reports/evaluation_victimas/metricas_globales.csv",
+      "filas_reconstruidas": 4,
+      "filas_oficiales": 4,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Umbral": 0.0,
+        "F1": 0.0,
+        "AUC_ROC": 0.0,
+        "Average_Precision": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "Especificidad": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Brier": 5.551115123125783e-17,
+        "Tasa_Predicha_Positiva": 0.0,
+        "TN": 0.0,
+        "FP": 0.0,
+        "FN": 0.0,
+        "TP": 0.0
+      }
+    },
+    {
+      "archivo": "reports/evaluation_victimas/metricas_random_forest_ajustado_por_localidad.csv",
+      "filas_reconstruidas": 20,
+      "filas_oficiales": 20,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Observaciones": 0.0,
+        "Positivos": 0.0,
+        "Prevalencia": 0.0,
+        "F1": 0.0,
+        "AUC_ROC": 0.0,
+        "Average_Precision": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "Especificidad": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Brier": 5.551115123125783e-17,
+        "Tasa_Predicha_Positiva": 0.0,
+        "TN": 0.0,
+        "FP": 0.0,
+        "FN": 0.0,
+        "TP": 0.0
+      }
+    },
+    {
+      "archivo": "reports/evaluation_victimas/metricas_random_forest_ajustado_por_franja.csv",
+      "filas_reconstruidas": 4,
+      "filas_oficiales": 4,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Observaciones": 0.0,
+        "Positivos": 0.0,
+        "Prevalencia": 0.0,
+        "F1": 0.0,
+        "AUC_ROC": 0.0,
+        "Average_Precision": 0.0,
+        "Precision": 0.0,
+        "Recall": 0.0,
+        "Especificidad": 0.0,
+        "Balanced_Accuracy": 0.0,
+        "Brier": 2.7755575615628914e-17,
+        "Tasa_Predicha_Positiva": 0.0,
+        "TN": 0.0,
+        "FP": 0.0,
+        "FN": 0.0,
+        "TP": 0.0
+      }
+    },
+    {
+      "archivo": "reports/evaluation_victimas/comparacion_referencias_historicas.csv",
+      "filas_reconstruidas": 6,
+      "filas_oficiales": 6,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Filas": 0.0,
+        "Grupos_Nuevos": 0.0,
+        "Average_Precision": 0.0,
+        "AUC_ROC": 0.0,
+        "Brier": 0.0
+      }
+    },
+    {
+      "archivo": "reports/evaluation_victimas/bootstrap_rf_vs_referencia_resumen.csv",
+      "filas_reconstruidas": 3,
+      "filas_oficiales": 3,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Diferencia_A_Menos_B": 0.0,
+        "P025": 0.0,
+        "P975": 0.0,
+        "Replicas_Validas": 0.0,
+        "Bloques": 0.0,
+        "Dias_Bloque": 0.0,
+        "Semilla": 0.0
+      }
+    }
+  ],
+  "seleccion": [
+    {
+      "archivo": "metadata_modelo.json",
+      "coincidencias": {
+        "modelo_seleccionado": true,
+        "umbral_candidato": true,
+        "variables": true,
+        "random_state": true
+      },
+      "python_oficial": "3.14.5",
+      "python_reproduccion": "3.12.14"
+    },
+    {
+      "archivo": "metadata_random_forest_ajustado.json",
+      "coincidencias": {
+        "mejor_candidato": true,
+        "hiperparametros": true,
+        "umbral_temporal": true
+      },
+      "python_oficial": "3.12.14",
+      "python_reproduccion": "3.12.14"
+    }
+  ],
+  "modelos": [
+    {
+      "modelo": "pipeline_logistica_victimas.pkl",
+      "mismo_esquema": true,
+      "mismos_hiperparametros": true,
+      "mismos_bytes": false
+    },
+    {
+      "modelo": "pipeline_random_forest_victimas.pkl",
+      "mismo_esquema": true,
+      "mismos_hiperparametros": true,
+      "mismos_bytes": false
+    },
+    {
+      "modelo": "pipeline_xgboost_victimas.pkl",
+      "mismo_esquema": true,
+      "mismos_hiperparametros": true,
+      "mismos_bytes": false
+    },
+    {
+      "modelo": "pipeline_random_forest_ajustado_victimas.pkl",
+      "mismo_esquema": true,
+      "mismos_hiperparametros": true,
+      "mismos_bytes": true
+    }
+  ],
+  "nota_bytes": "No se exige identidad binaria de pickle; se comparan esquema, parámetros, decisiones y scores con tolerancia prefijada.",
+  "estado": "reproduccion_equivalente",
+  "oficiales_intactos": true,
+  "archivos_oficiales_comprobados": 181,
+  "archivos_oficiales_modificados": [],
+  "ejecuciones": [
+    {
+      "notebook": "03B_Preparacion_Datos_Con_Victimas.ipynb",
+      "celdas_codigo": 9,
+      "celdas_ejecutadas": 9,
+      "errores": 0,
+      "segundos": 32.62,
+      "sha256_ejecutado": "31a8217853baf23d9267b612a4ea2cf5bdd2a1df02d46a4c5982eb7e6964c375"
+    },
+    {
+      "notebook": "04B_Modelado_Con_Victimas.ipynb",
+      "celdas_codigo": 12,
+      "celdas_ejecutadas": 12,
+      "errores": 0,
+      "segundos": 44.74,
+      "sha256_ejecutado": "0acb45da4d61604a3310f6794c8227500e925aededca4dfa15ce6d0a9afe4422"
+    },
+    {
+      "notebook": "04C_Ajuste_Hiperparametros_Con_Victimas.ipynb",
+      "celdas_codigo": 6,
+      "celdas_ejecutadas": 6,
+      "errores": 0,
+      "segundos": 73.74,
+      "sha256_ejecutado": "f31ff5106671be6c7901477fa5190a6f5695a939fe131f19fb2dcb0f2dac1e44"
+    },
+    {
+      "notebook": "05B_Evaluacion_Con_Victimas.ipynb",
+      "celdas_codigo": 27,
+      "celdas_ejecutadas": 27,
+      "errores": 0,
+      "segundos": 22.43,
+      "sha256_ejecutado": "9a79febd3263c122810be771d7f74ed01a80b1a2547fe2baac439ff154b2d82f"
+    }
+  ]
+}

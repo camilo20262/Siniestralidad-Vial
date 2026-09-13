@@ -1,0 +1,8 @@
+{
+  "motivo": "Contrato del ensayo reconstruido. No reemplaza ni declara un modelo principal nuevo.",
+  "campos_de_control": "Hashes, parámetros y métricas provienen del ensayo; esquema de la versión oficial.",
+  "reportes_oficiales_precargados": 0,
+  "modelos_oficiales_copiados": 0,
+  "notebook_05B_codigo_modificado": false,
+  "advertencia_textos": "Las referencias a rf_victimas_bogota_v1.0 en las conclusiones originales son contexto de comparación, no promoción del modelo reconstruido."
+}

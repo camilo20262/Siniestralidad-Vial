@@ -1,0 +1,5 @@
+# Copias locales voluminosas y entorno regenerable. Se conservan en disco.
+*/.venv/
+*/data/
+*/models/**/*.pkl
+*/runtime/

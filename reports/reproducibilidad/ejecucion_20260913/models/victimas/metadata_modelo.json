@@ -1,0 +1,28 @@
+{
+  "universo": "Siniestros Con Heridos o Con Muertos",
+  "dataset": "../data/processed/dataset_victimas_localidad_franja_fecha.parquet",
+  "entrenamiento": "2018-01-01 a 2022-12-31",
+  "confirmacion_retrospectiva": "2023-01-01 a 2024-12-31",
+  "modelo_seleccionado": "Random Forest",
+  "criterio_seleccion": "Mayor Average Precision promedio en validacion temporal expansiva",
+  "umbral_candidato": 0.5499999999999999,
+  "variables": [
+    "Localidad",
+    "Franja_Horaria",
+    "Dia_Semana",
+    "Mes",
+    "Es_Fin_de_Semana",
+    "Es_Festivo",
+    "Accidentes_Prom_7d",
+    "Accidentes_Prom_30d",
+    "Accidentes_Semana_Anterior",
+    "Sin_Historial_Accidentes_Prom_7d",
+    "Sin_Historial_Accidentes_Prom_30d",
+    "Sin_Historial_Accidentes_Semana_Anterior"
+  ],
+  "random_state": 42,
+  "version_python": "3.12.14",
+  "version_pandas": "3.0.3",
+  "version_sklearn": "1.9.0",
+  "version_xgboost": "3.4.0"
+}

@@ -1,0 +1,29 @@
+{
+  "git_commit": "bae352e9f6616fa16bd4b02e91b47828f67e27d0",
+  "notebooks": [
+    {
+      "notebook": "03B_Preparacion_Datos_Con_Victimas.ipynb",
+      "sha256_original": "35275ea76ed0d86a67b19392bfbf58bbbb14dc5309ffcd001fd29fe4e165ee4c",
+      "codigo_sin_cambios": true
+    },
+    {
+      "notebook": "04B_Modelado_Con_Victimas.ipynb",
+      "sha256_original": "7584a90af4c72cc8ed76ad39b8335b5385bc8e400600619b1bf1340cd52234b2",
+      "codigo_sin_cambios": true
+    },
+    {
+      "notebook": "04C_Ajuste_Hiperparametros_Con_Victimas.ipynb",
+      "sha256_original": "90b5f184529f7432e62016944ac17f85efaa6c19b452a863fc9114bd26bac276",
+      "codigo_sin_cambios": true
+    },
+    {
+      "notebook": "05B_Evaluacion_Con_Victimas.ipynb",
+      "sha256_original": "f760349abb6b10a002e2f2d657ff576e525f12c0ce28ebae614b1a3c8ad1518b",
+      "codigo_sin_cambios": true
+    }
+  ],
+  "excel_sha256": "afcb691b5918835c3392854b770895aeb62b4e00f1191708d10e6942bebf87f5",
+  "tolerancia_absoluta_scores_metricas": 1e-10,
+  "entorno": "venv nuevo sin system-site-packages; requirements.txt instalado independientemente",
+  "originales_modificados": false
+}
