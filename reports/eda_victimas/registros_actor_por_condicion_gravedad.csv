@@ -1,0 +1,63 @@
+﻿Condicion_Especifica,Gravedad_Indicador_Tradicional,Registros_Actores,Siniestros_Distintos
+Ciclista,HERIDO,14469,14244
+Ciclista,ILESO,997,983
+Ciclista,MUERTO,499,499
+Ciclista,Sin información,22,22
+Cond Carga,HERIDO,542,534
+Cond Carga,ILESO,4323,4242
+Cond Carga,MUERTO,3,3
+Cond Carga,Sin información,30,29
+Cond Livianos,HERIDO,10827,9740
+Cond Livianos,ILESO,26493,25081
+Cond Livianos,MUERTO,48,48
+Cond Livianos,Sin información,370,368
+Cond Servicio Especial,HERIDO,297,294
+Cond Servicio Especial,ILESO,1043,1037
+Cond Servicio Especial,MUERTO,1,1
+Cond Servicio Especial,Sin información,1,1
+Cond TPP,HERIDO,1012,968
+Cond TPP,ILESO,14538,14173
+Cond TPP,MUERTO,3,3
+Cond TPP,Sin información,38,37
+Cond Taxi,HERIDO,3512,3394
+Cond Taxi,ILESO,7916,7718
+Cond Taxi,MUERTO,13,13
+Cond Taxi,Sin información,38,38
+Cond Vehículo Sin Info,HERIDO,42,42
+Cond Vehículo Sin Info,ILESO,1513,1502
+Cond Vehículo Sin Info,Sin información,707,682
+Motociclista,HERIDO,48193,43798
+Motociclista,ILESO,6126,6001
+Motociclista,MUERTO,1223,1220
+Motociclista,Sin información,98,93
+Pasajero Bicicleta,HERIDO,1086,936
+Pasajero Bicicleta,ILESO,1,1
+Pasajero Bicicleta,MUERTO,5,5
+Pasajero Bicicleta,Sin información,1,1
+Pasajero Carga,HERIDO,291,213
+Pasajero Carga,MUERTO,11,11
+Pasajero Liviano,HERIDO,7137,4689
+Pasajero Liviano,ILESO,10,7
+Pasajero Liviano,MUERTO,44,39
+Pasajero Liviano,Sin información,4,4
+Pasajero Motocicleta,HERIDO,12353,11857
+Pasajero Motocicleta,ILESO,30,30
+Pasajero Motocicleta,MUERTO,229,229
+Pasajero Motocicleta,Sin información,3,3
+Pasajero Servicio Especial,HERIDO,632,222
+Pasajero Servicio Especial,ILESO,1,1
+Pasajero Sin Info,HERIDO,116,100
+Pasajero Sin Info,MUERTO,7,7
+Pasajero Taxi,HERIDO,3028,1984
+Pasajero Taxi,ILESO,4,3
+Pasajero Taxi,MUERTO,19,17
+Pasajero Taxi,Sin información,1,1
+Pasajero Transporte Pasajeros,HERIDO,10480,6633
+Pasajero Transporte Pasajeros,ILESO,2,2
+Pasajero Transporte Pasajeros,MUERTO,31,30
+Pasajero Transporte Pasajeros,Sin información,2,2
+Peatón,HERIDO,21603,19552
+Peatón,ILESO,18,18
+Peatón,MUERTO,1441,1429
+Peatón,Sin información,11,11
+Sin Informacion,ILESO,10,10

@@ -1,0 +1,9 @@
+{
+  "url": "https://sig.catastrobogota.gov.co/arcgis/rest/services/ordenamientoterritorial/localidad/MapServer/0/query?where=1%3D1&outFields=LOCNOMBRE%2CLOCCODIGO&returnGeometry=true&outSR=4326&f=geojson",
+  "servicio": "https://sig.catastrobogota.gov.co/arcgis/rest/services/ordenamientoterritorial/localidad/MapServer/0",
+  "atribucion": "Secretaría Distrital de Planeación - SDP",
+  "consultado_utc": "2026-09-13T03:52:53.469465+00:00",
+  "sha256": "4dd83b3ba825c64e11e77a2aa39cbf505d2678a20d5ddba6217642f7b657344f",
+  "crs": "EPSG:4326",
+  "alcance": "Instantánea de referencia actual; no certifica límites históricos 2018–2024."
+}

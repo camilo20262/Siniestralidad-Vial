@@ -4,6 +4,11 @@ import nbformat as nbf
 ROOT = Path(__file__).resolve().parents[1]
 NB = ROOT / 'notebooks'
 
+# Generador histórico: no debe reemplazar la ampliación posterior de 3.1.
+eda_actual = NB / '02B_EDA_y_Analisis_Espacial_Con_Victimas.ipynb'
+if eda_actual.exists() and nbf.read(eda_actual, as_version=4).metadata.get('revision_analitica'):
+    raise SystemExit('02B contiene la ampliación de 3.1. Edite y ejecute el notebook actual; este generador histórico lo sobrescribiría.')
+
 def md(text): return nbf.v4.new_markdown_cell(text)
 def code(text): return nbf.v4.new_code_cell(text)
 

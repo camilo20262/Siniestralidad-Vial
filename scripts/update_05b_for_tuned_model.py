@@ -5,6 +5,9 @@ root = Path(__file__).resolve().parents[1]
 path = root / 'notebooks' / '05B_Evaluacion_Con_Victimas.ipynb'
 nb = nbformat.read(path, as_version=4)
 
+if nb.metadata.get('revision_analitica'):
+    raise SystemExit('05B ya contiene referencias históricas e incertidumbre. Este actualizador histórico por posiciones no debe volver a aplicarse.')
+
 nb.cells[0].source = """# 05B · Evaluación del escenario de siniestros con víctimas
 ### Fase 5 de CRISP-DM · modelo ajustado
 

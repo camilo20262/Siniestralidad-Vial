@@ -1,0 +1,11 @@
+{
+  "siniestros": 85199,
+  "dias": 2557,
+  "total_diario_coincide": true,
+  "combinaciones_dia_franja": 28,
+  "combinaciones_actor_dia_franja": 84,
+  "poligonos": 20,
+  "geometrias_validas": true,
+  "datos_y_modelos_intactos": true,
+  "fuente_cartografica_sha256": "4dd83b3ba825c64e11e77a2aa39cbf505d2678a20d5ddba6217642f7b657344f"
+}

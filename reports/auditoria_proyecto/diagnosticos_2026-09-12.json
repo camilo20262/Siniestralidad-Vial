@@ -1,0 +1,704 @@
+{
+  "fecha": "2026-09-12",
+  "alcance": "Auditoría de lectura y diagnósticos en memoria; sin reentrenar ni cambiar el modelo cerrado ni los notebooks.",
+  "modelo": "rf_victimas_bogota_v1.0",
+  "comprobacion_cierre": {
+    "resultado": "correcto",
+    "predicciones": 58480,
+    "umbrales_etiqueta": 80,
+    "evidencias_integras": 12
+  },
+  "diagnosticos": {
+    "grid": {
+      "filas": 204560,
+      "nulos": 0,
+      "duplicados": 0,
+      "dias_por_grupo_min": 2557,
+      "dias_por_grupo_max": 2557
+    },
+    "variables_verificadas": {
+      "Accidentes_Prom_7d": {
+        "error_maximo": 0,
+        "indicador_diferencias": 0
+      },
+      "Accidentes_Prom_30d": {
+        "error_maximo": 0,
+        "indicador_diferencias": 0
+      },
+      "Accidentes_Semana_Anterior": {
+        "error_maximo": 0,
+        "indicador_diferencias": 0
+      },
+      "mes_diferencias": 0,
+      "fin_semana_diferencias": 0,
+      "dia_semana_diferencias": 0,
+      "festivos_diferencias": 0
+    },
+    "baselines_diagnosticas_solo_train": [
+      {
+        "Referencia": "Tasa historica ['global']",
+        "AP": 0.19011627906976744,
+        "AUC": 0.5,
+        "Brier": 0.15435678122821342
+      },
+      {
+        "Referencia": "Tasa historica ['Localidad']",
+        "AP": 0.2440420102685065,
+        "AUC": 0.6219308063458661,
+        "Brier": 0.14946278936460064
+      },
+      {
+        "Referencia": "Tasa historica ['Localidad', 'Franja_Horaria']",
+        "AP": 0.2964308673057439,
+        "AUC": 0.6808992441197584,
+        "Brier": 0.14498670433833047
+      },
+      {
+        "Referencia": "Tasa historica ['Localidad', 'Franja_Horaria', 'Dia_Semana']",
+        "AP": 0.3086609763463467,
+        "AUC": 0.6931102355490653,
+        "Brier": 0.14377013021926516
+      }
+    ],
+    "separacion_umbral_modelo": [
+      {
+        "modelo": "base",
+        "umbral": 0.5,
+        "F1": 0.3940679920660547
+      },
+      {
+        "modelo": "base",
+        "umbral": 0.52,
+        "F1": 0.397288921363602
+      },
+      {
+        "modelo": "base",
+        "umbral": 0.55,
+        "F1": 0.39817184643510056
+      },
+      {
+        "modelo": "ajustado",
+        "umbral": 0.5,
+        "F1": 0.4043829898252022
+      },
+      {
+        "modelo": "ajustado",
+        "umbral": 0.52,
+        "F1": 0.40578901871113465
+      },
+      {
+        "modelo": "ajustado",
+        "umbral": 0.55,
+        "F1": 0.40022421524663676
+      }
+    ],
+    "fuentes_reportes": {
+      "metricas_por_anio.csv": [
+        {
+          "Anio": 2023,
+          "Modelo": "Regresión Logística",
+          "Umbral": 0.5,
+          "F1": 0.3620432513049962,
+          "AUC_ROC": 0.6413393286408391,
+          "Average_Precision": 0.2699568204481319,
+          "Precision": 0.2439545254695057,
+          "Recall": 0.7017163504968383,
+          "Especificidad": 0.4913585463765054,
+          "Balanced_Accuracy": 0.5965374484366719,
+          "Brier": 0.238357494023817,
+          "Tasa_Predicha_Positiva": 0.5452397260273972,
+          "TN": 11628,
+          "FP": 12037,
+          "FN": 1651,
+          "TP": 3884
+        },
+        {
+          "Anio": 2023,
+          "Modelo": "Random Forest base",
+          "Umbral": 0.5499999999999999,
+          "F1": 0.3980689318015155,
+          "AUC_ROC": 0.6865744352774185,
+          "Average_Precision": 0.3046971158833553,
+          "Precision": 0.3007664604303259,
+          "Recall": 0.5884372177055104,
+          "Especificidad": 0.6800338051975491,
+          "Balanced_Accuracy": 0.6342355114515297,
+          "Brier": 0.2295649823354024,
+          "Tasa_Predicha_Positiva": 0.3708561643835616,
+          "TN": 16093,
+          "FP": 7572,
+          "FN": 2278,
+          "TP": 3257
+        },
+        {
+          "Anio": 2023,
+          "Modelo": "Random Forest ajustado",
+          "Umbral": 0.5199999999999999,
+          "F1": 0.4044287079188445,
+          "AUC_ROC": 0.6934858537119776,
+          "Average_Precision": 0.3099882136792305,
+          "Precision": 0.2935225974873552,
+          "Recall": 0.6500451671183378,
+          "Especificidad": 0.6340587365307416,
+          "Balanced_Accuracy": 0.6420519518245398,
+          "Brier": 0.2218586981726098,
+          "Tasa_Predicha_Positiva": 0.4197945205479452,
+          "TN": 15005,
+          "FP": 8660,
+          "FN": 1937,
+          "TP": 3598
+        },
+        {
+          "Anio": 2023,
+          "Modelo": "XGBoost",
+          "Umbral": 0.5,
+          "F1": 0.3911101658868566,
+          "AUC_ROC": 0.6808314032573384,
+          "Average_Precision": 0.3051685749225385,
+          "Precision": 0.2771038951254426,
+          "Recall": 0.6644986449864498,
+          "Especificidad": 0.5945489118952039,
+          "Balanced_Accuracy": 0.6295237784408269,
+          "Brier": 0.2230313867330551,
+          "Tasa_Predicha_Positiva": 0.4545547945205479,
+          "TN": 14070,
+          "FP": 9595,
+          "FN": 1857,
+          "TP": 3678
+        },
+        {
+          "Anio": 2024,
+          "Modelo": "Regresión Logística",
+          "Umbral": 0.5,
+          "F1": 0.3644938363840119,
+          "AUC_ROC": 0.6408117503785006,
+          "Average_Precision": 0.2706416625831532,
+          "Precision": 0.2465104528516389,
+          "Recall": 0.6990865126276196,
+          "Especificidad": 0.4965607460860024,
+          "Balanced_Accuracy": 0.597823629356811,
+          "Brier": 0.2381599030223352,
+          "Tasa_Predicha_Positiva": 0.5407445355191257,
+          "TN": 11767,
+          "FP": 11930,
+          "FN": 1680,
+          "TP": 3903
+        },
+        {
+          "Anio": 2024,
+          "Modelo": "Random Forest base",
+          "Umbral": 0.5499999999999999,
+          "F1": 0.3982741857073408,
+          "AUC_ROC": 0.6841173044204547,
+          "Average_Precision": 0.3031586651303143,
+          "Precision": 0.3013887611514761,
+          "Recall": 0.5869604155471968,
+          "Especificidad": 0.6794530953285226,
+          "Balanced_Accuracy": 0.6332067554378598,
+          "Brier": 0.2312271987556672,
+          "Tasa_Predicha_Positiva": 0.3713456284153005,
+          "TN": 16101,
+          "FP": 7596,
+          "FN": 2306,
+          "TP": 3277
+        },
+        {
+          "Anio": 2024,
+          "Modelo": "Random Forest ajustado",
+          "Umbral": 0.5199999999999999,
+          "F1": 0.4071286251937126,
+          "AUC_ROC": 0.69320318356525,
+          "Average_Precision": 0.3101102502409166,
+          "Precision": 0.2945935122146575,
+          "Recall": 0.6587855991402471,
+          "Especificidad": 0.6283495801156265,
+          "Balanced_Accuracy": 0.6435675896279368,
+          "Brier": 0.2223172085991529,
+          "Tasa_Predicha_Positiva": 0.4264002732240437,
+          "TN": 14890,
+          "FP": 8807,
+          "FN": 1905,
+          "TP": 3678
+        },
+        {
+          "Anio": 2024,
+          "Modelo": "XGBoost",
+          "Umbral": 0.5,
+          "F1": 0.3963524546707666,
+          "AUC_ROC": 0.679280442725356,
+          "Average_Precision": 0.299290081545092,
+          "Precision": 0.2814971006852925,
+          "Recall": 0.6695325094035465,
+          "Especificidad": 0.5973751951723847,
+          "Balanced_Accuracy": 0.6334538522879656,
+          "Brier": 0.2224840968847274,
+          "Tasa_Predicha_Positiva": 0.4535177595628415,
+          "TN": 14156,
+          "FP": 9541,
+          "FN": 1845,
+          "TP": 3738
+        }
+      ],
+      "metricas_macro_localidad.csv": [
+        {
+          "Metrica": "F1",
+          "Global": 0.4057890187111346,
+          "Macro_Localidades": 0.3473762910433183
+        },
+        {
+          "Metrica": "Precision",
+          "Global": 0.2940629673038839,
+          "Macro_Localidades": 0.2602374225388568
+        },
+        {
+          "Metrica": "Recall",
+          "Global": 0.654434250764526,
+          "Macro_Localidades": 0.5583275210773949
+        },
+        {
+          "Metrica": "AUC_ROC",
+          "Global": 0.6933242182043409,
+          "Macro_Localidades": 0.6119076280274424
+        },
+        {
+          "Metrica": "Average_Precision",
+          "Global": 0.3098375996626644,
+          "Macro_Localidades": 0.2647301628778334
+        }
+      ],
+      "resumen_candelaria.csv": [
+        {
+          "Observaciones": 2924,
+          "Positivos": 157,
+          "Prevalencia": 0.0536935704514363,
+          "Score_Medio": 0.1664802252314814,
+          "Score_Mediana": 0.1708586754144288,
+          "Score_P95": 0.2618116513304165,
+          "Score_Max": 0.3227442785558873,
+          "Umbral_Global": 0.5199999999999999,
+          "Alertas": 0,
+          "TP": 0,
+          "Recall": 0
+        }
+      ],
+      "diagnostico_volumen_franja.csv": [
+        {
+          "Franja_Horaria": "Noche",
+          "Observaciones": 14620,
+          "Positivos": 3292,
+          "Prevalencia": 0.2251709986320109,
+          "F1": 0.4305799648506151,
+          "AUC_ROC": 0.6645990794324197,
+          "Average_Precision": 0.3284260264877952,
+          "Precision": 0.302917903066271,
+          "Recall": 0.744228432563791,
+          "Especificidad": 0.502295197740113,
+          "Balanced_Accuracy": 0.623261815151952,
+          "Brier": 0.2485599274339607,
+          "Tasa_Predicha_Positiva": 0.5532147742818058,
+          "TN": 5690,
+          "FP": 5638,
+          "FN": 842,
+          "TP": 2450,
+          "Volumen_Historico_2018_2022": 15606,
+          "Score_Medio": 0.5033912827873563
+        },
+        {
+          "Franja_Horaria": "Mañana",
+          "Observaciones": 14620,
+          "Positivos": 2885,
+          "Prevalencia": 0.1973324213406292,
+          "F1": 0.4261874197689345,
+          "AUC_ROC": 0.70578854675647,
+          "Average_Precision": 0.3266293142221288,
+          "Precision": 0.2979839823253244,
+          "Recall": 0.7480069324090122,
+          "Especificidad": 0.5667660843630166,
+          "Balanced_Accuracy": 0.6573865083860144,
+          "Brier": 0.2305011765657377,
+          "Tasa_Predicha_Positiva": 0.4953488372093023,
+          "TN": 6651,
+          "FP": 5084,
+          "FN": 727,
+          "TP": 2158,
+          "Volumen_Historico_2018_2022": 18934,
+          "Score_Medio": 0.4754697592717316
+        },
+        {
+          "Franja_Horaria": "Tarde",
+          "Observaciones": 14620,
+          "Positivos": 2623,
+          "Prevalencia": 0.1794117647058823,
+          "F1": 0.3957134799774394,
+          "AUC_ROC": 0.6977332559089703,
+          "Average_Precision": 0.2934559450193227,
+          "Precision": 0.280999679589875,
+          "Recall": 0.6686999618757148,
+          "Especificidad": 0.6259064766191548,
+          "Balanced_Accuracy": 0.6473032192474348,
+          "Brier": 0.2179439584347818,
+          "Tasa_Predicha_Positiva": 0.4269493844049247,
+          "TN": 7509,
+          "FP": 4488,
+          "FN": 869,
+          "TP": 1754,
+          "Volumen_Historico_2018_2022": 18765,
+          "Score_Medio": 0.4497755966462978
+        },
+        {
+          "Franja_Horaria": "Madrugada",
+          "Observaciones": 14620,
+          "Positivos": 2318,
+          "Prevalencia": 0.1585499316005472,
+          "F1": 0.3330296957551467,
+          "AUC_ROC": 0.6748669415342301,
+          "Average_Precision": 0.2737407435780682,
+          "Precision": 0.2882371491643015,
+          "Recall": 0.3943054357204487,
+          "Especificidad": 0.8165338969273289,
+          "Balanced_Accuracy": 0.6054196663238888,
+          "Brier": 0.1913480055835366,
+          "Tasa_Predicha_Positiva": 0.2168946648426812,
+          "TN": 10045,
+          "FP": 2257,
+          "FN": 1404,
+          "TP": 914,
+          "Volumen_Historico_2018_2022": 5983,
+          "Score_Medio": 0.400909623712251
+        }
+      ]
+    },
+    "validacion_folds": [
+      {
+        "Corte": 1,
+        "Entrenamiento": "2018-2019",
+        "Anio_Validacion": 2020,
+        "Modelo": "Regresión Logística",
+        "N_Train": 58400,
+        "N_Validacion": 29280,
+        "Prevalencia_Train": 0.1589041095890411,
+        "Prevalencia_Validacion": 0.1027322404371584,
+        "F1": 0.2318231928185206,
+        "AUC_ROC": 0.6414006354046538,
+        "Average_Precision": 0.147693248797507,
+        "Precision": 0.1376472788479521,
+        "Recall": 0.7340425531914894,
+        "Especificidad": 0.4734698538367844,
+        "Balanced_Accuracy": 0.6037562035141368,
+        "Brier": 0.2434191585858522,
+        "TN": 12439,
+        "FP": 13833,
+        "FN": 800,
+        "TP": 2208
+      },
+      {
+        "Corte": 1,
+        "Entrenamiento": "2018-2019",
+        "Anio_Validacion": 2020,
+        "Modelo": "Random Forest",
+        "N_Train": 58400,
+        "N_Validacion": 29280,
+        "Prevalencia_Train": 0.1589041095890411,
+        "Prevalencia_Validacion": 0.1027322404371584,
+        "F1": 0.2499418198743309,
+        "AUC_ROC": 0.6812433832050788,
+        "Average_Precision": 0.1753706793419581,
+        "Precision": 0.1514809590973201,
+        "Recall": 0.714095744680851,
+        "Especificidad": 0.5420219244823387,
+        "Balanced_Accuracy": 0.6280588345815948,
+        "Brier": 0.2232890221165489,
+        "TN": 14240,
+        "FP": 12032,
+        "FN": 860,
+        "TP": 2148
+      },
+      {
+        "Corte": 1,
+        "Entrenamiento": "2018-2019",
+        "Anio_Validacion": 2020,
+        "Modelo": "XGBoost",
+        "N_Train": 58400,
+        "N_Validacion": 29280,
+        "Prevalencia_Train": 0.1589041095890411,
+        "Prevalencia_Validacion": 0.1027322404371584,
+        "F1": 0.2507710875687273,
+        "AUC_ROC": 0.654350275027859,
+        "Average_Precision": 0.1560935223628308,
+        "Precision": 0.1570636653788006,
+        "Recall": 0.6216755319148937,
+        "Especificidad": 0.6179963459196103,
+        "Balanced_Accuracy": 0.619835938917252,
+        "Brier": 0.224460557103157,
+        "TN": 16236,
+        "FP": 10036,
+        "FN": 1138,
+        "TP": 1870
+      },
+      {
+        "Corte": 2,
+        "Entrenamiento": "2018-2020",
+        "Anio_Validacion": 2021,
+        "Modelo": "Regresión Logística",
+        "N_Train": 87680,
+        "N_Validacion": 29200,
+        "Prevalencia_Train": 0.1597057481751825,
+        "Prevalencia_Validacion": 0.1581164383561643,
+        "F1": 0.3251356422088129,
+        "AUC_ROC": 0.6571967042277315,
+        "Average_Precision": 0.2463157058733044,
+        "Precision": 0.2122616525423729,
+        "Recall": 0.694390296729478,
+        "Especificidad": 0.51600699670504,
+        "Balanced_Accuracy": 0.605198646717259,
+        "Brier": 0.2337249518054051,
+        "TN": 12685,
+        "FP": 11898,
+        "FN": 1411,
+        "TP": 3206
+      },
+      {
+        "Corte": 2,
+        "Entrenamiento": "2018-2020",
+        "Anio_Validacion": 2021,
+        "Modelo": "Random Forest",
+        "N_Train": 87680,
+        "N_Validacion": 29200,
+        "Prevalencia_Train": 0.1597057481751825,
+        "Prevalencia_Validacion": 0.1581164383561643,
+        "F1": 0.3465312017530753,
+        "AUC_ROC": 0.6914406063994295,
+        "Average_Precision": 0.270887745371084,
+        "Precision": 0.2250032337343163,
+        "Recall": 0.7535196014728178,
+        "Especificidad": 0.5125493227026807,
+        "Balanced_Accuracy": 0.6330344620877493,
+        "Brier": 0.2265002188359624,
+        "TN": 12600,
+        "FP": 11983,
+        "FN": 1138,
+        "TP": 3479
+      },
+      {
+        "Corte": 2,
+        "Entrenamiento": "2018-2020",
+        "Anio_Validacion": 2021,
+        "Modelo": "XGBoost",
+        "N_Train": 87680,
+        "N_Validacion": 29200,
+        "Prevalencia_Train": 0.1597057481751825,
+        "Prevalencia_Validacion": 0.1581164383561643,
+        "F1": 0.3513012264433144,
+        "AUC_ROC": 0.6814082768897975,
+        "Average_Precision": 0.2566968736278482,
+        "Precision": 0.2426847412795503,
+        "Recall": 0.6359107645657354,
+        "Especificidad": 0.6273034210633365,
+        "Balanced_Accuracy": 0.6316070928145359,
+        "Brier": 0.216481015086174,
+        "TN": 15421,
+        "FP": 9162,
+        "FN": 1681,
+        "TP": 2936
+      },
+      {
+        "Corte": 3,
+        "Entrenamiento": "2018-2021",
+        "Anio_Validacion": 2022,
+        "Modelo": "Regresión Logística",
+        "N_Train": 116880,
+        "N_Validacion": 29200,
+        "Prevalencia_Train": 0.1657597535934291,
+        "Prevalencia_Validacion": 0.189486301369863,
+        "F1": 0.3572100018800526,
+        "AUC_ROC": 0.6356254587311899,
+        "Average_Precision": 0.2716443734890077,
+        "Precision": 0.2413771199898367,
+        "Recall": 0.6867883607446231,
+        "Especificidad": 0.4953733046013436,
+        "Balanced_Accuracy": 0.5910808326729834,
+        "Brier": 0.2392188733044942,
+        "TN": 11724,
+        "FP": 11943,
+        "FN": 1733,
+        "TP": 3800
+      },
+      {
+        "Corte": 3,
+        "Entrenamiento": "2018-2021",
+        "Anio_Validacion": 2022,
+        "Modelo": "Random Forest",
+        "N_Train": 116880,
+        "N_Validacion": 29200,
+        "Prevalencia_Train": 0.1657597535934291,
+        "Prevalencia_Validacion": 0.189486301369863,
+        "F1": 0.3913851734300612,
+        "AUC_ROC": 0.6853935979951846,
+        "Average_Precision": 0.3015471448158192,
+        "Precision": 0.2612274543033531,
+        "Recall": 0.7800469907825772,
+        "Especificidad": 0.4842607850593654,
+        "Balanced_Accuracy": 0.6321538879209713,
+        "Brier": 0.2310557192464302,
+        "TN": 11461,
+        "FP": 12206,
+        "FN": 1217,
+        "TP": 4316
+      },
+      {
+        "Corte": 3,
+        "Entrenamiento": "2018-2021",
+        "Anio_Validacion": 2022,
+        "Modelo": "XGBoost",
+        "N_Train": 116880,
+        "N_Validacion": 29200,
+        "Prevalencia_Train": 0.1657597535934291,
+        "Prevalencia_Validacion": 0.189486301369863,
+        "F1": 0.3949065119277885,
+        "AUC_ROC": 0.6798685563629177,
+        "Average_Precision": 0.2952192110788272,
+        "Precision": 0.2809847847694778,
+        "Recall": 0.664196638351708,
+        "Especificidad": 0.6026534837537499,
+        "Balanced_Accuracy": 0.633425061052729,
+        "Brier": 0.2223444581031799,
+        "TN": 14263,
+        "FP": 9404,
+        "FN": 1858,
+        "TP": 3675
+      }
+    ]
+  },
+  "baselines_validacion_temporal": {
+    "detalle": [
+      {
+        "Modelo": "Tasa historica ['Localidad', 'Franja_Horaria']",
+        "Validacion": 2020,
+        "AP": 0.1730775969365056,
+        "AUC": 0.6846807822258792,
+        "Brier": 0.09250983868040326
+      },
+      {
+        "Modelo": "Tasa historica ['Localidad', 'Franja_Horaria', 'Dia_Semana']",
+        "Validacion": 2020,
+        "AP": 0.17671330826301235,
+        "AUC": 0.6911851397187686,
+        "Brier": 0.09320945821435526
+      },
+      {
+        "Modelo": "Tasa historica ['Localidad', 'Franja_Horaria']",
+        "Validacion": 2021,
+        "AP": 0.26102233620021653,
+        "AUC": 0.6889450626002034,
+        "Brier": 0.12540014506190802
+      },
+      {
+        "Modelo": "Tasa historica ['Localidad', 'Franja_Horaria', 'Dia_Semana']",
+        "Validacion": 2021,
+        "AP": 0.266632681415947,
+        "AUC": 0.6946180197762795,
+        "Brier": 0.12508814691818793
+      },
+      {
+        "Modelo": "Tasa historica ['Localidad', 'Franja_Horaria']",
+        "Validacion": 2022,
+        "AP": 0.29026010880076547,
+        "AUC": 0.6818972237322827,
+        "Brier": 0.14481949841776764
+      },
+      {
+        "Modelo": "Tasa historica ['Localidad', 'Franja_Horaria', 'Dia_Semana']",
+        "Validacion": 2022,
+        "AP": 0.30747500448014153,
+        "AUC": 0.6967367636829129,
+        "Brier": 0.143354270518725
+      },
+      {
+        "Modelo": "RF ajustado",
+        "Validacion": 2020,
+        "AP": 0.1821010133624505,
+        "AUC": 0.6889305576420652,
+        "Brier": 0.2151322179576952
+      },
+      {
+        "Modelo": "RF ajustado",
+        "Validacion": 2021,
+        "AP": 0.2757492248492203,
+        "AUC": 0.7020401135646945,
+        "Brier": 0.2163338443555219
+      },
+      {
+        "Modelo": "RF ajustado",
+        "Validacion": 2022,
+        "AP": 0.307723655237088,
+        "AUC": 0.6958781999575394,
+        "Brier": 0.2227579146077169
+      }
+    ],
+    "media": [
+      {
+        "Modelo": "RF ajustado",
+        "AP": 0.25519129781625294,
+        "AUC": 0.6956162903880997,
+        "Brier": 0.21807465897364464
+      },
+      {
+        "Modelo": "Tasa historica ['Localidad', 'Franja_Horaria', 'Dia_Semana']",
+        "AP": 0.2502736647197003,
+        "AUC": 0.6941799743926537,
+        "Brier": 0.12055062521708941
+      },
+      {
+        "Modelo": "Tasa historica ['Localidad', 'Franja_Horaria']",
+        "AP": 0.24145334731249588,
+        "AUC": 0.6851743561861218,
+        "Brier": 0.12090982738669298
+      }
+    ]
+  },
+  "bootstrap_pareado": {
+    "metodo": "Bootstrap pareado no solapado, bloques de 7 dias incluyendo todas las localidades y franjas. Ultimo bloque mas corto. Diagnostico exploratorio no confirmatorio.",
+    "repeticiones": 300,
+    "semilla": 42,
+    "bloques": 105,
+    "diferencia": "RF ajustado menos tasa historica localidad-franja-dia",
+    "intervalos": {
+      "AP": {
+        "estimacion": 0.001176623316317682,
+        "p025": -0.0026493841923174778,
+        "p975": 0.004766865481200404
+      },
+      "AUC": {
+        "estimacion": 0.000213982655275613,
+        "p025": -0.0018884820370856953,
+        "p975": 0.002594575429336987
+      },
+      "Brier": {
+        "estimacion": 0.07831813678523905,
+        "p025": 0.07580322986528451,
+        "p975": 0.0804506552379783
+      }
+    }
+  },
+  "gravedad": {
+    "tradicional_victimas": 85199,
+    "indicador_30d_victimas": 85143,
+    "excluidos_al_cambiar": 77,
+    "incluidos_al_cambiar": 21,
+    "gravedad_30d_faltante_entre_tradicional_victimas": 16
+  },
+  "dashboard": {
+    "prueba": "Servidor local 127.0.0.1:8765, copia dashboard/dist, navegador en la aplicación",
+    "error_inicial_confirmado": true,
+    "causa": "app.js busca Modelo=Random Forest; CSV contiene Random Forest ajustado y Random Forest base.",
+    "filtros": "Candelaria + Madrugada mantiene resultados de Candelaria en todas las franjas: 157 omitidos y 0 detectados.",
+    "barras": {
+      "muestra": 3,
+      "ancho": 0,
+      "alto": 0,
+      "display": "inline"
+    },
+    "alcance_real": "Visor estático de métricas retrospectivas. No ejecuta inferencia ni muestra un mapa de predicciones."
+  },
+  "nota": "Las comparaciones nuevas y su bootstrap son diagnósticas. No seleccionan un nuevo modelo ni un nuevo umbral y todavía no forman parte de 05B."
+}

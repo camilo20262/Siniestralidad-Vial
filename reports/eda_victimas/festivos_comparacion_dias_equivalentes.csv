@@ -1,0 +1,126 @@
+﻿Fecha_Acc,Anio,Mes,Dia_Num,Dia_Semana,Es_Festivo,Nombre_Festivo,Siniestros,Esperado_No_Festivo
+2018-01-01,2018,1,0,Lunes,True,Año Nuevo,15,38.666666666666664
+2018-01-08,2018,1,0,Lunes,True,Día de los Reyes Magos (observado),17,38.666666666666664
+2018-03-19,2018,3,0,Lunes,True,Día de San José,17,38.666666666666664
+2018-03-29,2018,3,3,Jueves,True,Jueves Santo,28,37.666666666666664
+2018-03-30,2018,3,4,Viernes,True,Viernes Santo,11,39.8
+2018-05-01,2018,5,1,Martes,True,Día del Trabajo,30,38.734693877551024
+2018-05-14,2018,5,0,Lunes,True,Ascensión del señor (observado),19,38.666666666666664
+2018-06-04,2018,6,0,Lunes,True,Corpus Christi (observado),18,38.666666666666664
+2018-06-11,2018,6,0,Lunes,True,Sagrado Corazón (observado),22,38.666666666666664
+2018-07-02,2018,7,0,Lunes,True,San Pedro y San Pablo (observado),16,38.666666666666664
+2018-07-20,2018,7,4,Viernes,True,Día de la Independencia,31,39.8
+2018-08-07,2018,8,1,Martes,True,Batalla de Boyacá,23,38.734693877551024
+2018-08-20,2018,8,0,Lunes,True,La Asunción (observado),31,38.666666666666664
+2018-10-15,2018,10,0,Lunes,True,Día de la Raza (observado),23,38.666666666666664
+2018-11-05,2018,11,0,Lunes,True,Día de Todos los Santos (observado),24,38.666666666666664
+2018-11-12,2018,11,0,Lunes,True,Independencia de Cartagena (observado),26,38.666666666666664
+2018-12-08,2018,12,5,Sábado,True,La Inmaculada Concepción,33,38.1764705882353
+2018-12-25,2018,12,1,Martes,True,Navidad,26,38.734693877551024
+2019-01-01,2019,1,1,Martes,True,Año Nuevo,17,38.34615384615385
+2019-01-07,2019,1,0,Lunes,True,Día de los Reyes Magos (observado),12,37.46511627906977
+2019-03-25,2019,3,0,Lunes,True,Día de San José (observado),28,37.46511627906977
+2019-04-18,2019,4,3,Jueves,True,Jueves Santo,21,37.450980392156865
+2019-04-19,2019,4,4,Viernes,True,Viernes Santo,10,39.31372549019608
+2019-05-01,2019,5,2,Miércoles,True,Día del Trabajo,32,37.0
+2019-06-03,2019,6,0,Lunes,True,Ascensión del señor (observado),30,37.46511627906977
+2019-06-24,2019,6,0,Lunes,True,Corpus Christi (observado),17,37.46511627906977
+2019-07-01,2019,7,0,Lunes,True,Sagrado Corazón (observado); San Pedro y San Pablo (observado),18,37.46511627906977
+2019-07-20,2019,7,5,Sábado,True,Día de la Independencia,29,36.86274509803921
+2019-08-07,2019,8,2,Miércoles,True,Batalla de Boyacá,35,37.0
+2019-08-19,2019,8,0,Lunes,True,La Asunción (observado),16,37.46511627906977
+2019-10-14,2019,10,0,Lunes,True,Día de la Raza (observado),22,37.46511627906977
+2019-11-04,2019,11,0,Lunes,True,Día de Todos los Santos (observado),31,37.46511627906977
+2019-11-11,2019,11,0,Lunes,True,Independencia de Cartagena,20,37.46511627906977
+2019-12-08,2019,12,6,Domingo,True,La Inmaculada Concepción,23,25.019607843137255
+2019-12-25,2019,12,2,Miércoles,True,Navidad,19,37.0
+2020-01-01,2020,1,2,Miércoles,True,Año Nuevo,13,25.28846153846154
+2020-01-06,2020,1,0,Lunes,True,Día de los Reyes Magos,14,25.658536585365855
+2020-03-23,2020,3,0,Lunes,True,Día de San José (observado),2,25.658536585365855
+2020-04-09,2020,4,3,Jueves,True,Jueves Santo,8,24.51923076923077
+2020-04-10,2020,4,4,Viernes,True,Viernes Santo,4,28.0625
+2020-05-01,2020,5,4,Viernes,True,Día del Trabajo,7,28.0625
+2020-05-25,2020,5,0,Lunes,True,Ascensión del señor (observado),16,25.658536585365855
+2020-06-15,2020,6,0,Lunes,True,Corpus Christi (observado),12,25.658536585365855
+2020-06-22,2020,6,0,Lunes,True,Sagrado Corazón (observado),18,25.658536585365855
+2020-06-29,2020,6,0,Lunes,True,San Pedro y San Pablo,17,25.658536585365855
+2020-07-20,2020,7,0,Lunes,True,Día de la Independencia,12,25.658536585365855
+2020-08-07,2020,8,4,Viernes,True,Batalla de Boyacá,18,28.0625
+2020-08-17,2020,8,0,Lunes,True,La Asunción (observado),10,25.658536585365855
+2020-10-12,2020,10,0,Lunes,True,Día de la Raza,14,25.658536585365855
+2020-11-02,2020,11,0,Lunes,True,Día de Todos los Santos (observado),17,25.658536585365855
+2020-11-16,2020,11,0,Lunes,True,Independencia de Cartagena (observado),16,25.658536585365855
+2020-12-08,2020,12,1,Martes,True,La Inmaculada Concepción,23,25.647058823529413
+2020-12-25,2020,12,4,Viernes,True,Navidad,10,28.0625
+2021-01-01,2021,1,4,Viernes,True,Año Nuevo,9,34.72549019607843
+2021-01-11,2021,1,0,Lunes,True,Día de los Reyes Magos (observado),9,31.571428571428573
+2021-03-22,2021,3,0,Lunes,True,Día de San José (observado),24,31.571428571428573
+2021-04-01,2021,4,3,Jueves,True,Jueves Santo,19,32.84313725490196
+2021-04-02,2021,4,4,Viernes,True,Viernes Santo,12,34.72549019607843
+2021-05-01,2021,5,5,Sábado,True,Día del Trabajo,23,34.89795918367347
+2021-05-17,2021,5,0,Lunes,True,Ascensión del señor (observado),20,31.571428571428573
+2021-06-07,2021,6,0,Lunes,True,Corpus Christi (observado),25,31.571428571428573
+2021-06-14,2021,6,0,Lunes,True,Sagrado Corazón (observado),21,31.571428571428573
+2021-07-05,2021,7,0,Lunes,True,San Pedro y San Pablo (observado),25,31.571428571428573
+2021-07-20,2021,7,1,Martes,True,Día de la Independencia,19,32.94117647058823
+2021-08-07,2021,8,5,Sábado,True,Batalla de Boyacá,29,34.89795918367347
+2021-08-16,2021,8,0,Lunes,True,La Asunción (observado),23,31.571428571428573
+2021-10-18,2021,10,0,Lunes,True,Día de la Raza (observado),13,31.571428571428573
+2021-11-01,2021,11,0,Lunes,True,Día de Todos los Santos,21,31.571428571428573
+2021-11-15,2021,11,0,Lunes,True,Independencia de Cartagena (observado),25,31.571428571428573
+2021-12-08,2021,12,2,Miércoles,True,La Inmaculada Concepción,27,32.490196078431374
+2021-12-25,2021,12,5,Sábado,True,Navidad,29,34.89795918367347
+2022-01-01,2022,1,5,Sábado,True,Año Nuevo,22,38.65384615384615
+2022-01-10,2022,1,0,Lunes,True,Día de los Reyes Magos (observado),19,36.04761904761905
+2022-03-21,2022,3,0,Lunes,True,Día de San José (observado),25,36.04761904761905
+2022-04-14,2022,4,3,Jueves,True,Jueves Santo,28,36.2
+2022-04-15,2022,4,4,Viernes,True,Viernes Santo,16,40.411764705882355
+2022-05-01,2022,5,6,Domingo,True,Día del Trabajo,39,28.836734693877553
+2022-05-30,2022,5,0,Lunes,True,Ascensión del señor (observado),22,36.04761904761905
+2022-06-20,2022,6,0,Lunes,True,Corpus Christi (observado),32,36.04761904761905
+2022-06-27,2022,6,0,Lunes,True,Sagrado Corazón (observado),32,36.04761904761905
+2022-07-04,2022,7,0,Lunes,True,San Pedro y San Pablo (observado),23,36.04761904761905
+2022-07-20,2022,7,2,Miércoles,True,Día de la Independencia,30,35.470588235294116
+2022-08-07,2022,8,6,Domingo,True,Batalla de Boyacá,38,28.836734693877553
+2022-08-15,2022,8,0,Lunes,True,La Asunción,22,36.04761904761905
+2022-10-17,2022,10,0,Lunes,True,Día de la Raza (observado),21,36.04761904761905
+2022-11-07,2022,11,0,Lunes,True,Día de Todos los Santos (observado),18,36.04761904761905
+2022-11-14,2022,11,0,Lunes,True,Independencia de Cartagena (observado),24,36.04761904761905
+2022-12-08,2022,12,3,Jueves,True,La Inmaculada Concepción,22,36.2
+2022-12-25,2022,12,6,Domingo,True,Navidad,24,28.836734693877553
+2023-01-01,2023,1,6,Domingo,True,Año Nuevo,24,28.346153846153847
+2023-01-09,2023,1,0,Lunes,True,Día de los Reyes Magos (observado),20,36.794871794871796
+2023-03-20,2023,3,0,Lunes,True,Día de San José (observado),30,36.794871794871796
+2023-04-06,2023,4,3,Jueves,True,Jueves Santo,22,35.82
+2023-04-07,2023,4,4,Viernes,True,Viernes Santo,11,41.04
+2023-05-01,2023,5,0,Lunes,True,Día del Trabajo,19,36.794871794871796
+2023-05-22,2023,5,0,Lunes,True,Ascensión del señor (observado),24,36.794871794871796
+2023-06-12,2023,6,0,Lunes,True,Corpus Christi (observado),26,36.794871794871796
+2023-06-19,2023,6,0,Lunes,True,Sagrado Corazón (observado),24,36.794871794871796
+2023-07-03,2023,7,0,Lunes,True,San Pedro y San Pablo (observado),18,36.794871794871796
+2023-07-20,2023,7,3,Jueves,True,Día de la Independencia,29,35.82
+2023-08-07,2023,8,0,Lunes,True,Batalla de Boyacá,29,36.794871794871796
+2023-08-21,2023,8,0,Lunes,True,La Asunción (observado),24,36.794871794871796
+2023-10-16,2023,10,0,Lunes,True,Día de la Raza (observado),18,36.794871794871796
+2023-11-06,2023,11,0,Lunes,True,Día de Todos los Santos (observado),20,36.794871794871796
+2023-11-13,2023,11,0,Lunes,True,Independencia de Cartagena (observado),30,36.794871794871796
+2023-12-08,2023,12,4,Viernes,True,La Inmaculada Concepción,32,41.04
+2023-12-25,2023,12,0,Lunes,True,Navidad,22,36.794871794871796
+2024-01-01,2024,1,0,Lunes,True,Año Nuevo,22,35.833333333333336
+2024-01-08,2024,1,0,Lunes,True,Día de los Reyes Magos (observado),20,35.833333333333336
+2024-03-25,2024,3,0,Lunes,True,Día de San José (observado),27,35.833333333333336
+2024-03-28,2024,3,3,Jueves,True,Jueves Santo,26,36.8235294117647
+2024-03-29,2024,3,4,Viernes,True,Viernes Santo,16,39.568627450980394
+2024-05-01,2024,5,2,Miércoles,True,Día del Trabajo,38,36.55102040816327
+2024-05-13,2024,5,0,Lunes,True,Ascensión del señor (observado),23,35.833333333333336
+2024-06-03,2024,6,0,Lunes,True,Corpus Christi (observado),15,35.833333333333336
+2024-06-10,2024,6,0,Lunes,True,Sagrado Corazón (observado),19,35.833333333333336
+2024-07-01,2024,7,0,Lunes,True,San Pedro y San Pablo (observado),12,35.833333333333336
+2024-07-20,2024,7,5,Sábado,True,Día de la Independencia,33,37.568627450980394
+2024-08-07,2024,8,2,Miércoles,True,Batalla de Boyacá,21,36.55102040816327
+2024-08-19,2024,8,0,Lunes,True,La Asunción (observado),27,35.833333333333336
+2024-10-14,2024,10,0,Lunes,True,Día de la Raza (observado),20,35.833333333333336
+2024-11-04,2024,11,0,Lunes,True,Día de Todos los Santos (observado),28,35.833333333333336
+2024-11-11,2024,11,0,Lunes,True,Independencia de Cartagena,25,35.833333333333336
+2024-12-08,2024,12,6,Domingo,True,La Inmaculada Concepción,21,28.254901960784313
+2024-12-25,2024,12,2,Miércoles,True,Navidad,22,36.55102040816327

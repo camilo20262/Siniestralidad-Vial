@@ -10,13 +10,23 @@ El escenario principal utiliza únicamente siniestros **con víctimas**. Esta de
 - **Franjas:** madrugada, mañana, tarde y noche.
 - **Entrenamiento:** 2018–2022.
 - **Evaluación retrospectiva:** 2023–2024.
-- **Modelo seleccionado:** Random Forest ajustado.
+- **Modelo principal cerrado:** Random Forest ajustado, versión académica `rf_victimas_bogota_v1.0`.
 - **Umbral operativo exploratorio:** 0,52, elegido con predicciones fuera de muestra de 2020–2022.
 - **Objetivo `Alto_Riesgo`:** el conteo supera el cuantil 2/3 histórico de su localidad y franja, calculado sin usar datos futuros.
 
 En 49 de las 80 combinaciones localidad–franja el umbral histórico es cero. En esos grupos, la etiqueta significa que ocurrió al menos un siniestro con víctima; en los grupos de mayor volumen conserva el sentido de frecuencia superior a lo habitual. Por ello, el modelo produce una **puntuación de priorización**, no una probabilidad individual de accidente.
 
 El escenario original con todos los siniestros se conserva en los notebooks 03, 04 y 05 como análisis de sensibilidad y evidencia del cambio de cobertura.
+
+## Modelo principal y ficha técnica
+
+La [ficha técnica del modelo](reports/modelo_principal/ficha_tecnica_modelo.md) formaliza el cierre académico del 12 de septiembre de 2026. La configuración es de 300 árboles, profundidad sin límite, mínimo 20 observaciones por hoja, `max_features='sqrt'`, `class_weight='balanced'`, semilla 42 y umbral de score **0,52**.
+
+El [registro oficial](models/victimas/modelo_principal.json) identifica el pipeline ajustado y conserva sus variables, parámetros, resultados y huellas de integridad. La entrada de referencia es `src.modelo_principal.cargar_modelo_principal()`: su método `predecir(datos_preparados)` devuelve el score y la alerta aplicando el umbral cerrado.
+
+El modelo base de 200 árboles y umbral 0,55 se mantiene como referencia. **`pipeline_modelo_seleccionado.pkl` y `metadata_modelo.json` son archivos históricos de 04B y corresponden al modelo base.** Consulte el [catálogo de artefactos](models/victimas/README.md) para evitar confundirlos con el modelo principal.
+
+Puede comprobar el cierre con `.venv/bin/python scripts/verificar_modelo_principal.py`. La comprobación reproduce las predicciones de 05B y detecta cambios en el modelo, los datos o las evidencias. Si se reentrena, se debe actualizar expresamente la versión después de evaluarla.
 
 ## Resultados principales
 
@@ -63,7 +73,10 @@ Siniestralidad_Vial/
 │   ├── eda_victimas/
 │   ├── modeling_victimas/
 │   ├── tuning_victimas/
-│   └── evaluation_victimas/
+│   ├── evaluation_victimas/
+│   └── modelo_principal/          # Ficha técnica y comprobación del cierre
+├── src/                          # Carga e inferencia del modelo principal
+├── scripts/                      # Generación de notebooks y verificación
 ├── dashboard/                     # Dashboard web interactivo
 ├── requirements.txt
 └── README.md
@@ -83,6 +96,16 @@ jupyter lab
 
 Para reproducir el escenario principal, ejecutar **02B** para el EDA espacial y después **03B**, **04B**, **04C** y **05B**. El notebook 04C guarda el modelo ajustado en un archivo separado y no reemplaza el modelo base. El notebook 05B compara ambos y desarrolla la evaluación detallada del modelo ajustado.
 
+## Ampliaciones de las actividades 3.1 y 5.1
+
+**3.1 — notebook 02B:** incorpora serie diaria y mensual con calendario completo, cruces día–franja–actor, festivos con denominadores y referencia del mismo día semanal, sensibilidad a 2020 y revisión de la hoja `Actor_vial`. Distingue siniestros de registros de personas y utiliza polígonos oficiales SDP/Catastro, centros medianos de eventos y celdas de 100 × 100 m. La cartografía y su procedencia se conservan en `data/reference/`; no se reasignan localidades ni se modifica el dataset del modelo. Consulte la [conclusión de 3.1](reports/eda_victimas/conclusion_ejecutiva.md).
+
+**5.1 — notebook 05B:** añade tasas históricas estimadas solo con entrenamiento, comprobación en los cortes 2020–2022, comparación anual y bootstrap pareado en bloques semanales. La tasa localidad–franja–día de semana obtiene AP **0,3087**, AUC **0,6931** y Brier **0,1438**, frente a **0,3098**, **0,6933** y **0,2221** del RF ajustado. Los intervalos exploratorios de la diferencia en AP/AUC incluyen cero: no se afirma superioridad concluyente del RF sobre esta referencia. El modelo principal y el umbral **0,52** se conservan. Consulte la [comparación](reports/evaluation_victimas/comparacion_referencias_historicas.csv) y la [conclusión ampliada](reports/evaluation_victimas/conclusion_ejecutiva.md).
+
+05B comprueba equivalencia numérica antes de conservar las evidencias congeladas, evitando que diferencias aritméticas de aproximadamente 1e-16 alteren sus huellas al reexportarlas. Los nuevos reportes se guardan por separado. Las funciones de referencia y bootstrap tienen pruebas en `tests/`, ejecutables con `python -m unittest discover -s tests -v`.
+
+La primera ejecución de 02B descarga la cartografía si falta; las siguientes verifican y reutilizan la copia local. Las dependencias geográficas están incluidas en `requirements.txt`. Los antiguos scripts generadores se detienen si detectan estos notebooks ampliados, para evitar sobrescribirlos.
+
 ## Dashboard
 
 El dashboard en `dashboard/dist/` permite explorar métricas globales, por localidad y por franja. Presenta explícitamente la limitación de calibración y evita interpretar los scores como probabilidades. Sus datos proceden de los CSV generados por 05B.
@@ -91,4 +114,4 @@ El dashboard en `dashboard/dist/` permite explorar métricas globales, por local
 
 La evaluación 2023–2024 es retrospectiva y ya participó en la comparación final; no constituye una prueba futura independiente. El prototipo no está listo para producción ni estima causalidad, gravedad futura o riesgo individual. Antes de un uso operativo se requiere validación prospectiva, calibración temporal separada, costos de falsas alertas y omisiones, e incertidumbre por subgrupo.
 
-Reportes recomendados: [conclusión ejecutiva](reports/evaluation_victimas/conclusion_ejecutiva.md), [métricas globales](reports/evaluation_victimas/metricas_globales.csv), [métricas por localidad](reports/evaluation_victimas/metricas_random_forest_por_localidad.csv) y [calibración](reports/evaluation_victimas/comparacion_brier_lineas_base.csv).
+Reportes recomendados: [ficha técnica](reports/modelo_principal/ficha_tecnica_modelo.md), [conclusión ejecutiva](reports/evaluation_victimas/conclusion_ejecutiva.md), [métricas globales](reports/evaluation_victimas/metricas_globales.csv), [métricas del ajustado por localidad](reports/evaluation_victimas/metricas_random_forest_ajustado_por_localidad.csv) y [calibración](reports/evaluation_victimas/comparacion_brier_lineas_base.csv).

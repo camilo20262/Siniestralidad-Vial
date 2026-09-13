@@ -1,0 +1,25 @@
+{
+  "fecha": "2026-09-12",
+  "comando": ".venv/bin/python scripts/verificar_modelo_principal.py",
+  "resultado": "correcto",
+  "modelo": "rf_victimas_bogota_v1.0",
+  "observaciones_verificadas": 58480,
+  "umbrales_etiqueta_verificados": 80,
+  "evidencias_integras": 12,
+  "predicciones_coinciden_con_05B": true,
+  "umbral_score": 0.52,
+  "metricas_reproducidas": {
+    "F1": 0.40578901871113465,
+    "AUC_ROC": 0.6933242182043409,
+    "Average_Precision": 0.3098375996626644,
+    "Precision": 0.2940629673038839,
+    "Recall": 0.654434250764526,
+    "Brier": 0.2220882670045042,
+    "TN": 29895,
+    "FP": 17467,
+    "FN": 3842,
+    "TP": 7276
+  },
+  "validaciones_entrada": 4,
+  "modelos_reentrenados": 0
+}
