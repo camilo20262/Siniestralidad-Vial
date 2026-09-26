@@ -10,6 +10,7 @@ import argparse
 from datetime import datetime, timezone
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -129,7 +130,8 @@ def execute_notebook(run, name):
     client = NotebookClient(nb, km=manager, timeout=3600,
         resources={'metadata': {'path': str(run / 'notebooks')}}, on_cell_executed=progress)
     try:
-        client.execute(cwd=str(run / 'notebooks'))
+        # Un SINIESTRALIDAD_ROOT heredado nunca debe desviar una copia al original.
+        client.execute(cwd=str(run / 'notebooks'), env={**os.environ, 'SINIESTRALIDAD_ROOT': str(run)})
     finally:
         # También se conserva la evidencia y el error si falla una celda.
         nbformat.write(nb, path)

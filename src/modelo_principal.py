@@ -25,6 +25,8 @@ class ModeloPrincipal:
 
     def predecir(self, datos: pd.DataFrame) -> pd.DataFrame:
         """Devuelve score y alerta con el mismo índice del DataFrame recibido."""
+        if not isinstance(datos, pd.DataFrame):
+            raise ValueError('La entrada debe ser un DataFrame con las variables preparadas.')
         columnas = self.registro['variables']
         if not datos.columns.is_unique:
             raise ValueError('Las columnas de entrada deben tener nombres únicos.')
@@ -50,7 +52,12 @@ class ModeloPrincipal:
         historicas = [c for c in numericas if c.startswith('Accidentes_')]
         if (X[historicas] < 0).any().any():
             raise ValueError('Los históricos de siniestros no pueden ser negativos.')
-        score = self.pipeline.predict_proba(X)[:, 1]
+        probabilities = np.asarray(self.pipeline.predict_proba(X), dtype=float)
+        if probabilities.shape != (len(X), 2):
+            raise ValueError('La salida del pipeline no tiene dos clases por observación.')
+        score = probabilities[:, 1]
+        if not np.isfinite(score).all() or ((score < 0) | (score > 1)).any():
+            raise ValueError('El pipeline devolvió puntuaciones inválidas.')
         decision = self.registro['decision']
         return pd.DataFrame({
             decision['columna_score']: score,

@@ -1,0 +1,30 @@
+name: Pruebas sin reentrenamiento
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      integracion:
+        description: Verificar Excel LFS, dataset y modelo cerrado
+        type: boolean
+        default: false
+permissions:
+  contents: read
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: ${{ github.event_name == 'workflow_dispatch' && inputs.integracion }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m pip check
+      - run: python scripts/verificar_codigo.py
+      - name: Verificación de artefactos (manual)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.integracion }}
+        run: python scripts/verificar_codigo.py --integracion

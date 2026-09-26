@@ -1,0 +1,33 @@
+{
+  "archivo_local": "data/raw/base-anuario-de-siniestralidad-2024.xlsx",
+  "titulo": "Base del Anuario de Siniestralidad Vial de Bogotá 2024",
+  "entidad": "Secretaría Distrital de Movilidad — Observatorio de Movilidad de Bogotá",
+  "pagina_publicacion": "https://observatorio.movilidadbogota.gov.co/node/79",
+  "pagina_catalogo": "https://observatorio.movilidadbogota.gov.co/publicaciones/anuarios",
+  "url_excel_publicada": "https://observatorio.movilidadbogota.gov.co/sites/default/files/2025-09/Base_Anuario_de_Siniestralidad_2024.xlsx",
+  "fecha_consulta_publicacion": "2026-09-26",
+  "fecha_descarga_original": null,
+  "nota_fecha": "No se conoce la fecha de descarga original. La fecha de consulta no la sustituye.",
+  "periodo_fuente": [2015, 2024],
+  "periodo_modelado": [2018, 2024],
+  "fecha_corte_analitico": "2024-12-31",
+  "fecha_extraccion_sistema_fuente": null,
+  "sha256_local": "afcb691b5918835c3392854b770895aeb62b4e00f1191708d10e6942bebf87f5",
+  "bytes_local": 126580774,
+  "comparacion_binaria_con_descarga_actual": {
+    "estado": "no_completada",
+    "nota": "Se verificó el enlace publicado. La transferencia de comprobación fue interrumpida por su duración; el hash registrado identifica solo la copia local congelada. No se afirma igualdad binaria con la descarga actual."
+  },
+  "licencia": {
+    "estado": "pendiente_confirmacion_especifica",
+    "identificador": null,
+    "nota": "La página consultada publica el Excel, pero no se verificó una licencia específica del archivo. No se asume una licencia abierta por la mera disponibilidad pública. Confirmar condiciones con la entidad antes de redistribuir."
+  },
+  "hojas": {
+    "Siniestros": {"filas": 278614, "columnas": 40, "uso": "Fuente del modelo; filtro 2018–2024 y Gravedad_Indicador_Tradicional en Con Heridos/Con Muertos", "clave": "Codigo_Accidente"},
+    "Vehiculos": {"filas": 523168, "columnas": 32, "uso": "Exploración inicial, no predictor del modelo principal", "vinculo": "Codigo_Accidente; puede haber varios vehículos por siniestro"},
+    "Actor_vial": {"filas": 608155, "columnas": 44, "uso": "EDA descriptivo, no predictor del modelo principal", "vinculo": "Codigo_Accidente; varios registros de personas por siniestro; Codigo_Vehiculo permite análisis adicional previa validación"},
+    "Diccionario": {"filas": 110, "columnas": 3, "uso": "Definiciones de campos; no observaciones de entrenamiento"}
+  },
+  "precaucion_integracion": "No unir tablas uno-a-muchos antes de contar siniestros: multiplicaría eventos. Agregar y comprobar cardinalidad según la unidad de análisis."
+}

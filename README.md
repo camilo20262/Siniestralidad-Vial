@@ -84,7 +84,7 @@ Siniestralidad_Vial/
 
 ## Ejecución reproducible
 
-Se requieren Python, Git y Git LFS. Después de clonar el repositorio y descargar los archivos LFS:
+El entorno local verificado usa Python **3.12.14**, Git y Git LFS. La versión de Python se registra en `.python-version`. Después de clonar el repositorio y descargar los archivos LFS:
 
 ```bash
 python3 -m venv .venv
@@ -94,7 +94,49 @@ cd notebooks
 jupyter lab
 ```
 
-Para reproducir el escenario principal, ejecutar **02B** para el EDA espacial y después **03B**, **04B**, **04C** y **05B**. El notebook 04C guarda el modelo ajustado en un archivo separado y no reemplaza el modelo base. El notebook 05B compara ambos y desarrolla la evaluación detallada del modelo ajustado.
+Para reproducir el escenario principal se utiliza **02B** para el EDA espacial y la cadena **03B → 04B → 04C → 05B**. **No reejecute entrenamientos sobre el cierre oficial:** 04C puede sobrescribir su modelo ajustado. Use `python scripts/reproducir_cadena_aislada.py` para una nueva carpeta aislada. El notebook 05B compara las configuraciones base y ajustada. La [ejecución de septiembre 13](reports/reproducibilidad/ejecucion_20260913/INFORME.md) conserva la evidencia histórica anterior a la extracción de funciones de preparación; no se reescribió.
+
+## Verificación del código sin reentrenar
+
+Desde la raíz, con el entorno activado:
+
+```sh
+python scripts/verificar_codigo.py
+python scripts/verificar_codigo.py --integracion
+```
+
+La primera orden usa fixtures pequeños para probar preparación, etiquetas, lags,
+calendario, rutas, cargador, entradas inválidas, umbral y consulta retrospectiva.
+La segunda requiere los artefactos reales: verifica la fuente, reconstruye el
+dataset en memoria y exige igualdad exacta, reproduce las 58.480 decisiones del
+modelo cerrado y comprueba consultas individuales. No modifica datos, modelos ni
+reportes. Con `--salida ruta_nueva.json` guarda un informe nuevo sin sobrescribir.
+
+Los scripts también funcionan usando su ruta absoluta desde otro directorio.
+03B, 04B y 04C pueden abrirse desde la raíz o `notebooks/`; para un kernel ubicado
+fuera del checkout se puede definir `SINIESTRALIDAD_ROOT` con la ruta del proyecto.
+El ejecutor aislado fija esta variable a su copia para no escribir en el original.
+
+La preparación se comparte entre 03B y `src/preparacion.py`. La procedencia y sus
+limitaciones se explican en [data/raw/README.md](data/raw/README.md).
+El [catálogo de artefactos](config/artefactos.json) separa principal, referencia
+base y legado sin mover archivos que participan en verificaciones de integridad.
+
+### Consulta retrospectiva sin dashboard
+
+```sh
+python scripts/consultar_modelo.py --fecha 2023-01-01 --localidad "CANDELARIA" --franja "Noche"
+```
+
+Use los nombres exactos de localidad registrados en el dataset. La consulta
+verifica el dataset y el modelo, selecciona las variables históricas ya preparadas
+y devuelve score, alerta y umbral 0,52. Rechaza fechas fuera de 2023–2024 y grupos
+desconocidos. **No construye históricos nuevos, no pronostica fechas futuras y no
+implementa una interfaz web.**
+
+`.github/workflows/pruebas.yml` configura pruebas de CI en push/pull request. La
+verificación de integración es manual y requiere descargar Git LFS. La ejecución
+local no certifica que el flujo remoto haya pasado: debe comprobarse al publicarlo.
 
 ## Ampliaciones de las actividades 3.1 y 5.1
 
