@@ -10,6 +10,16 @@ from src.modelo_principal import ModeloPrincipal, cargar_modelo_principal
 from src.rutas import ROOT, sha256_archivo
 
 
+ALCANCE_CONSULTA = (
+    'Consulta retrospectiva de casos históricos preparados; '
+    'no es un pronóstico para fechas nuevas ni una validación prospectiva.'
+)
+ADVERTENCIA_SCORE = (
+    'El score es una puntuación relativa de priorización, no una probabilidad '
+    'calibrada de alto riesgo ni de sufrir un accidente. Uso académico, no operativo.'
+)
+
+
 @dataclass
 class ConsultaRetrospectiva:
     modelo: ModeloPrincipal
@@ -37,7 +47,17 @@ class ConsultaRetrospectiva:
         salida = fila[columnas].copy()
         for c in resultado:
             salida[c] = resultado[c]
-        salida['Umbral_Score'] = self.modelo.registro['decision']['umbral_score']
+        registro = self.modelo.registro
+        evaluacion = registro['datos']['evaluacion']
+        salida['Umbral_Score'] = registro['decision']['umbral_score']
+        # Columnas, no DataFrame.attrs: la trazabilidad viaja en cada registro JSON/CSV.
+        salida['Id_Modelo'] = registro['id_modelo']
+        salida['Version_Modelo'] = registro['version']
+        salida['Tipo_Evaluacion'] = evaluacion['tipo']
+        salida['Evaluacion_Desde'] = evaluacion['desde']
+        salida['Evaluacion_Hasta'] = evaluacion['hasta']
+        salida['Alcance_Consulta'] = ALCANCE_CONSULTA
+        salida['Advertencia_Score'] = ADVERTENCIA_SCORE
         # No se devuelve el conteo/etiqueta observados como si fueran predicciones.
         return salida
 

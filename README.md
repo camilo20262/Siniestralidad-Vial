@@ -134,6 +134,21 @@ y devuelve score, alerta y umbral 0,52. Rechaza fechas fuera de 2023–2024 y gr
 desconocidos. **No construye históricos nuevos, no pronostica fechas futuras y no
 implementa una interfaz web.**
 
+Cada registro devuelto incluye también la trazabilidad de la consulta, tanto en
+la función de Python como en el JSON de la línea de comandos:
+
+| Campo | Contenido |
+| --- | --- |
+| `Id_Modelo` y `Version_Modelo` | Identificador y versión tomados del registro del modelo cargado |
+| `Tipo_Evaluacion` | `retrospectiva` |
+| `Evaluacion_Desde` y `Evaluacion_Hasta` | Periodo registrado: `2023-01-01` a `2024-12-31` |
+| `Alcance_Consulta` | Advierte que se consultan casos históricos, no pronósticos para fechas nuevas |
+| `Advertencia_Score` | Aclara que el score no es una probabilidad calibrada y que el uso es académico, no operativo |
+
+Estos campos acompañan al `Umbral_Score` ya existente. Son columnas de la salida
+para conservarse al exportar, no variables predictoras. No cambian el score ni
+la decisión del modelo.
+
 `.github/workflows/pruebas.yml` configura pruebas de CI en push/pull request. La
 verificación de integración es manual y requiere descargar Git LFS. La ejecución
 local no certifica que el flujo remoto haya pasado: debe comprobarse al publicarlo.

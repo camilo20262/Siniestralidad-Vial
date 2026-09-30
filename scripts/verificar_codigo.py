@@ -41,7 +41,19 @@ def main():
             actual = consulta.consultar(fila.Fecha_Acc, fila.Localidad, fila.Franja_Horaria).iloc[0]
             np.testing.assert_allclose(actual.Score_Priorizacion, fila.Score, atol=1e-12, rtol=0)
             assert actual.Alerta_Modelo == fila.Prediccion
+            registro = consulta.modelo.registro
+            assert actual.Id_Modelo == registro['id_modelo']
+            assert actual.Version_Modelo == registro['version']
+            assert actual.Tipo_Evaluacion == registro['datos']['evaluacion']['tipo'] == 'retrospectiva'
+            assert actual.Evaluacion_Desde == registro['datos']['evaluacion']['desde']
+            assert actual.Evaluacion_Hasta == registro['datos']['evaluacion']['hasta']
+            assert actual.Umbral_Score == registro['decision']['umbral_score']
+            assert 'no es un pronóstico' in actual.Alcance_Consulta
+            assert 'no una probabilidad calibrada' in actual.Advertencia_Score
         report['consulta'] = {'casos_reales': len(muestras), 'coincide_con_05B': True,
+                              'trazabilidad_verificada': True,
+                              'id_modelo': consulta.modelo.registro['id_modelo'],
+                              'version_modelo': consulta.modelo.registro['version'],
                               'alcance': 'consulta retrospectiva de variables preparadas, no predicción futura'}
     if args.salida:
         args.salida.parent.mkdir(parents=True, exist_ok=True)
