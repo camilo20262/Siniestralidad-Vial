@@ -11,7 +11,7 @@ El escenario principal utiliza únicamente siniestros **con víctimas**. Esta de
 - **Entrenamiento:** 2018–2022.
 - **Evaluación retrospectiva:** 2023–2024.
 - **Modelo principal cerrado:** Random Forest ajustado, versión académica `rf_victimas_bogota_v1.0`.
-- **Umbral operativo exploratorio:** 0,52, elegido con predicciones fuera de muestra de 2020–2022.
+- **Umbral de decisión exploratorio:** 0,52, elegido con predicciones fuera de muestra de 2020–2022.
 - **Objetivo `Alto_Riesgo`:** el conteo supera el cuantil 2/3 histórico de su localidad y franja, calculado sin usar datos futuros.
 
 En 49 de las 80 combinaciones localidad–franja el umbral histórico es cero. En esos grupos, la etiqueta significa que ocurrió al menos un siniestro con víctima; en los grupos de mayor volumen conserva el sentido de frecuencia superior a lo habitual. Por ello, el modelo produce una **puntuación de priorización**, no una probabilidad individual de accidente.
@@ -19,6 +19,11 @@ En 49 de las 80 combinaciones localidad–franja el umbral histórico es cero. E
 El escenario original con todos los siniestros se conserva en los notebooks 03, 04 y 05 como análisis de sensibilidad y evidencia del cambio de cobertura.
 
 ## Modelo principal y ficha técnica
+
+La [especificación vigente ESP-MODELO-01](docs/ESPECIFICACION_VIGENTE.md) formaliza
+**RF ajustado, umbral 0,52** como requisito de las consultas y del dashboard.
+Sustituye el requisito antiguo de 0,55, que se conserva únicamente para el RF base.
+Esta aclaración no cambia modelos, umbrales calculados ni resultados históricos.
 
 La [ficha técnica del modelo](reports/modelo_principal/ficha_tecnica_modelo.md) formaliza el cierre académico del 12 de septiembre de 2026. La configuración es de 300 árboles, profundidad sin límite, mínimo 20 observaciones por hoja, `max_features='sqrt'`, `class_weight='balanced'`, semilla 42 y umbral de score **0,52**.
 

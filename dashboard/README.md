@@ -4,6 +4,12 @@ Aplicación en Python Dash de solo lectura. Reutiliza el modelo académico
 `rf_victimas_bogota_v1.0`, umbral 0,52. No entrena ni modifica los datos oficiales.
 La maqueta anterior se conserva en `dist/`; no es la aplicación vigente.
 
+La [especificación vigente ESP-MODELO-01](../docs/ESPECIFICACION_VIGENTE.md)
+establece RF ajustado con umbral 0,52 para esta interfaz. El requisito anterior
+de 0,55 queda sustituido: ese valor corresponde únicamente a la referencia base
+mostrada en las comparaciones. La autoridad ejecutable sigue siendo el registro
+del modelo; no se ofrece un cambio de umbral desde el dashboard.
+
 ## Instalación e inicio
 
 Desde la raíz del repositorio, con Python 3.12 y Git LFS:

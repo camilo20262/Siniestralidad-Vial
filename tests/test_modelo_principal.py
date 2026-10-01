@@ -44,6 +44,14 @@ class ModeloTest(unittest.TestCase):
         self.assertEqual(result.Alerta_Modelo.tolist(), [0, 1, 1])
         self.assertEqual(result.index.tolist(), [9, 3, 7])
 
+    def test_intervalo_entre_umbrales_no_usa_regla_del_modelo_base(self):
+        scores = np.array([0.5199, 0.52, 0.54])
+        with patch.object(self.modelo.pipeline, 'predict_proba',
+                          return_value=np.column_stack([1-scores, scores])):
+            result = self.modelo.predecir(entrada())
+        self.assertEqual(result.Alerta_Modelo.tolist(), [0, 1, 1])
+        np.testing.assert_array_equal(result.Score_Priorizacion.to_numpy(), scores)
+
     def test_orden_filas_y_columnas_extra(self):
         data = entrada()
         pd.testing.assert_frame_equal(self.modelo.predecir(data.iloc[::-1]), self.modelo.predecir(data).iloc[::-1])

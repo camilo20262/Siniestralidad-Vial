@@ -1,5 +1,9 @@
 # Artefactos del escenario con víctimas
 
+La [especificación vigente ESP-MODELO-01](../../docs/ESPECIFICACION_VIGENTE.md)
+formaliza la sustitución del requisito antiguo RF/0,55 por RF ajustado/0,52 para
+el producto actual. Los artefactos y metadatos históricos del base no se modifican.
+
 El modelo principal de la tesis se identifica en **[modelo_principal.json](modelo_principal.json)**. Su versión académica es `rf_victimas_bogota_v1.0`: Random Forest ajustado, umbral de score **0,52**. La [ficha técnica](../../reports/modelo_principal/ficha_tecnica_modelo.md) documenta datos, selección, resultados y límites.
 
 | Archivo | Papel |
