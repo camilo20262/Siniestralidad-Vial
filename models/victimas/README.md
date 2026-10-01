@@ -21,3 +21,12 @@ El modelo principal de la tesis se identifica en **[modelo_principal.json](model
 Para nuevas integraciones, importar `cargar_modelo_principal` desde `src.modelo_principal` y usar `modelo.predecir(datos_preparados)`. Devuelve `Score_Priorizacion` y `Alerta_Modelo`; la alerta aplica el umbral registrado 0,52. No combine el clasificador ajustado con otro preprocesador ni use el alias histórico para cargar el principal.
 
 El cierre conserva los modelos base y sus metadatos. La ejecución de 04B puede recrear sus archivos históricos; no cambia el registro principal. La ejecución de 04C puede reemplazar el pipeline ajustado: si cambia su huella, se debe repetir la evaluación y versionar expresamente el cierre. Verificar desde la raíz con `.venv/bin/python scripts/verificar_modelo_principal.py`.
+
+## Entornos históricos y reproducción
+
+`metadata_modelo.json` declara Python **3.14.5** para el base de 04B. El modelo
+ajustado y la reproducción aislada registran **3.12.14**, versión fijada para el
+proyecto actual. No se debe editar el metadato histórico para igualarlo al entorno
+actual: forma parte de las evidencias congeladas del cierre. La
+[nota de procedencia](../../docs/PROCEDENCIA_ENTORNOS_MODELOS.md) distingue la
+declaración histórica de la ejecución comprobada y documenta sus limitaciones.

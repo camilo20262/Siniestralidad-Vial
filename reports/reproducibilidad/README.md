@@ -5,6 +5,13 @@ comparó 03B → 04B → 04C → 05B en un entorno virtual nuevo, partiendo del 
 Las cuatro copias conservan sus salidas; los notebooks y artefactos oficiales
 no se sobrescribieron.
 
+La [nota de procedencia de entornos](../../docs/PROCEDENCIA_ENTORNOS_MODELOS.md)
+aclara por qué el metadato base declara Python 3.14.5 mientras este ensayo y el
+modelo ajustado registran 3.12.14. Los campos `python_oficial` del resultado leen
+los metadatos conservados; no verifican independientemente el intérprete original.
+El registro de ejecución del ensayo es `entorno.json`. No se reescribe la evidencia
+histórica para hacer coincidir versiones.
+
 ## Repetir la prueba
 
 Desde la raíz del proyecto, con las dependencias de `requirements.txt`

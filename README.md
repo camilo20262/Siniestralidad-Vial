@@ -105,6 +105,11 @@ cd notebooks
 jupyter lab
 ```
 
+Los metadatos históricos del modelo base declaran Python **3.14.5**; no son una
+instrucción para cambiar el entorno actual. La [nota de procedencia de entornos](docs/PROCEDENCIA_ENTORNOS_MODELOS.md)
+distingue esa declaración del modelo ajustado y del ensayo aislado en **3.12.14**,
+conservando los metadatos originales y los límites de lo comprobado.
+
 Para reproducir el escenario principal se utiliza **02B** para el EDA espacial y la cadena **03B → 04B → 04C → 05B**. **No reejecute entrenamientos sobre el cierre oficial:** 04C puede sobrescribir su modelo ajustado. Use `python scripts/reproducir_cadena_aislada.py` para una nueva carpeta aislada. El notebook 05B compara las configuraciones base y ajustada. La [ejecución de septiembre 13](reports/reproducibilidad/ejecucion_20260913/INFORME.md) conserva la evidencia histórica anterior a la extracción de funciones de preparación; no se reescribió.
 
 ## Verificación del código sin reentrenar

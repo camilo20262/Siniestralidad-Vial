@@ -1,0 +1,23 @@
+{
+  "fecha": "2026-10-01",
+  "alcance": "Revisión documental y de integridad; no es una nueva reproducción integral",
+  "documento": "docs/PROCEDENCIA_ENTORNOS_MODELOS.md",
+  "python_actual_observado": "3.12.14",
+  "python_base_declarado": "3.14.5",
+  "python_ajustado_declarado": "3.12.14",
+  "python_ensayo_registrado": "3.12.14",
+  "entorno_original_base_verificado_independientemente": false,
+  "evidencia_ensayo": "reports/reproducibilidad/ejecucion_20260913/entorno.json",
+  "comparacion_historica": "reports/reproducibilidad/ejecucion_20260913/resultado.json",
+  "estado_comparacion_historica": "reproduccion_equivalente",
+  "tablas_equivalentes_ensayo_historico": 14,
+  "sha256_metadata_base": "51c6acc6628a5031cb8fc0d6f07ff32165120216bd25f1d2845744eba549c2ed",
+  "evidencias_registro_comprobadas_por_sha256": 12,
+  "evidencias_registro_coincidentes": 12,
+  "pruebas_unitarias": 65,
+  "fallos": 0,
+  "errores": 0,
+  "modelos_reentrenados": 0,
+  "metadata_historica_modificada": false,
+  "registro_principal_modificado": false
+}

@@ -46,3 +46,20 @@ class CatalogoTest(unittest.TestCase):
         self.assertIn('**0,55**', spec)
         metadata = json.loads((ROOT/registro['referencia_base']['metadata']).read_text())
         self.assertAlmostEqual(metadata['umbral_candidato'], 0.55)
+
+    def test_procedencia_entornos_distingue_declaracion_y_reproduccion(self):
+        nota = (ROOT/'docs/PROCEDENCIA_ENTORNOS_MODELOS.md').read_text()
+        ensayo = ROOT/'reports/reproducibilidad/ejecucion_20260913'
+        resultado = json.loads((ensayo/'resultado.json').read_text())
+        entorno = json.loads((ensayo/'entorno.json').read_text())
+        for seleccion in resultado['seleccion']:
+            metadata = json.loads((ROOT/'models/victimas'/seleccion['archivo']).read_text())
+            with self.subTest(archivo=seleccion['archivo']):
+                self.assertEqual(metadata['version_python'], seleccion['python_oficial'])
+                self.assertEqual(entorno['python'].split()[0], seleccion['python_reproduccion'])
+                self.assertIn(metadata['version_python'], nota)
+        self.assertIn('no versión del intérprete', nota)
+        self.assertIn('no compatibilidad', nota)
+        for documento in ('README.md', 'models/victimas/README.md',
+                          'reports/reproducibilidad/README.md'):
+            self.assertIn('docs/PROCEDENCIA_ENTORNOS_MODELOS.md', (ROOT/documento).read_text())
