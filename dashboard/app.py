@@ -66,6 +66,34 @@ def notice(text, warning=False):
     return html.Div(text,className='notice warning' if warning else 'notice',role='note')
 
 
+def label_explanation(s, locality, slot):
+    rule=s.label_rule(locality,slot)
+    minimum=rule['minimo_siniestros']
+    target='al menos un siniestro con víctimas' if minimum==1 else f'{minimum} o más siniestros con víctimas'
+    meaning=('Aquí la etiqueta describe ocurrencia, no una frecuencia excepcional.' if minimum==1
+             else 'Aquí la etiqueta exige superar el umbral histórico de conteo del grupo.')
+    return html.Div([
+        html.H3('¿Qué intenta identificar esta alerta?'),
+        html.P(['En esta localidad y franja, la etiqueta observada Alto_Riesgo = 1 significa ',html.Strong(target),' en ese día.']),
+        html.P(meaning),
+        html.P(f"Umbral del conteo: {number(rule['umbral_conteo'],2)}; se exige superarlo, no igualarlo. Se calcula solo con 2018–2022.",className='footnote'),
+        html.P(f"Es distinto del umbral del score ({number(s.registro['decision']['umbral_score'],2)}). La alerta es la clasificación del modelo: no confirma que ese número de siniestros haya ocurrido ni indica cuántos ocurrirán.",className='footnote'),
+    ],className='label-explanation')
+
+
+def weakest_slot_warning(s):
+    rows=s.reports['metricas_random_forest_ajustado_por_franja']
+    valid=rows[rows.Positivos.gt(0) & rows.Recall.notna()]
+    if valid.empty:
+        return notice('No hay positivos suficientes para comparar el recall por franja.')
+    row=valid.loc[valid.Recall.idxmin()]
+    return notice([
+        html.Strong(f'{row.Franja_Horaria}: menor recall global ({number(row.Recall*100,2)} %)'),
+        html.P(f"El modelo detectó {number(row.TP)} de {number(row.Positivos)} casos con etiqueta positiva y omitió {number(row.FN)}. Son casos localidad × fecha × franja, no personas ni siniestros individuales."),
+        html.P('Resultado global 2023–2024 para todas las localidades; no cambia con los filtros. No significa que esta franja tenga menor siniestralidad ni explica la causa de las omisiones.'),
+    ],True)
+
+
 def overview(s):
     grid=s.history()
     monthly=grid.groupby('Mes',as_index=False).Siniestros.sum()
@@ -127,9 +155,12 @@ def query_result(s,fecha,slot,locality,view):
             html.Div([html.Strong(number(row.Score_Priorizacion,3)),html.Span('Score de priorización')],className='score-value'),
             html.Div('Priorización alta' if row.Alerta_Modelo else 'Priorización baja',className='badge high' if row.Alerta_Modelo else 'badge low'),
             html.P('Alerta cuando el score es mayor o igual a 0,52. No equivale a una probabilidad.',className='footnote'),
+            label_explanation(s,locality,slot),
             html.H3('Antecedentes del caso'),html.Dl([item for n,v in histories for item in [html.Dt(n),html.Dd(v)]],className='antecedents'),
             html.P('No incluyen los siniestros del propio día.',className='footnote'),
             html.Details([html.Summary('Ver trazabilidad e interpretación'),trace,html.P(row.Advertencia_Score)])]
+    if slot=='Madrugada':
+        detail.append(weakest_slot_warning(s))
     ranking=rows[['Localidad','Score_Priorizacion','Alerta_Modelo']].copy()
     ranking['Alerta_Modelo']=ranking.Alerta_Modelo.map({0:'Baja',1:'Alta'})
     return charts.map_figure(s,rows,locality,view), detail, table(ranking,{'Alerta_Modelo':'Priorización','Score_Priorizacion':'Score'})
@@ -193,6 +224,7 @@ def evaluation_page(s):
         html.Button('Descargar métricas filtradas CSV',id='download-eval-button',className='button secondary'),
         html.H2('Comparaciones del estudio completo',className='section-title'),
         notice('Las siguientes tablas e importancia de variables corresponden al conjunto completo 2023–2024; no cambian con los filtros superiores.'),
+        weakest_slot_warning(s),
         html.Div([
             panel('Detección por localidad','Proporción de positivos detectados y omitidos. Pase sobre las barras para ver los conteos.',
                   graph('eval-territory-detection',charts.detection_by_group(territory,'Localidad',560))),

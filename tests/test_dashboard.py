@@ -7,6 +7,8 @@ import unittest
 import pandas as pd
 from dashboard.data import DashboardData, preparar_actores, resumen_metricas, normalize, KEYS, REPORTS, SLOTS
 from dashboard.app import create_app, query_result, history_result, evaluation_result
+from dashboard.app import label_explanation, weakest_slot_warning
+from plotly.utils import PlotlyJSONEncoder
 from dashboard import charts
 from src.consulta_retrospectiva import ConsultaRetrospectiva
 from src.modelo_principal import ModeloPrincipal
@@ -154,6 +156,42 @@ class DashboardTest(unittest.TestCase):
 
     def test_normalizacion_tildes(self):
         self.assertEqual(normalize('SAN CRISTÓBAL'),normalize('San Cristobal'))
+
+    def test_interpretacion_del_grupo_usa_solo_train(self):
+        for threshold, text in [(0,'al menos un siniestro'),(1,'2 o más siniestros'),(2,'3 o más siniestros')]:
+            with self.subTest(threshold=threshold):
+                s=fixture()
+                train=s.consulta.datos.Periodo.eq('train')
+                s.consulta.datos.loc[train,'Num_Accidentes']=threshold
+                s.consulta.datos.loc[~train,'Num_Accidentes']=999
+                before=s.predictions.copy(deep=True)
+                self.assertEqual(s.label_rule('KENNEDY','Mañana')['minimo_siniestros'],threshold+1)
+                body=json.dumps(label_explanation(s,'KENNEDY','Mañana'),cls=PlotlyJSONEncoder,ensure_ascii=False)
+                self.assertIn(text,body)
+                self.assertIn('0,52',body)
+                self.assertIn('no confirma',body)
+                self.assertNotIn('999',body)
+                pd.testing.assert_frame_equal(before,s.predictions)
+        with self.assertRaises(ValueError):self.s.label_rule('INEXISTENTE','Mañana')
+
+    def test_aviso_madrugada_deriva_del_reporte_y_declara_alcance(self):
+        text=json.dumps(weakest_slot_warning(self.s),cls=PlotlyJSONEncoder,ensure_ascii=False)
+        for value in ['Madrugada','39,43','914','2.318','1.404','no cambia con los filtros','no personas']:
+            self.assertIn(value,text)
+        frame=self.s.reports['metricas_random_forest_ajustado_por_franja']
+        frame.loc[frame.Franja_Horaria.eq('Madrugada'),'Recall']=.1
+        updated=json.dumps(weakest_slot_warning(self.s),cls=PlotlyJSONEncoder,ensure_ascii=False)
+        self.assertIn('10,00',updated)
+        self.assertNotIn('39,43',updated)
+
+    def test_callback_consulta_incluye_significado_y_aviso_segun_franja(self):
+        key=next(k for k in self.app.callback_map if k.startswith('..query-map'))
+        for slot in ['Mañana','Madrugada']:
+            response=self.call(key,['2023-01-01',slot,'KENNEDY','urbana'])
+            body=json.dumps(response['query-detail']['children'],ensure_ascii=False)
+            self.assertIn('¿Qué intenta identificar esta alerta?',body)
+            self.assertIn('2 o más siniestros',body)
+            self.assertEqual('menor recall global' in body,slot=='Madrugada')
 
     def test_deteccion_por_grupo_preserva_conteos(self):
         report=self.s.reports['metricas_random_forest_ajustado_por_localidad']

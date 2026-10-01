@@ -1,0 +1,84 @@
+{
+  "fecha_utc": "2026-10-01T17:26:36.399368+00:00",
+  "resultado": "correcto",
+  "pruebas_unitarias": 62,
+  "fallos": 0,
+  "errores": 0,
+  "integracion_ejecutada": true,
+  "modelos_reentrenados": 0,
+  "fuente": {
+    "resultado": "correcto",
+    "sha256_local": "afcb691b5918835c3392854b770895aeb62b4e00f1191708d10e6942bebf87f5",
+    "hojas_verificadas": 4,
+    "licencia": "pendiente_confirmacion_especifica"
+  },
+  "preparacion": {
+    "resultado": "correcto",
+    "filas": 204560,
+    "columnas": 16,
+    "igualdad": "exacta: valores, etiquetas, orden y tipos",
+    "archivos_sobrescritos": 0,
+    "modelos_reentrenados": 0,
+    "sha256_dataset": "0e92fce1e9398e4b4ddc190126d605cb7c983d15ca614235fd07401302ee9a2d"
+  },
+  "modelo": {
+    "resultado": "correcto",
+    "modelo": "rf_victimas_bogota_v1.0",
+    "observaciones_verificadas": 58480,
+    "umbrales_etiqueta_verificados": 80,
+    "evidencias_integras": 12,
+    "predicciones_coinciden_con_05B": true,
+    "umbral_score": 0.52,
+    "metricas_reproducidas": {
+      "F1": 0.40578901871113465,
+      "AUC_ROC": 0.6933242182043409,
+      "Average_Precision": 0.3098375996626644,
+      "Precision": 0.2940629673038839,
+      "Recall": 0.654434250764526,
+      "Brier": 0.2220882670045042,
+      "TN": 29895,
+      "FP": 17467,
+      "FN": 3842,
+      "TP": 7276
+    },
+    "validaciones_entrada": 4,
+    "modelos_reentrenados": 0
+  },
+  "consulta": {
+    "casos_reales": 4,
+    "coincide_con_05B": true,
+    "trazabilidad_verificada": true,
+    "id_modelo": "rf_victimas_bogota_v1.0",
+    "version_modelo": "1.0",
+    "alcance": "consulta retrospectiva de variables preparadas, no predicción futura"
+  },
+  "dashboard": {
+    "resultado": "correcto",
+    "modelo": "rf_victimas_bogota_v1.0",
+    "paginas_verificadas": [
+      "overview",
+      "query",
+      "history",
+      "evaluation",
+      "about"
+    ],
+    "predicciones": 58480,
+    "localidades_mapa": 20,
+    "conteos_actores_coinciden_con_eda": true,
+    "metricas_globales_coinciden_con_05B": true,
+    "evidencias_oficiales_intactas": 12,
+    "tiempos_servidor_segundos": {
+      "consulta_2023-01-01_KENNEDY": 0.0993,
+      "consulta_2024-02-29_CANDELARIA": 0.0641,
+      "consulta_2024-12-31_SUMAPAZ": 0.0637,
+      "historia_completa": 0.0807,
+      "historia_filtrada": 0.0532,
+      "evaluacion_global": 0.0657,
+      "evaluacion_filtrada": 0.0322
+    },
+    "operaciones_medidas_menores_5s": true,
+    "nota_rendimiento": "Medición local del cálculo de vista; no incluye navegador, arranque ni red.",
+    "duracion_total_segundos": 1.309,
+    "modelos_reentrenados": 0
+  }
+}

@@ -53,6 +53,9 @@ ejecutarlo sobre un directorio ya preparado ni borrar evidencias para forzarlo.
    El encuadre urbano no cubre todo Sumapaz; seleccionarla acerca el mapa a esa
    localidad. «Distrito completo» muestra el conjunto. La tabla contiene siempre
    las 20 localidades, también si no están visibles en el encuadre.
+   El detalle explica si la etiqueta del grupo significa uno, dos o tres
+   siniestros con víctimas, usando solo el histórico de entrenamiento. No
+   muestra el conteo observado del día como si fuera la predicción.
 3. **Análisis histórico:** filtros combinables por año, localidad, franja y
    participación de motocicleta, peatón o bicicleta. Son categorías no
    excluyentes: no sumar sus conteos. El filtro usa indicadores afirmativos de
@@ -63,6 +66,10 @@ ejecutarlo sobre un directorio ya preparado ni borrar evidencias para forzarlo.
    Incluye barras de detección y omisión por localidad y franja, con tablas de
    conteos para no interpretar porcentajes sin conocer el tamaño de muestra.
    AUC se omite si no hay ambas clases; AP y recall se omiten sin positivos.
+   Un aviso destaca Madrugada: recall global de 39,43 % (914 de 2.318 positivos
+   detectados y 1.404 omitidos). Se deriva del reporte conservado, no de una
+   cifra introducida manualmente. También aparece al consultar Madrugada y
+   siempre aclara que describe el conjunto completo 2023–2024, no el caso individual.
 5. **Metodología:** definición de etiqueta, separación temporal, identidad del
    modelo, procedencia, interpretación, limitaciones y guía de navegación.
 

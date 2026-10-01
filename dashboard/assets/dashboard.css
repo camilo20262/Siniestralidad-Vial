@@ -433,6 +433,17 @@ nav {
 .antecedents dt {
   color:var(--muted)
 }
+.label-explanation {
+  border-left:3px solid var(--teal);
+  padding:2px 12px;
+  margin:20px 0;
+  background:#f5f8f6;
+  font-size:13px;
+  line-height:1.65
+}
+.label-explanation h3 {
+  font-size:14px
+}
 details {
   border-top:1px solid var(--line);
   padding-top:14px;

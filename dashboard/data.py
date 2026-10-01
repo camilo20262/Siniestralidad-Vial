@@ -1,5 +1,6 @@
 """Datos de solo lectura y cálculos de presentación; nunca entrena modelos."""
 from dataclasses import dataclass
+from functools import cached_property
 import json
 import unicodedata
 
@@ -73,6 +74,21 @@ class DashboardData:
     @property
     def localidades(self):
         return sorted(self.registro['categorias']['Localidad'])
+
+    @cached_property
+    def label_thresholds(self):
+        # Solo train del dataset verificado; nunca se usan conteos del día consultado.
+        train = self.consulta.datos[self.consulta.datos.Periodo.eq('train')]
+        return train.groupby(['Localidad', 'Franja_Horaria']).Num_Accidentes.quantile(2 / 3)
+
+    def label_rule(self, localidad, franja):
+        try:
+            threshold = float(self.label_thresholds.loc[(localidad, franja)])
+        except KeyError as exc:
+            raise ValueError('No hay umbral histórico para esta localidad y franja.') from exc
+        if not np.isfinite(threshold) or threshold < 0:
+            raise ValueError('Umbral histórico del conteo no válido.')
+        return {'umbral_conteo': threshold, 'minimo_siniestros': int(np.floor(threshold)) + 1}
 
     def attach_trace(self, frame):
         frame = frame.copy()
