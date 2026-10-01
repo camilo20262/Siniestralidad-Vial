@@ -54,7 +54,7 @@ def write_json(path, value):
 
 def protected_snapshot():
     files = []
-    for folder in ['data', 'models', 'notebooks', 'src', 'reports']:
+    for folder in ['data', 'models', 'notebooks', 'src', 'reports', 'dashboard', 'scripts', 'tests', 'config', 'docs']:
         files += [p for p in (ROOT / folder).rglob('*') if p.is_file()
                   and '__pycache__' not in p.parts
                   and not p.is_relative_to(ROOT / 'reports/reproducibilidad')]
@@ -68,7 +68,8 @@ def announce(run, message, **extra):
     write_json(run / 'estado.json', {'momento_utc': now, 'etapa': message, **extra})
 
 
-def setup(run):
+def setup(run, names=None, extra_inputs=(), extra_folders=()):
+    names = NAMES if names is None else names
     run.mkdir(parents=True, exist_ok=False)
     write_json(run / 'integridad_oficial_antes.json', protected_snapshot())
     for name in ['notebooks', 'data/raw', 'models/victimas', 'reports', 'scripts', 'src', 'runtime/kernels/repro']:
@@ -82,8 +83,16 @@ def setup(run):
         for p in names:
             shutil.copy2(p, run / folder / p.name)
     shutil.copy2(ROOT / 'requirements.txt', run / 'requirements.txt')
+    # Solo entradas y código adicionales: nunca modelos o resultados esperados.
+    for relative in extra_inputs:
+        target = run / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / relative, target)
+    for folder in extra_folders:
+        shutil.copytree(ROOT / folder, run / folder,
+                        ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '.DS_Store'))
     provenance = []
-    for name in NAMES:
+    for name in names:
         original = ROOT / 'notebooks' / name
         nb = nbformat.read(original, as_version=4)
         for c in nb.cells:
@@ -98,7 +107,14 @@ def setup(run):
         ['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(), 'notebooks': provenance,
         'excel_sha256': digest(run / raw), 'tolerancia_absoluta_scores_metricas': SCORE_ATOL,
         'entorno': 'venv nuevo sin system-site-packages; requirements.txt instalado independientemente',
-        'originales_modificados': False})
+        'originales_modificados': False,
+        'entradas_adicionales': {str(p): digest(run / p) for p in extra_inputs},
+        'carpetas_codigo_adicionales': list(extra_folders),
+        'codigo_sha256': {str(p.relative_to(run)): digest(p)
+                         for folder in ['src', 'scripts', *extra_folders]
+                         for p in (run / folder).rglob('*') if p.is_file()},
+        'git_status_al_inicio': subprocess.check_output(
+            ['git', 'status', '--short'], cwd=ROOT, text=True)})
     announce(run, 'Creando entorno virtual independiente')
     venv.EnvBuilder(with_pip=True, system_site_packages=False).create(run / '.venv')
     python = run / '.venv/bin/python'

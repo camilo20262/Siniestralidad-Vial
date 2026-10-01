@@ -114,6 +114,12 @@ Para reproducir el escenario principal se utiliza **02B** para el EDA espacial y
 
 ## Verificación del código sin reentrenar
 
+Para reconstruir **02B → 03B → 04B → 04C → 05B → dashboard**, utilice
+`.venv/bin/python scripts/verificar_flujo_completo.py`. Reentrena solo en una
+copia nueva, compara resultados y prueba un servidor HTTP local temporal.
+Consulte el [alcance y evidencias del recorrido integral](reports/reproducibilidad/README.md).
+No sobrescribe el cierre ni sustituye la revisión visual y la aceptación humana.
+
 Desde la raíz, con el entorno activado:
 
 ```sh

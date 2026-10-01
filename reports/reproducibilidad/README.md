@@ -14,6 +14,48 @@ histórica para hacer coincidir versiones.
 
 ## Repetir la prueba
 
+### Recorrido integral con EDA y dashboard
+
+Desde la raíz, con Python 3.12.14 y las dependencias instaladas:
+
+```sh
+.venv/bin/python scripts/verificar_flujo_completo.py
+```
+
+Este comando **sí reentrena, pero únicamente en una copia aislada nueva**. Ejecuta
+02B → 03B → 04B → 04C → 05B, reconstruye los agregados descriptivos del dashboard
+y comprueba su funcionamiento con las salidas reconstruidas. No modifica ni
+promueve el modelo oficial. `--run-name nombre_nuevo` permite identificar el
+ensayo; una carpeta existente se rechaza, no se reutiliza.
+
+Entradas: Excel original, su ficha de procedencia y la instantánea local de
+cartografía con su hash. No descarga nuevos polígonos ni precarga datasets,
+modelos, agregados o reportes oficiales como resultados del ensayo. La instalación
+del entorno virtual nuevo sí puede requerir Internet. Conserva commit, estado de
+trabajo, hashes del código copiado, versiones y salidas de los cinco notebooks.
+
+Comprobaciones adicionales respecto a la cadena 03B–05B:
+
+- Igualdad de las tablas EDA y controles; generación de sus figuras y conclusión.
+- Dataset exacto y equivalencia de las 14 tablas de modelado/evaluación.
+- Agregados por actor reconstruidos y contrastados con el EDA y la copia oficial.
+- Cinco secciones, mapa, métricas y filtros mediante el verificador del dashboard.
+- Arranque real de un servidor en **127.0.0.1 con puerto temporal**: salud, activos,
+  cinco páginas, consultas, rechazo de una fecha futura, filtros y cuatro descargas.
+  El proceso temporal se detiene al terminar; no interviene el puerto 8050 del usuario.
+- Huellas de archivos oficiales antes/después; una diferencia o fallo devuelve
+  un estado de error y conserva la evidencia, sin intentar reparar el cierre.
+
+`resultado.json` reúne el recorrido; `comparacion_eda.json`,
+`verificacion_dashboard.json` y `verificacion_http.json` detallan cada control.
+La prueba HTTP ejercita callbacks reales pero **no ejecuta JavaScript ni acredita
+el diseño visual o la usabilidad**. La revisión en navegador del mismo ensayo se
+debe registrar aparte; tampoco equivale a aceptación por usuarios o despliegue.
+
+Las mediciones de tiempo son locales y no constituyen una prueba de carga.
+
+### Cadena de modelado sin EDA ni dashboard
+
 Desde la raíz del proyecto, con las dependencias de `requirements.txt`
 instaladas en el entorno que inicia el proceso:
 
