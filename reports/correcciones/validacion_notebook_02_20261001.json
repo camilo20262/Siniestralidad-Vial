@@ -1,0 +1,40 @@
+{
+  "fecha_utc": "2026-10-01T17:33:26.411645+00:00",
+  "notebook": "notebooks/02_Comprension_de_los_Datos.ipynb",
+  "resultado": "correcto",
+  "celdas_codigo_ejecutadas": 26,
+  "errores": 0,
+  "version_python_kernel": "3.12.14",
+  "info_con_conteos_no_nulos": 4,
+  "tablas_dtypes_visibles": 4,
+  "hojas": {
+    "Siniestros": {
+      "filas": 278614,
+      "columnas": 40,
+      "uso": "Fuente del modelo; filtro 2018–2024 y Gravedad_Indicador_Tradicional en Con Heridos/Con Muertos",
+      "clave": "Codigo_Accidente"
+    },
+    "Vehiculos": {
+      "filas": 523168,
+      "columnas": 32,
+      "uso": "Exploración inicial, no predictor del modelo principal",
+      "vinculo": "Codigo_Accidente; puede haber varios vehículos por siniestro"
+    },
+    "Actor_vial": {
+      "filas": 608155,
+      "columnas": 44,
+      "uso": "EDA descriptivo, no predictor del modelo principal",
+      "vinculo": "Codigo_Accidente; varios registros de personas por siniestro; Codigo_Vehiculo permite análisis adicional previa validación"
+    },
+    "Diccionario": {
+      "filas": 110,
+      "columnas": 3,
+      "uso": "Definiciones de campos; no observaciones de entrenamiento"
+    }
+  },
+  "fuente_sha256_sin_cambios": "afcb691b5918835c3392854b770895aeb62b4e00f1191708d10e6942bebf87f5",
+  "evidencias_modelo_intactas": 12,
+  "pruebas_unitarias": 64,
+  "modelos_reentrenados": 0,
+  "integracion_completa_repetida": false
+}

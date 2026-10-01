@@ -30,7 +30,7 @@ class RutasTest(unittest.TestCase):
         return scope
 
     def test_rutas_raiz_notebooks_y_directorio_externo(self):
-        names = ['03B_Preparacion_Datos_Con_Victimas.ipynb', '04B_Modelado_Con_Victimas.ipynb',
+        names = ['02_Comprension_de_los_Datos.ipynb', '03B_Preparacion_Datos_Con_Victimas.ipynb', '04B_Modelado_Con_Victimas.ipynb',
                  '04C_Ajuste_Hiperparametros_Con_Victimas.ipynb']
         with tempfile.TemporaryDirectory() as temp:
             for name in names:
