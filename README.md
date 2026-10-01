@@ -18,6 +18,12 @@ En 49 de las 80 combinaciones localidad–franja el umbral histórico es cero. E
 
 El escenario original con todos los siniestros se conserva en los notebooks 03, 04 y 05 como análisis de sensibilidad y evidencia del cambio de cobertura.
 
+También en ese escenario original hay grupos cuya etiqueta mide ocurrencia:
+**19 de 80 (23,75 %)** tienen umbral de conteo cero, frente a **49 de 80 (61,25 %)**
+en el principal con víctimas. Estos porcentajes son de grupos, no prevalencias
+de la etiqueta. El [anexo de interpretación](docs/ANEXO_INTERPRETACION_ETIQUETA.md)
+documenta la distribución completa, los grupos y su comprobación con entrenamiento.
+
 ## Modelo principal y ficha técnica
 
 La [especificación vigente ESP-MODELO-01](docs/ESPECIFICACION_VIGENTE.md) formaliza

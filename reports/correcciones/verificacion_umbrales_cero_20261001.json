@@ -1,0 +1,330 @@
+{
+  "fecha_utc": "2026-10-01T23:07:44.069037+00:00",
+  "resultado": "correcto",
+  "escenarios": [
+    {
+      "escenario": "original",
+      "dataset": "data/processed/dataset_localidad_franja_fecha.parquet",
+      "sha256": "5229d7aaa99148373d089533719d0d93414d2e57d4f89f5a39dea18b078f752e",
+      "filas": 204560,
+      "filas_train": 146080,
+      "train_desde": "2018-01-01",
+      "train_hasta": "2022-12-31",
+      "cuantil": 0.6666666666666666,
+      "grupos": 80,
+      "distribucion_umbrales": {
+        "0": 19,
+        "1": 34,
+        "2": 14,
+        "3": 10,
+        "4": 3
+      },
+      "grupos_cero": 19,
+      "porcentaje_grupos_cero": 23.75,
+      "diferencias_etiqueta": 0,
+      "grupos_cero_detalle": [
+        {
+          "Localidad": "ANTONIO NARIÑO",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "BARRIOS UNIDOS",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "CANDELARIA",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "CANDELARIA",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "CANDELARIA",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "CANDELARIA",
+          "Franja_Horaria": "Tarde"
+        },
+        {
+          "Localidad": "CHAPINERO",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "CIUDAD BOLÍVAR",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "LOS MÁRTIRES",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "RAFAEL URIBE URIBE",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "SAN CRISTÓBAL",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "SANTA FE",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "SUMAPAZ",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "SUMAPAZ",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "SUMAPAZ",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "SUMAPAZ",
+          "Franja_Horaria": "Tarde"
+        },
+        {
+          "Localidad": "TEUSAQUILLO",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "TUNJUELITO",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "USME",
+          "Franja_Horaria": "Madrugada"
+        }
+      ]
+    },
+    {
+      "escenario": "victimas",
+      "dataset": "data/processed/dataset_victimas_localidad_franja_fecha.parquet",
+      "sha256": "0e92fce1e9398e4b4ddc190126d605cb7c983d15ca614235fd07401302ee9a2d",
+      "filas": 204560,
+      "filas_train": 146080,
+      "train_desde": "2018-01-01",
+      "train_hasta": "2022-12-31",
+      "cuantil": 0.6666666666666666,
+      "grupos": 80,
+      "distribucion_umbrales": {
+        "0": 49,
+        "1": 28,
+        "2": 3
+      },
+      "grupos_cero": 49,
+      "porcentaje_grupos_cero": 61.25000000000001,
+      "diferencias_etiqueta": 0,
+      "grupos_cero_detalle": [
+        {
+          "Localidad": "ANTONIO NARIÑO",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "ANTONIO NARIÑO",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "ANTONIO NARIÑO",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "ANTONIO NARIÑO",
+          "Franja_Horaria": "Tarde"
+        },
+        {
+          "Localidad": "BARRIOS UNIDOS",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "BARRIOS UNIDOS",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "BOSA",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "CANDELARIA",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "CANDELARIA",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "CANDELARIA",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "CANDELARIA",
+          "Franja_Horaria": "Tarde"
+        },
+        {
+          "Localidad": "CHAPINERO",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "CHAPINERO",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "CHAPINERO",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "CHAPINERO",
+          "Franja_Horaria": "Tarde"
+        },
+        {
+          "Localidad": "CIUDAD BOLÍVAR",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "ENGATIVÁ",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "FONTIBÓN",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "LOS MÁRTIRES",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "LOS MÁRTIRES",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "LOS MÁRTIRES",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "LOS MÁRTIRES",
+          "Franja_Horaria": "Tarde"
+        },
+        {
+          "Localidad": "PUENTE ARANDA",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "RAFAEL URIBE URIBE",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "RAFAEL URIBE URIBE",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "RAFAEL URIBE URIBE",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "SAN CRISTÓBAL",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "SAN CRISTÓBAL",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "SANTA FE",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "SANTA FE",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "SANTA FE",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "SANTA FE",
+          "Franja_Horaria": "Tarde"
+        },
+        {
+          "Localidad": "SUBA",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "SUMAPAZ",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "SUMAPAZ",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "SUMAPAZ",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "SUMAPAZ",
+          "Franja_Horaria": "Tarde"
+        },
+        {
+          "Localidad": "TEUSAQUILLO",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "TEUSAQUILLO",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "TUNJUELITO",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "TUNJUELITO",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "TUNJUELITO",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "TUNJUELITO",
+          "Franja_Horaria": "Tarde"
+        },
+        {
+          "Localidad": "USAQUÉN",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "USAQUÉN",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "USME",
+          "Franja_Horaria": "Madrugada"
+        },
+        {
+          "Localidad": "USME",
+          "Franja_Horaria": "Mañana"
+        },
+        {
+          "Localidad": "USME",
+          "Franja_Horaria": "Noche"
+        },
+        {
+          "Localidad": "USME",
+          "Franja_Horaria": "Tarde"
+        }
+      ]
+    }
+  ],
+  "notebooks_solo_documentacion": [
+    "notebooks/03_Preparacion_de_los_Datos (3).ipynb",
+    "notebooks/04_Modelado.ipynb",
+    "notebooks/05_Evaluacion.ipynb"
+  ],
+  "celdas_codigo_y_salidas_conservadas": true,
+  "evidencias_modelo_intactas": 12,
+  "modelos_reentrenados": 0
+}
