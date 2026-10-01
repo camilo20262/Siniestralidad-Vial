@@ -3,11 +3,37 @@ import tempfile
 from pathlib import Path
 import unittest
 from unittest.mock import patch
+import nbformat
 from scripts import verificar_flujo_completo as flow
 from scripts.verificar_dashboard_http import callback_payload
 
 
 class FlujoCompletoTest(unittest.TestCase):
+    def test_setup_conserva_lista_notebooks_al_copiar_codigo(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for folder in ['notebooks', 'data/raw', 'scripts', 'src']:
+                (root/folder).mkdir(parents=True)
+            (root/'data/raw/base-anuario-de-siniestralidad-2024.xlsx').write_bytes(b'fixture')
+            (root/'requirements.txt').write_text('')
+            (root/'scripts/verificar_modelo_principal.py').write_text('# fixture')
+            (root/'src/rutas.py').write_text('# fixture')
+            names = ['eda.ipynb', 'preparacion.ipynb']
+            for name in names:
+                nbformat.write(nbformat.v4.new_notebook(cells=[nbformat.v4.new_code_cell('1 + 1')]),
+                               root/'notebooks'/name)
+            run = root/'reports/reproducibilidad/ensayo'
+            with patch.object(flow.chain, 'ROOT', root), \
+                 patch.object(flow.chain.subprocess, 'check_output', return_value='fixture'), \
+                 patch.object(flow.chain.venv.EnvBuilder, 'create', side_effect=RuntimeError('fin del fixture')):
+                with self.assertRaisesRegex(RuntimeError, 'fin del fixture'):
+                    flow.chain.setup(run, names=names)
+            self.assertEqual(sorted(p.name for p in (run/'notebooks').iterdir()), names)
+            for name in names:
+                nb = nbformat.read(run/'notebooks'/name, as_version=4)
+                self.assertEqual(nb.cells[0].source, '1 + 1')
+                self.assertIsNone(nb.cells[0].execution_count)
+
     def test_cadena_incluye_eda_y_no_precarga_resultados(self):
         self.assertTrue(flow.NAMES[0].startswith('02B'))
         self.assertEqual(flow.NAMES[1:], flow.chain.NAMES)

@@ -79,8 +79,8 @@ def setup(run, names=None, extra_inputs=(), extra_folders=()):
     # Una copia real, no enlaces hacia archivos oficiales que pudieran alterarse.
     (run / raw).chmod(0o444)
     for folder in ['src', 'scripts']:
-        names = list((ROOT / folder).glob('*.py')) if folder == 'src' else [ROOT / 'scripts/verificar_modelo_principal.py']
-        for p in names:
+        code_paths = list((ROOT / folder).glob('*.py')) if folder == 'src' else [ROOT / 'scripts/verificar_modelo_principal.py']
+        for p in code_paths:
             shutil.copy2(p, run / folder / p.name)
     shutil.copy2(ROOT / 'requirements.txt', run / 'requirements.txt')
     # Solo entradas y código adicionales: nunca modelos o resultados esperados.
