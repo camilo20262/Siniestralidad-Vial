@@ -1,0 +1,30 @@
+{
+  "fecha_utc": "2026-10-01T11:50:09.599045+00:00",
+  "resultado": "correcto",
+  "modelo": "rf_victimas_bogota_v1.0",
+  "paginas_verificadas": [
+    "overview",
+    "query",
+    "history",
+    "evaluation",
+    "about"
+  ],
+  "predicciones": 58480,
+  "localidades_mapa": 20,
+  "conteos_actores_coinciden_con_eda": true,
+  "metricas_globales_coinciden_con_05B": true,
+  "evidencias_oficiales_intactas": 12,
+  "tiempos_servidor_segundos": {
+    "consulta_2023-01-01_KENNEDY": 0.1177,
+    "consulta_2024-02-29_CANDELARIA": 0.0954,
+    "consulta_2024-12-31_SUMAPAZ": 0.0662,
+    "historia_completa": 0.2006,
+    "historia_filtrada": 0.0605,
+    "evaluacion_global": 0.0735,
+    "evaluacion_filtrada": 0.0395
+  },
+  "operaciones_medidas_menores_5s": true,
+  "nota_rendimiento": "Medición local del cálculo de vista; no incluye navegador, arranque ni red.",
+  "duracion_total_segundos": 1.798,
+  "modelos_reentrenados": 0
+}

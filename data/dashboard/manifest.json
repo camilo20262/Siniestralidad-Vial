@@ -1,0 +1,32 @@
+{
+  "fecha_utc": "2026-10-01T00:14:23.534038+00:00",
+  "fuente_sha256": "afcb691b5918835c3392854b770895aeb62b4e00f1191708d10e6942bebf87f5",
+  "siniestros": 85199,
+  "modelo": "rf_victimas_bogota_v1.0",
+  "unidad": "Siniestros con participación del actor; categorías no excluyentes, no personas.",
+  "valores_indicadores": {
+    "Motocicleta": {
+      "SI": 50000,
+      "Sin información": 35199
+    },
+    "Peatón": {
+      "Sin información": 64266,
+      "SI": 20933
+    },
+    "Bicicleta": {
+      "Sin información": 69616,
+      "SI": 15583
+    }
+  },
+  "archivos": {
+    "data/dashboard/siniestros_actores.parquet": "4dabc50e482e3f179df15937793325f67d52e1ebdc21d641ba0992b66e15d39d",
+    "data/reference/localidades_sdp_referencia.geojson": "4dd83b3ba825c64e11e77a2aa39cbf505d2678a20d5ddba6217642f7b657344f",
+    "reports/evaluation_victimas/metricas_globales.csv": "a029f460ba259d74e7e55694f88c2adb5c5410419edc973f73e7d185a3b8f8f6",
+    "reports/evaluation_victimas/comparacion_referencias_historicas.csv": "f679663de89def42c44e490a92ca61214b54471658d083c5a04227f48fc5da31",
+    "reports/evaluation_victimas/bootstrap_rf_vs_referencia_resumen.csv": "e865285eac62fa9629b62b3499c4d69241e199a0a2191f2a950b27cb80d11426",
+    "reports/evaluation_victimas/importancia_permutacion_random_forest_ajustado.csv": "76963a067d580d928ffa0ed62ff1304217df2996e292ac20214c2176e2825a1f",
+    "reports/evaluation_victimas/calibracion_por_deciles.csv": "f2f867b6bd3ea39fd0279ec01a0ecb70d017d77a50199627d996bc5ce9b76cde",
+    "reports/evaluation_victimas/metricas_random_forest_ajustado_por_localidad.csv": "4cb63fba419d16821edc86f7c97293bb3bd41ac4b693804127daff93f9ff79ca",
+    "reports/evaluation_victimas/metricas_random_forest_ajustado_por_franja.csv": "17509de0a288189c56a17893befbb9e50cfa169295a3319ceb790be08be1cb1d"
+  }
+}

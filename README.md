@@ -165,7 +165,25 @@ La primera ejecución de 02B descarga la cartografía si falta; las siguientes v
 
 ## Dashboard
 
-El dashboard en `dashboard/dist/` permite explorar métricas globales, por localidad y por franja. Presenta explícitamente la limitación de calibración y evita interpretar los scores como probabilidades. Sus datos proceden de los CSV generados por 05B.
+La aplicación vigente está implementada en **Python Dash**. Desde la raíz, con
+el entorno activado y las dependencias instaladas:
+
+```sh
+python -m dashboard.app
+```
+
+Abra **http://127.0.0.1:8050**. Incluye resumen, consulta retrospectiva y mapa de
+las 20 localidades, filtros descriptivos por año/territorio/franja/actor,
+evaluación filtrada, referencias históricas, metodología y descargas con contexto.
+La [guía del dashboard](dashboard/README.md) explica instalación, uso, arquitectura,
+interpretación y diagnóstico. La maqueta `dashboard/dist/` se conserva como legado.
+
+Los datos oficiales y el modelo no se modifican. `data/dashboard/` contiene
+agregados descriptivos adicionales comprobados contra el EDA. La consulta solo
+admite 2023–2024; los scores no se presentan como probabilidades. La cartografía
+es local y no necesita claves ni servicios de mapas. No hay despliegue público.
+
+Verificación con datos reales: `python scripts/verificar_dashboard.py`.
 
 ## Alcance y limitaciones
 

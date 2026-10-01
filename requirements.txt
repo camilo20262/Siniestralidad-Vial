@@ -13,3 +13,5 @@ nbclient==0.10.2
 seaborn==0.13.2
 shapely==2.1.2
 pyproj==3.7.2
+dash==4.4.1
+plotly==7.1.0

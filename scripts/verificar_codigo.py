@@ -55,6 +55,8 @@ def main():
                               'id_modelo': consulta.modelo.registro['id_modelo'],
                               'version_modelo': consulta.modelo.registro['version'],
                               'alcance': 'consulta retrospectiva de variables preparadas, no predicción futura'}
+        from scripts.verificar_dashboard import verificar as verificar_dashboard
+        report['dashboard'] = verificar_dashboard()
     if args.salida:
         args.salida.parent.mkdir(parents=True, exist_ok=True)
         with args.salida.open('x', encoding='utf-8') as stream:
