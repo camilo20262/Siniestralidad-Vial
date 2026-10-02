@@ -1,0 +1,6 @@
+# Intento fallido antes de ejecutar notebooks. Conservar copias localmente, versionar diagnóstico.
+*
+!.gitignore
+!estado.json
+!resultado.json
+!integridad_oficial_antes.json

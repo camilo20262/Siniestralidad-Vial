@@ -1,0 +1,9 @@
+{
+  "fecha_utc": "2026-10-02T14:30:00.039515+00:00",
+  "resultado": "correcto",
+  "pruebas_unitarias": 70,
+  "fallos": 0,
+  "errores": 0,
+  "integracion_ejecutada": false,
+  "modelos_reentrenados": 0
+}

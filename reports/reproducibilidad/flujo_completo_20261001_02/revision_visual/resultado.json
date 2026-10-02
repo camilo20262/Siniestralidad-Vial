@@ -1,0 +1,60 @@
+{
+  "fecha_revision": "2026-10-02",
+  "tipo": "Revision visual asistida, separada de la prueba HTTP automatica",
+  "url_temporal": "http://127.0.0.1:52719/",
+  "modelo_observado": "reproduccion_aislada_flujo_completo_20261001_02",
+  "paginas_revisadas": [
+    "Resumen",
+    "Consulta y mapa",
+    "Análisis histórico",
+    "Evaluación",
+    "Metodología"
+  ],
+  "interacciones": [
+    "Cambio de Mañana a Madrugada en Kennedy para 2023-01-01",
+    "Apertura de trazabilidad de la consulta",
+    "Navegación por cinco secciones"
+  ],
+  "aviso_madrugada_observado": "Recall global 39,43 %, 914 detectados de 2.318 positivos",
+  "metricas_observadas": {
+    "F1": 0.4058,
+    "AUC_ROC": 0.6933,
+    "Brier": 0.2221
+  },
+  "errores_consola_observados": 0,
+  "aceptacion_por_usuarios": false,
+  "revision_multinavegador_o_movil": false,
+  "servidor_temporal_detenido": true,
+  "capturas": [
+    {
+      "archivo": "consulta_madrugada.png",
+      "sha256": "7f40183903a05362361a4c71213bf093399a17a7a1214b1fb7c210d2e8150f21",
+      "ancho": 65536,
+      "alto": 4292542531
+    },
+    {
+      "archivo": "evaluacion.png",
+      "sha256": "c08ba018bcf2c9e47de947eac0efc4ee1e4e9db9fdd51e5434e1f37ff268442d",
+      "ancho": 65536,
+      "alto": 4292542531
+    },
+    {
+      "archivo": "historia.png",
+      "sha256": "d46a7845c0e735a712f78da7f530adc100a083f2036f6ae6b7fd610616550d11",
+      "ancho": 65536,
+      "alto": 4292542531
+    },
+    {
+      "archivo": "metodologia.png",
+      "sha256": "fa1452f49942d559ed84bceef8bcc5cdac689d22e994147bdd172f5ba8ca2295",
+      "ancho": 65536,
+      "alto": 4292542531
+    },
+    {
+      "archivo": "resumen.png",
+      "sha256": "309927db3dd367a737601b8ffab4b7ab2a688ffeeb5c8ba7bff0cc1b39f90bcc",
+      "ancho": 65536,
+      "alto": 4292542531
+    }
+  ]
+}

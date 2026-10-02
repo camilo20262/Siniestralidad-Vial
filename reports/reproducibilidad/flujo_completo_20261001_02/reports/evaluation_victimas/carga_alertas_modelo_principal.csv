@@ -1,0 +1,2 @@
+﻿Modelo,Umbral,Alertas,Dias,Alertas_Por_Dia,Fraccion_Observaciones_Alertadas,Falsas_Alertas_Por_Deteccion,TP_Adicionales_Vs_Base,FP_Adicionales_Vs_Base
+Random Forest ajustado,0.5199999999999999,24743,731,33.84815321477428,0.42310191518467855,2.4006322155030237,742,2299

@@ -16,6 +16,11 @@ histórica para hacer coincidir versiones.
 
 ### Recorrido integral con EDA y dashboard
 
+**Ensayo completado:** [flujo_completo_20261001_02/INFORME.md](flujo_completo_20261001_02/INFORME.md).
+66 celdas ejecutadas sin errores, 24 tablas EDA y 14 de modelado/evaluación
+equivalentes; dashboard reconstruido, HTTP real y revisión visual registrada.
+Ejecución automática del 1 de octubre; revisión visual del 2 de octubre de 2026.
+
 Desde la raíz, con Python 3.12.14 y las dependencias instaladas:
 
 ```sh

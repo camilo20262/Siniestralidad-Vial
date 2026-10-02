@@ -1,0 +1,323 @@
+{
+  "tablas": [
+    {
+      "archivo": "reports/eda_victimas/actores_dia_semana_franja.csv",
+      "filas_reconstruidas": 84,
+      "filas_oficiales": 84,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Dia_Num": 0.0,
+        "Siniestros_Con_Participacion": 0.0,
+        "Dias_Calendario": 0.0,
+        "Promedio_Diario": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/actores_por_localidad.csv",
+      "filas_reconstruidas": 20,
+      "filas_oficiales": 20,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Bicicleta": 0.0,
+        "Motocicleta": 0.0,
+        "Peatón": 0.0,
+        "Siniestros_Totales": 0.0,
+        "Participacion_Motocicleta": 0.0,
+        "Participacion_Peatón": 0.0,
+        "Participacion_Bicicleta": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/calidad_indicadores_actores.csv",
+      "filas_reconstruidas": 6,
+      "filas_oficiales": 6,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Registros": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/centros_medianos_siniestros.csv",
+      "filas_reconstruidas": 20,
+      "filas_oficiales": 20,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Longitud": 0.0,
+        "Latitud": 0.0,
+        "Siniestros": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/cobertura_coordenadas.csv",
+      "filas_reconstruidas": 7,
+      "filas_oficiales": 7,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Anio": 0.0,
+        "Siniestros": 0.0,
+        "Coordenadas_Completas": 0.0,
+        "Coordenadas_En_Rango": 0.0,
+        "Dentro_Distrito_Referencia": 0.0,
+        "Cobertura_Completa": 0.0,
+        "Cobertura_Dentro_Referencia": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/comparacion_indicadores_gravedad.csv",
+      "filas_reconstruidas": 3,
+      "filas_oficiales": 3,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Con Heridos": 0.0,
+        "Con Muertos": 0.0,
+        "Sin información": 0.0,
+        "Solo Daños": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/control_poligonos_y_rectangulo.csv",
+      "filas_reconstruidas": 1,
+      "filas_oficiales": 1,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Fuera_Rectangulo_Urbano_Con_Coordenada": 0.0,
+        "Dentro_Distrito_Fuera_Rectangulo": 0.0,
+        "Fuera_Distrito_Con_Coordenada": 0.0,
+        "Dentro_Distrito_Localidad_Distinta": 0.0,
+        "Puntos_Limite_Compartido": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/coordenadas_para_revision.csv",
+      "filas_reconstruidas": 7817,
+      "filas_oficiales": 7817,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Codigo_Accidente": 0.0,
+        "Longitud": 0.0,
+        "Latitud": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/dia_semana_franja.csv",
+      "filas_reconstruidas": 28,
+      "filas_oficiales": 28,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Dia_Num": 0.0,
+        "Siniestros": 0.0,
+        "Dias_Calendario": 0.0,
+        "Promedio_Diario": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/estabilidad_territorial_periodos.csv",
+      "filas_reconstruidas": 20,
+      "filas_oficiales": 20,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Siniestros_Pre": 0.0,
+        "Siniestros_Post": 0.0,
+        "Siniestros_Pre_Sin2020": 0.0,
+        "Dias_Pre": 0.0,
+        "Dias_Post": 0.0,
+        "Dias_Pre_Sin2020": 0.0,
+        "Promedio_Diario_Pre": 0.0,
+        "Promedio_Diario_Post": 0.0,
+        "Promedio_Diario_Pre_Sin2020": 0.0,
+        "Ratio_Post_Pre": 0.0,
+        "Ratio_Post_Pre_Sin2020": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/estacionalidad_mes.csv",
+      "filas_reconstruidas": 12,
+      "filas_oficiales": 12,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Mes": 0.0,
+        "Siniestros": 0.0,
+        "Dias": 0.0,
+        "Promedio_Diario": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/festivos_comparacion_dias_equivalentes.csv",
+      "filas_reconstruidas": 125,
+      "filas_oficiales": 125,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Anio": 0.0,
+        "Mes": 0.0,
+        "Dia_Num": 0.0,
+        "Siniestros": 0.0,
+        "Esperado_No_Festivo": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/festivos_estandarizados_dia_semana.csv",
+      "filas_reconstruidas": 7,
+      "filas_oficiales": 7,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Anio": 0.0,
+        "Dias_Festivos": 0.0,
+        "Siniestros_Observados": 0.0,
+        "Siniestros_Esperados_Mismo_Dia_Semana": 0.0,
+        "Ratio_Observado_Esperado": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/festivos_por_anio.csv",
+      "filas_reconstruidas": 14,
+      "filas_oficiales": 14,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Anio": 0.0,
+        "Dias": 0.0,
+        "Siniestros": 0.0,
+        "Promedio_Diario": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/integridad_hoja_actores.csv",
+      "filas_reconstruidas": 1,
+      "filas_oficiales": 1,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Registros_Actores": 0.0,
+        "IDs_Actores_Faltantes": 0.0,
+        "IDs_Actores_Duplicados": 0.0,
+        "Siniestros_Con_Actores": 0.0,
+        "Siniestros_Sin_Fila_Actor": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/registros_actor_condicion_dia_franja.csv",
+      "filas_reconstruidas": 482,
+      "filas_oficiales": 482,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Registros_Actores": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/registros_actor_por_condicion_gravedad.csv",
+      "filas_reconstruidas": 62,
+      "filas_oficiales": 62,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Registros_Actores": 0.0,
+        "Siniestros_Distintos": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/resumen_anual.csv",
+      "filas_reconstruidas": 7,
+      "filas_oficiales": 7,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Anio": 0.0,
+        "Siniestros": 0.0,
+        "Dias": 0.0,
+        "Promedio_Diario": 0.0,
+        "Ratio_vs_2018_2019": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/resumen_localidades.csv",
+      "filas_reconstruidas": 20,
+      "filas_oficiales": 20,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Siniestros": 0.0,
+        "Siniestros_Con_Muertos": 0.0,
+        "Siniestros_Con_Peaton": 0.0,
+        "Siniestros_Con_Moto": 0.0,
+        "Siniestros_Con_Bicicleta": 0.0,
+        "Cobertura_Coordenadas_Completas": 0.0,
+        "Participacion_Ciudad": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/resumen_picos_actores.csv",
+      "filas_reconstruidas": 3,
+      "filas_oficiales": 3,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Dia_Num": 0.0,
+        "Siniestros_Con_Participacion": 0.0,
+        "Dias_Calendario": 0.0,
+        "Promedio_Diario": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/sensibilidad_universo_gravedad.csv",
+      "filas_reconstruidas": 1,
+      "filas_oficiales": 1,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Victimas_Tradicional": 0.0,
+        "Victimas_30d": 0.0,
+        "Salen_Al_Cambiar": 0.0,
+        "Entran_Al_Cambiar": 0.0,
+        "Indicador30d_Faltante_En_Tradicional": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/serie_diaria_calendario.csv",
+      "filas_reconstruidas": 2557,
+      "filas_oficiales": 2557,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Anio": 0.0,
+        "Mes": 0.0,
+        "Dia_Num": 0.0,
+        "Siniestros": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/serie_mensual.csv",
+      "filas_reconstruidas": 84,
+      "filas_oficiales": 84,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Anio": 0.0,
+        "Mes": 0.0,
+        "Siniestros": 0.0,
+        "Dias": 0.0,
+        "Promedio_Diario": 0.0
+      }
+    },
+    {
+      "archivo": "reports/eda_victimas/top25_celdas_concentracion.csv",
+      "filas_reconstruidas": 25,
+      "filas_oficiales": 25,
+      "equivalente": true,
+      "max_diferencias_numericas": {
+        "Celda_Este_100m": 0.0,
+        "Celda_Norte_100m": 0.0,
+        "Siniestros": 0.0,
+        "Siniestros_Con_Muertos": 0.0,
+        "Lado_Celda_Metros": 0.0
+      }
+    }
+  ],
+  "controles_iguales": true,
+  "conclusion_igual": true,
+  "figuras_generadas": [
+    "01_cobertura_coordenadas.png",
+    "02_distribucion_anual_localidad.png",
+    "03_densidad_espacial_victimas.png",
+    "04_centros_localidad.png",
+    "05_serie_temporal_mensual.png",
+    "06_dia_franja_y_mes.png",
+    "07_festivos_denominadores.png",
+    "08_actores_dia_franja.png",
+    "09_mapa_localidades_oficial.png",
+    "10_estabilidad_sensibilidad_2020.png"
+  ],
+  "inventario_figuras_igual": true,
+  "nota_figuras": "Inventario verificado; no se exige identidad de píxeles.",
+  "equivalente": true
+}

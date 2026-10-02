@@ -112,13 +112,19 @@ conservando los metadatos originales y los límites de lo comprobado.
 
 Para reproducir el escenario principal se utiliza **02B** para el EDA espacial y la cadena **03B → 04B → 04C → 05B**. **No reejecute entrenamientos sobre el cierre oficial:** 04C puede sobrescribir su modelo ajustado. Use `python scripts/reproducir_cadena_aislada.py` para una nueva carpeta aislada. El notebook 05B compara las configuraciones base y ajustada. La [ejecución de septiembre 13](reports/reproducibilidad/ejecucion_20260913/INFORME.md) conserva la evidencia histórica anterior a la extracción de funciones de preparación; no se reescribió.
 
-## Verificación del código sin reentrenar
+## Verificación integral aislada
 
 Para reconstruir **02B → 03B → 04B → 04C → 05B → dashboard**, utilice
 `.venv/bin/python scripts/verificar_flujo_completo.py`. Reentrena solo en una
 copia nueva, compara resultados y prueba un servidor HTTP local temporal.
 Consulte el [alcance y evidencias del recorrido integral](reports/reproducibilidad/README.md).
 No sobrescribe el cierre ni sustituye la revisión visual y la aceptación humana.
+
+La [ejecución integral de octubre](reports/reproducibilidad/flujo_completo_20261001_02/INFORME.md)
+conserva los cinco notebooks ejecutados, comparaciones, pruebas del servidor
+y revisión visual del dashboard reconstruido.
+
+## Verificación del código sin reentrenar
 
 Desde la raíz, con el entorno activado:
 
