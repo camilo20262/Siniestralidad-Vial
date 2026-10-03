@@ -1,0 +1,30 @@
+{
+  "fecha_utc": "2026-10-02T23:29:22.877471+00:00",
+  "resultado": "correcto",
+  "modelo": "reproduccion_aislada_flujo_completo_20261002_cierre_pendientes",
+  "paginas_verificadas": [
+    "overview",
+    "query",
+    "history",
+    "evaluation",
+    "about"
+  ],
+  "predicciones": 58480,
+  "localidades_mapa": 20,
+  "conteos_actores_coinciden_con_eda": true,
+  "metricas_globales_coinciden_con_05B": true,
+  "evidencias_oficiales_intactas": 12,
+  "tiempos_servidor_segundos": {
+    "consulta_2023-01-01_KENNEDY": 0.1103,
+    "consulta_2024-02-29_CANDELARIA": 0.0743,
+    "consulta_2024-12-31_SUMAPAZ": 0.0616,
+    "historia_completa": 0.1722,
+    "historia_filtrada": 0.1043,
+    "evaluacion_global": 0.0842,
+    "evaluacion_filtrada": 0.0609
+  },
+  "operaciones_medidas_menores_5s": true,
+  "nota_rendimiento": "Medición local del cálculo de vista; no incluye navegador, arranque ni red.",
+  "duracion_total_segundos": 1.923,
+  "modelos_reentrenados": 0
+}

@@ -37,6 +37,10 @@ El [registro oficial](models/victimas/modelo_principal.json) identifica el pipel
 
 El modelo base de 200 árboles y umbral 0,55 se mantiene como referencia. **`pipeline_modelo_seleccionado.pkl` y `metadata_modelo.json` son archivos históricos de 04B y corresponden al modelo base.** Consulte el [catálogo de artefactos](models/victimas/README.md) para evitar confundirlos con el modelo principal.
 
+La [decisión de umbral DEC-UMB-01](docs/decisiones/umbral_modelo.md) documenta
+la comparación 0,52 frente a 0,55. La aprobación académica/institucional nominal
+continúa como TODO porque los artefactos no identifican una autoridad firmante.
+
 Puede comprobar el cierre con `.venv/bin/python scripts/verificar_modelo_principal.py`. La comprobación reproduce las predicciones de 05B y detecta cambios en el modelo, los datos o las evidencias. Si se reentrena, se debe actualizar expresamente la versión después de evaluarla.
 
 ## Resultados principales
@@ -78,7 +82,9 @@ Siniestralidad_Vial/
 │   ├── 05_Evaluacion.ipynb
 │   └── 05B_Evaluacion_Con_Victimas.ipynb
 ├── models/
-│   └── victimas/                  # Pipeline y modelos del escenario principal
+│   ├── README.md                  # Portada: binarios de la raíz son legado
+│   └── victimas/                  # Pipeline vigente y comparadores históricos
+├── legacy/                        # Manifiesto de artefactos conservados in situ
 ├── reports/
 │   ├── data_quality/
 │   ├── eda_victimas/
@@ -189,6 +195,17 @@ local no certifica que el flujo remoto haya pasado: debe comprobarse al publicar
 
 05B comprueba equivalencia numérica antes de conservar las evidencias congeladas, evitando que diferencias aritméticas de aproximadamente 1e-16 alteren sus huellas al reexportarlas. Los nuevos reportes se guardan por separado. Las funciones de referencia y bootstrap tienen pruebas en `tests/`, ejecutables con `python -m unittest discover -s tests -v`.
 
+## Estimación temporal adicional
+
+`scripts/generar_validacion_independiente.py` implementa una comprobación
+complementaria sin serializar modelos: selecciona configuración y umbral con
+validaciones 2020–2021, reajusta con 2018–2021 y evalúa 2022, que no participa
+en esa selección. El candidato 3 y umbral 0,54 obtienen en 2022 F1 0,4017, AP
+0,3077 y AUC-ROC 0,6959. Este diseño no sustituye `rf_victimas_bogota_v1.0` ni
+su umbral 0,52; 2022 ya había sido inspeccionado en el desarrollo histórico y
+no se presenta como prueba prospectiva. Consulte la
+[evidencia separada](reports/validacion_independiente_victimas/conclusion_ejecutiva.md).
+
 La primera ejecución de 02B descarga la cartografía si falta; las siguientes verifican y reutilizan la copia local. Las dependencias geográficas están incluidas en `requirements.txt`. Los antiguos scripts generadores se detienen si detectan estos notebooks ampliados, para evitar sobrescribirlos.
 
 ## Dashboard
@@ -216,5 +233,15 @@ Verificación con datos reales: `python scripts/verificar_dashboard.py`.
 ## Alcance y limitaciones
 
 La evaluación 2023–2024 es retrospectiva y ya participó en la comparación final; no constituye una prueba futura independiente. El prototipo no está listo para producción ni estima causalidad, gravedad futura o riesgo individual. Antes de un uso operativo se requiere validación prospectiva, calibración temporal separada, costos de falsas alertas y omisiones, e incertidumbre por subgrupo.
+
+> **TODO institucional — licencia:** confirmar por escrito la licencia y las
+> condiciones de redistribución del Excel con la entidad fuente. Hasta entonces,
+> `data/raw/procedencia_excel.json` registra
+> `"licencia": "pendiente de confirmación institucional"`.
+
+También quedan fuera de este cierre el despliegue público, la aceptación formal
+con usuarios, las pruebas de carga, la telemetría y una auditoría exhaustiva de
+accesibilidad. La aplicación es local y esos pendientes deben resolverse antes de
+presentarla como producto operativo o público.
 
 Reportes recomendados: [ficha técnica](reports/modelo_principal/ficha_tecnica_modelo.md), [conclusión ejecutiva](reports/evaluation_victimas/conclusion_ejecutiva.md), [métricas globales](reports/evaluation_victimas/metricas_globales.csv), [métricas del ajustado por localidad](reports/evaluation_victimas/metricas_random_forest_ajustado_por_localidad.csv) y [calibración](reports/evaluation_victimas/comparacion_brier_lineas_base.csv).

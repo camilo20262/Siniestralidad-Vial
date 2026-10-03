@@ -1,0 +1,42 @@
+[
+  {
+    "notebook": "02B_EDA_y_Analisis_Espacial_Con_Victimas.ipynb",
+    "celdas_codigo": 12,
+    "celdas_ejecutadas": 12,
+    "errores": 0,
+    "segundos": 104.75,
+    "sha256_ejecutado": "ac23eea1224beb45989e92aa4e1156eb7c9188bef72f540dbc55646a000b10b7"
+  },
+  {
+    "notebook": "03B_Preparacion_Datos_Con_Victimas.ipynb",
+    "celdas_codigo": 9,
+    "celdas_ejecutadas": 9,
+    "errores": 0,
+    "segundos": 25.53,
+    "sha256_ejecutado": "6271407a5ad70814e45a59322ef16f818c81000632044ea3fcfdcdf6cfb698e0"
+  },
+  {
+    "notebook": "04B_Modelado_Con_Victimas.ipynb",
+    "celdas_codigo": 12,
+    "celdas_ejecutadas": 12,
+    "errores": 0,
+    "segundos": 38.96,
+    "sha256_ejecutado": "cfebf44bcb5d30cf401b4aef55963dfc38a87fe300fc872fcf34826762810f27"
+  },
+  {
+    "notebook": "04C_Ajuste_Hiperparametros_Con_Victimas.ipynb",
+    "celdas_codigo": 6,
+    "celdas_ejecutadas": 6,
+    "errores": 0,
+    "segundos": 93.56,
+    "sha256_ejecutado": "544fc30fe7e8fd9bdf566421c81145998af14ed98974008310a7d8e58e7b2f38"
+  },
+  {
+    "notebook": "05B_Evaluacion_Con_Victimas.ipynb",
+    "celdas_codigo": 27,
+    "celdas_ejecutadas": 27,
+    "errores": 0,
+    "segundos": 22.93,
+    "sha256_ejecutado": "33a9748c0f413a205119f2a708546ae12c70c20c7c0e98982329eb1fbb1b1b82"
+  }
+]

@@ -36,3 +36,5 @@ uno-a-muchos: antes hay que validar la cardinalidad y la unidad de conteo.
 No se verificó una licencia específica para este Excel en la página consultada.
 Su disponibilidad pública no basta para asignarle una licencia. Ese punto de
 procedencia sigue abierto; no se inventó una fecha ni un permiso de reutilización.
+El metadato lo expresa literalmente como
+`"licencia": "pendiente de confirmación institucional"`.

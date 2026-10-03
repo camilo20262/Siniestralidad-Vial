@@ -1,0 +1,140 @@
+{
+  "resultado": "correcto",
+  "modelo": "reproduccion_aislada_flujo_completo_20261002_cierre_pendientes",
+  "servidor": "127.0.0.1, puerto temporal asignado por el sistema",
+  "servidor_detenido": true,
+  "paginas": [
+    "overview",
+    "query",
+    "history",
+    "evaluation",
+    "about"
+  ],
+  "consultas_validas": 3,
+  "consulta_futura_rechazada": true,
+  "descargas": [
+    "consulta_2023-01-01.json",
+    "localidades_2023-01-01.csv",
+    "historia_mensual.csv",
+    "metricas_filtradas.csv"
+  ],
+  "peticiones": [
+    {
+      "ruta": "/",
+      "estado_http": 200,
+      "segundos": 0.0122
+    },
+    {
+      "ruta": "/_dash-layout",
+      "estado_http": 200,
+      "segundos": 0.0006
+    },
+    {
+      "ruta": "/_dash-dependencies",
+      "estado_http": 200,
+      "segundos": 0.0004
+    },
+    {
+      "ruta": "/assets/dashboard.css",
+      "estado_http": 200,
+      "segundos": 0.0005
+    },
+    {
+      "ruta": "/healthz",
+      "estado_http": 200,
+      "segundos": 0.0004
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.1341
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0081
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0268
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0554
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0019
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.1046
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0771
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0754
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0154
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0006
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0849
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0543
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0687
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0333
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0243
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0288
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0276
+    },
+    {
+      "ruta": "/_dash-update-component",
+      "estado_http": 200,
+      "segundos": 0.0284
+    }
+  ],
+  "revision_visual_automatizada": false,
+  "limite": "HTTP y callbacks reales; no ejecuta JavaScript ni evalúa diseño o usabilidad."
+}

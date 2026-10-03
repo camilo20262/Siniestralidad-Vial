@@ -1,0 +1,868 @@
+{
+  "estado": "flujo_completo_verificado",
+  "alcance": "Reconstrucción aislada con reentrenamiento y HTTP local",
+  "dataset": {
+    "coincidencia_exacta": true,
+    "filas": 204560,
+    "columnas": 16
+  },
+  "eda": {
+    "tablas": [
+      {
+        "archivo": "reports/eda_victimas/actores_dia_semana_franja.csv",
+        "filas_reconstruidas": 84,
+        "filas_oficiales": 84,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Dia_Num": 0.0,
+          "Siniestros_Con_Participacion": 0.0,
+          "Dias_Calendario": 0.0,
+          "Promedio_Diario": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/actores_por_localidad.csv",
+        "filas_reconstruidas": 20,
+        "filas_oficiales": 20,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Bicicleta": 0.0,
+          "Motocicleta": 0.0,
+          "Peatón": 0.0,
+          "Siniestros_Totales": 0.0,
+          "Participacion_Motocicleta": 0.0,
+          "Participacion_Peatón": 0.0,
+          "Participacion_Bicicleta": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/calidad_indicadores_actores.csv",
+        "filas_reconstruidas": 6,
+        "filas_oficiales": 6,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Registros": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/centros_medianos_siniestros.csv",
+        "filas_reconstruidas": 20,
+        "filas_oficiales": 20,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Longitud": 0.0,
+          "Latitud": 0.0,
+          "Siniestros": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/cobertura_coordenadas.csv",
+        "filas_reconstruidas": 7,
+        "filas_oficiales": 7,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Anio": 0.0,
+          "Siniestros": 0.0,
+          "Coordenadas_Completas": 0.0,
+          "Coordenadas_En_Rango": 0.0,
+          "Dentro_Distrito_Referencia": 0.0,
+          "Cobertura_Completa": 0.0,
+          "Cobertura_Dentro_Referencia": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/comparacion_indicadores_gravedad.csv",
+        "filas_reconstruidas": 3,
+        "filas_oficiales": 3,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Con Heridos": 0.0,
+          "Con Muertos": 0.0,
+          "Sin información": 0.0,
+          "Solo Daños": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/control_poligonos_y_rectangulo.csv",
+        "filas_reconstruidas": 1,
+        "filas_oficiales": 1,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Fuera_Rectangulo_Urbano_Con_Coordenada": 0.0,
+          "Dentro_Distrito_Fuera_Rectangulo": 0.0,
+          "Fuera_Distrito_Con_Coordenada": 0.0,
+          "Dentro_Distrito_Localidad_Distinta": 0.0,
+          "Puntos_Limite_Compartido": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/coordenadas_para_revision.csv",
+        "filas_reconstruidas": 7817,
+        "filas_oficiales": 7817,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Codigo_Accidente": 0.0,
+          "Longitud": 0.0,
+          "Latitud": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/dia_semana_franja.csv",
+        "filas_reconstruidas": 28,
+        "filas_oficiales": 28,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Dia_Num": 0.0,
+          "Siniestros": 0.0,
+          "Dias_Calendario": 0.0,
+          "Promedio_Diario": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/estabilidad_territorial_periodos.csv",
+        "filas_reconstruidas": 20,
+        "filas_oficiales": 20,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Siniestros_Pre": 0.0,
+          "Siniestros_Post": 0.0,
+          "Siniestros_Pre_Sin2020": 0.0,
+          "Dias_Pre": 0.0,
+          "Dias_Post": 0.0,
+          "Dias_Pre_Sin2020": 0.0,
+          "Promedio_Diario_Pre": 0.0,
+          "Promedio_Diario_Post": 0.0,
+          "Promedio_Diario_Pre_Sin2020": 0.0,
+          "Ratio_Post_Pre": 0.0,
+          "Ratio_Post_Pre_Sin2020": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/estacionalidad_mes.csv",
+        "filas_reconstruidas": 12,
+        "filas_oficiales": 12,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Mes": 0.0,
+          "Siniestros": 0.0,
+          "Dias": 0.0,
+          "Promedio_Diario": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/festivos_comparacion_dias_equivalentes.csv",
+        "filas_reconstruidas": 125,
+        "filas_oficiales": 125,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Anio": 0.0,
+          "Mes": 0.0,
+          "Dia_Num": 0.0,
+          "Siniestros": 0.0,
+          "Esperado_No_Festivo": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/festivos_estandarizados_dia_semana.csv",
+        "filas_reconstruidas": 7,
+        "filas_oficiales": 7,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Anio": 0.0,
+          "Dias_Festivos": 0.0,
+          "Siniestros_Observados": 0.0,
+          "Siniestros_Esperados_Mismo_Dia_Semana": 0.0,
+          "Ratio_Observado_Esperado": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/festivos_por_anio.csv",
+        "filas_reconstruidas": 14,
+        "filas_oficiales": 14,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Anio": 0.0,
+          "Dias": 0.0,
+          "Siniestros": 0.0,
+          "Promedio_Diario": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/integridad_hoja_actores.csv",
+        "filas_reconstruidas": 1,
+        "filas_oficiales": 1,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Registros_Actores": 0.0,
+          "IDs_Actores_Faltantes": 0.0,
+          "IDs_Actores_Duplicados": 0.0,
+          "Siniestros_Con_Actores": 0.0,
+          "Siniestros_Sin_Fila_Actor": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/registros_actor_condicion_dia_franja.csv",
+        "filas_reconstruidas": 482,
+        "filas_oficiales": 482,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Registros_Actores": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/registros_actor_por_condicion_gravedad.csv",
+        "filas_reconstruidas": 62,
+        "filas_oficiales": 62,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Registros_Actores": 0.0,
+          "Siniestros_Distintos": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/resumen_anual.csv",
+        "filas_reconstruidas": 7,
+        "filas_oficiales": 7,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Anio": 0.0,
+          "Siniestros": 0.0,
+          "Dias": 0.0,
+          "Promedio_Diario": 0.0,
+          "Ratio_vs_2018_2019": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/resumen_localidades.csv",
+        "filas_reconstruidas": 20,
+        "filas_oficiales": 20,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Siniestros": 0.0,
+          "Siniestros_Con_Muertos": 0.0,
+          "Siniestros_Con_Peaton": 0.0,
+          "Siniestros_Con_Moto": 0.0,
+          "Siniestros_Con_Bicicleta": 0.0,
+          "Cobertura_Coordenadas_Completas": 0.0,
+          "Participacion_Ciudad": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/resumen_picos_actores.csv",
+        "filas_reconstruidas": 3,
+        "filas_oficiales": 3,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Dia_Num": 0.0,
+          "Siniestros_Con_Participacion": 0.0,
+          "Dias_Calendario": 0.0,
+          "Promedio_Diario": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/sensibilidad_universo_gravedad.csv",
+        "filas_reconstruidas": 1,
+        "filas_oficiales": 1,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Victimas_Tradicional": 0.0,
+          "Victimas_30d": 0.0,
+          "Salen_Al_Cambiar": 0.0,
+          "Entran_Al_Cambiar": 0.0,
+          "Indicador30d_Faltante_En_Tradicional": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/serie_diaria_calendario.csv",
+        "filas_reconstruidas": 2557,
+        "filas_oficiales": 2557,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Anio": 0.0,
+          "Mes": 0.0,
+          "Dia_Num": 0.0,
+          "Siniestros": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/serie_mensual.csv",
+        "filas_reconstruidas": 84,
+        "filas_oficiales": 84,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Anio": 0.0,
+          "Mes": 0.0,
+          "Siniestros": 0.0,
+          "Dias": 0.0,
+          "Promedio_Diario": 0.0
+        }
+      },
+      {
+        "archivo": "reports/eda_victimas/top25_celdas_concentracion.csv",
+        "filas_reconstruidas": 25,
+        "filas_oficiales": 25,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Celda_Este_100m": 0.0,
+          "Celda_Norte_100m": 0.0,
+          "Siniestros": 0.0,
+          "Siniestros_Con_Muertos": 0.0,
+          "Lado_Celda_Metros": 0.0
+        }
+      }
+    ],
+    "controles_iguales": true,
+    "conclusion_igual": true,
+    "figuras_generadas": [
+      "01_cobertura_coordenadas.png",
+      "02_distribucion_anual_localidad.png",
+      "03_densidad_espacial_victimas.png",
+      "04_centros_localidad.png",
+      "05_serie_temporal_mensual.png",
+      "06_dia_franja_y_mes.png",
+      "07_festivos_denominadores.png",
+      "08_actores_dia_franja.png",
+      "09_mapa_localidades_oficial.png",
+      "10_estabilidad_sensibilidad_2020.png"
+    ],
+    "inventario_figuras_igual": true,
+    "nota_figuras": "Inventario verificado; no se exige identidad de píxeles.",
+    "equivalente": true
+  },
+  "modelado_evaluacion": {
+    "tablas": [
+      {
+        "archivo": "reports/modeling_victimas/validacion_temporal_detalle.csv",
+        "filas_reconstruidas": 9,
+        "filas_oficiales": 9,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Corte": 0.0,
+          "Anio_Validacion": 0.0,
+          "N_Train": 0.0,
+          "N_Validacion": 0.0,
+          "Prevalencia_Train": 0.0,
+          "Prevalencia_Validacion": 0.0,
+          "F1": 0.0,
+          "AUC_ROC": 0.0,
+          "Average_Precision": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "Especificidad": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Brier": 0.0,
+          "TN": 0.0,
+          "FP": 0.0,
+          "FN": 0.0,
+          "TP": 0.0
+        }
+      },
+      {
+        "archivo": "reports/modeling_victimas/seleccion_umbral_2020_2022.csv",
+        "filas_reconstruidas": 181,
+        "filas_oficiales": 181,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Umbral": 0.0,
+          "F1": 0.0,
+          "AUC_ROC": 0.0,
+          "Average_Precision": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "Especificidad": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Brier": 2.7755575615628914e-17,
+          "TN": 0.0,
+          "FP": 0.0,
+          "FN": 0.0,
+          "TP": 0.0
+        }
+      },
+      {
+        "archivo": "reports/modeling_victimas/predicciones_oof_2020_2022.parquet",
+        "filas_reconstruidas": 263040,
+        "filas_oficiales": 263040,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Corte": 0.0,
+          "Anio_Validacion": 0.0,
+          "Umbral_Etiqueta": 0.0,
+          "Alto_Riesgo": 0.0,
+          "Probabilidad": 4.440892098500626e-16,
+          "Prediccion_05": 0.0
+        }
+      },
+      {
+        "archivo": "reports/modeling_victimas/predicciones_2023_2024.parquet",
+        "filas_reconstruidas": 175440,
+        "filas_oficiales": 175440,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Alto_Riesgo": 0.0,
+          "Umbral": 0.0,
+          "Probabilidad": 3.3306690738754696e-16,
+          "Prediccion": 0.0
+        }
+      },
+      {
+        "archivo": "reports/tuning_victimas/busqueda_temporal_detalle.csv",
+        "filas_reconstruidas": 24,
+        "filas_oficiales": 24,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Candidato": 0.0,
+          "Train_Hasta": 0.0,
+          "Validacion": 0.0,
+          "n_estimators": 0.0,
+          "max_depth": 0.0,
+          "min_samples_leaf": 0.0,
+          "Average_Precision": 0.0,
+          "AUC_ROC": 0.0,
+          "F1": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Brier": 2.7755575615628914e-17,
+          "TN": 0.0,
+          "FP": 0.0,
+          "FN": 0.0,
+          "TP": 0.0
+        }
+      },
+      {
+        "archivo": "reports/tuning_victimas/busqueda_temporal_resumen.csv",
+        "filas_reconstruidas": 8,
+        "filas_oficiales": 8,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Candidato": 0.0,
+          "AP_Media": 0.0,
+          "AP_Std": 0.0,
+          "AUC_Media": 0.0,
+          "F1_Medio": 0.0,
+          "Recall_Medio": 0.0,
+          "Brier_Medio": 0.0,
+          "n_estimators": 0.0,
+          "max_depth": 0.0,
+          "min_samples_leaf": 0.0
+        }
+      },
+      {
+        "archivo": "reports/tuning_victimas/seleccion_umbral.csv",
+        "filas_reconstruidas": 181,
+        "filas_oficiales": 181,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Umbral": 0.0,
+          "Average_Precision": 0.0,
+          "AUC_ROC": 0.0,
+          "F1": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Brier": 0.0,
+          "TN": 0.0,
+          "FP": 0.0,
+          "FN": 0.0,
+          "TP": 0.0
+        }
+      },
+      {
+        "archivo": "reports/tuning_victimas/predicciones_oof_mejor_configuracion.parquet",
+        "filas_reconstruidas": 87680,
+        "filas_oficiales": 87680,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Alto_Riesgo": 0.0,
+          "Score": 4.440892098500626e-16
+        }
+      },
+      {
+        "archivo": "reports/evaluation_victimas/predicciones_random_forest_ajustado_2023_2024.parquet",
+        "filas_reconstruidas": 58480,
+        "filas_oficiales": 58480,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Anio": 0.0,
+          "Alto_Riesgo": 0.0,
+          "Score": 4.440892098500626e-16,
+          "Prediccion": 0.0
+        }
+      },
+      {
+        "archivo": "reports/evaluation_victimas/metricas_globales.csv",
+        "filas_reconstruidas": 4,
+        "filas_oficiales": 4,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Umbral": 0.0,
+          "F1": 0.0,
+          "AUC_ROC": 0.0,
+          "Average_Precision": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "Especificidad": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Brier": 5.551115123125783e-17,
+          "Tasa_Predicha_Positiva": 0.0,
+          "TN": 0.0,
+          "FP": 0.0,
+          "FN": 0.0,
+          "TP": 0.0
+        }
+      },
+      {
+        "archivo": "reports/evaluation_victimas/metricas_random_forest_ajustado_por_localidad.csv",
+        "filas_reconstruidas": 20,
+        "filas_oficiales": 20,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Observaciones": 0.0,
+          "Positivos": 0.0,
+          "Prevalencia": 0.0,
+          "F1": 0.0,
+          "AUC_ROC": 0.0,
+          "Average_Precision": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "Especificidad": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Brier": 5.551115123125783e-17,
+          "Tasa_Predicha_Positiva": 0.0,
+          "TN": 0.0,
+          "FP": 0.0,
+          "FN": 0.0,
+          "TP": 0.0
+        }
+      },
+      {
+        "archivo": "reports/evaluation_victimas/metricas_random_forest_ajustado_por_franja.csv",
+        "filas_reconstruidas": 4,
+        "filas_oficiales": 4,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Observaciones": 0.0,
+          "Positivos": 0.0,
+          "Prevalencia": 0.0,
+          "F1": 0.0,
+          "AUC_ROC": 0.0,
+          "Average_Precision": 0.0,
+          "Precision": 0.0,
+          "Recall": 0.0,
+          "Especificidad": 0.0,
+          "Balanced_Accuracy": 0.0,
+          "Brier": 2.7755575615628914e-17,
+          "Tasa_Predicha_Positiva": 0.0,
+          "TN": 0.0,
+          "FP": 0.0,
+          "FN": 0.0,
+          "TP": 0.0
+        }
+      },
+      {
+        "archivo": "reports/evaluation_victimas/comparacion_referencias_historicas.csv",
+        "filas_reconstruidas": 6,
+        "filas_oficiales": 6,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Filas": 0.0,
+          "Grupos_Nuevos": 0.0,
+          "Average_Precision": 0.0,
+          "AUC_ROC": 0.0,
+          "Brier": 0.0
+        }
+      },
+      {
+        "archivo": "reports/evaluation_victimas/bootstrap_rf_vs_referencia_resumen.csv",
+        "filas_reconstruidas": 3,
+        "filas_oficiales": 3,
+        "equivalente": true,
+        "max_diferencias_numericas": {
+          "Diferencia_A_Menos_B": 0.0,
+          "P025": 0.0,
+          "P975": 0.0,
+          "Replicas_Validas": 0.0,
+          "Bloques": 0.0,
+          "Dias_Bloque": 0.0,
+          "Semilla": 0.0
+        }
+      }
+    ],
+    "seleccion": [
+      {
+        "archivo": "metadata_modelo.json",
+        "coincidencias": {
+          "modelo_seleccionado": true,
+          "umbral_candidato": true,
+          "variables": true,
+          "random_state": true
+        },
+        "python_oficial": "3.14.5",
+        "python_reproduccion": "3.12.14"
+      },
+      {
+        "archivo": "metadata_random_forest_ajustado.json",
+        "coincidencias": {
+          "mejor_candidato": true,
+          "hiperparametros": true,
+          "umbral_temporal": true
+        },
+        "python_oficial": "3.12.14",
+        "python_reproduccion": "3.12.14"
+      }
+    ],
+    "modelos": [
+      {
+        "modelo": "pipeline_logistica_victimas.pkl",
+        "mismo_esquema": true,
+        "mismos_hiperparametros": true,
+        "mismos_bytes": false
+      },
+      {
+        "modelo": "pipeline_random_forest_victimas.pkl",
+        "mismo_esquema": true,
+        "mismos_hiperparametros": true,
+        "mismos_bytes": false
+      },
+      {
+        "modelo": "pipeline_xgboost_victimas.pkl",
+        "mismo_esquema": true,
+        "mismos_hiperparametros": true,
+        "mismos_bytes": false
+      },
+      {
+        "modelo": "pipeline_random_forest_ajustado_victimas.pkl",
+        "mismo_esquema": true,
+        "mismos_hiperparametros": true,
+        "mismos_bytes": true
+      }
+    ],
+    "nota_bytes": "No se exige identidad binaria de pickle; se comparan esquema, parámetros, decisiones y scores con tolerancia prefijada."
+  },
+  "agregados_dashboard": {
+    "archivo": "data/dashboard/siniestros_actores.parquet",
+    "filas_reconstruidas": 75089,
+    "filas_oficiales": 75089,
+    "equivalente": true,
+    "max_diferencias_numericas": {
+      "Siniestros": 0.0
+    }
+  },
+  "dashboard": {
+    "fecha_utc": "2026-10-02T23:29:22.877471+00:00",
+    "resultado": "correcto",
+    "modelo": "reproduccion_aislada_flujo_completo_20261002_cierre_pendientes",
+    "paginas_verificadas": [
+      "overview",
+      "query",
+      "history",
+      "evaluation",
+      "about"
+    ],
+    "predicciones": 58480,
+    "localidades_mapa": 20,
+    "conteos_actores_coinciden_con_eda": true,
+    "metricas_globales_coinciden_con_05B": true,
+    "evidencias_oficiales_intactas": 12,
+    "tiempos_servidor_segundos": {
+      "consulta_2023-01-01_KENNEDY": 0.1103,
+      "consulta_2024-02-29_CANDELARIA": 0.0743,
+      "consulta_2024-12-31_SUMAPAZ": 0.0616,
+      "historia_completa": 0.1722,
+      "historia_filtrada": 0.1043,
+      "evaluacion_global": 0.0842,
+      "evaluacion_filtrada": 0.0609
+    },
+    "operaciones_medidas_menores_5s": true,
+    "nota_rendimiento": "Medición local del cálculo de vista; no incluye navegador, arranque ni red.",
+    "duracion_total_segundos": 1.923,
+    "modelos_reentrenados": 0
+  },
+  "http": {
+    "resultado": "correcto",
+    "modelo": "reproduccion_aislada_flujo_completo_20261002_cierre_pendientes",
+    "servidor": "127.0.0.1, puerto temporal asignado por el sistema",
+    "servidor_detenido": true,
+    "paginas": [
+      "overview",
+      "query",
+      "history",
+      "evaluation",
+      "about"
+    ],
+    "consultas_validas": 3,
+    "consulta_futura_rechazada": true,
+    "descargas": [
+      "consulta_2023-01-01.json",
+      "localidades_2023-01-01.csv",
+      "historia_mensual.csv",
+      "metricas_filtradas.csv"
+    ],
+    "peticiones": [
+      {
+        "ruta": "/",
+        "estado_http": 200,
+        "segundos": 0.0122
+      },
+      {
+        "ruta": "/_dash-layout",
+        "estado_http": 200,
+        "segundos": 0.0006
+      },
+      {
+        "ruta": "/_dash-dependencies",
+        "estado_http": 200,
+        "segundos": 0.0004
+      },
+      {
+        "ruta": "/assets/dashboard.css",
+        "estado_http": 200,
+        "segundos": 0.0005
+      },
+      {
+        "ruta": "/healthz",
+        "estado_http": 200,
+        "segundos": 0.0004
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.1341
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0081
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0268
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0554
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0019
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.1046
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0771
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0754
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0154
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0006
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0849
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0543
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0687
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0333
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0243
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0288
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0276
+      },
+      {
+        "ruta": "/_dash-update-component",
+        "estado_http": 200,
+        "segundos": 0.0284
+      }
+    ],
+    "revision_visual_automatizada": false,
+    "limite": "HTTP y callbacks reales; no ejecuta JavaScript ni evalúa diseño o usabilidad."
+  },
+  "revision_visual": "No incluida en la comprobación automática HTTP; registrar por separado.",
+  "oficiales_intactos": true,
+  "archivos_oficiales_comprobados": 265,
+  "archivos_oficiales_modificados": [],
+  "archivos_oficiales_creados": [],
+  "ejecuciones": [
+    {
+      "notebook": "02B_EDA_y_Analisis_Espacial_Con_Victimas.ipynb",
+      "celdas_codigo": 12,
+      "celdas_ejecutadas": 12,
+      "errores": 0,
+      "segundos": 104.75,
+      "sha256_ejecutado": "ac23eea1224beb45989e92aa4e1156eb7c9188bef72f540dbc55646a000b10b7"
+    },
+    {
+      "notebook": "03B_Preparacion_Datos_Con_Victimas.ipynb",
+      "celdas_codigo": 9,
+      "celdas_ejecutadas": 9,
+      "errores": 0,
+      "segundos": 25.53,
+      "sha256_ejecutado": "6271407a5ad70814e45a59322ef16f818c81000632044ea3fcfdcdf6cfb698e0"
+    },
+    {
+      "notebook": "04B_Modelado_Con_Victimas.ipynb",
+      "celdas_codigo": 12,
+      "celdas_ejecutadas": 12,
+      "errores": 0,
+      "segundos": 38.96,
+      "sha256_ejecutado": "cfebf44bcb5d30cf401b4aef55963dfc38a87fe300fc872fcf34826762810f27"
+    },
+    {
+      "notebook": "04C_Ajuste_Hiperparametros_Con_Victimas.ipynb",
+      "celdas_codigo": 6,
+      "celdas_ejecutadas": 6,
+      "errores": 0,
+      "segundos": 93.56,
+      "sha256_ejecutado": "544fc30fe7e8fd9bdf566421c81145998af14ed98974008310a7d8e58e7b2f38"
+    },
+    {
+      "notebook": "05B_Evaluacion_Con_Victimas.ipynb",
+      "celdas_codigo": 27,
+      "celdas_ejecutadas": 27,
+      "errores": 0,
+      "segundos": 22.93,
+      "sha256_ejecutado": "33a9748c0f413a205119f2a708546ae12c70c20c7c0e98982329eb1fbb1b1b82"
+    }
+  ]
+}

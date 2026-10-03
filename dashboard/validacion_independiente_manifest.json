@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "estado": "evidencia_complementaria_opt_in",
+  "archivos": {
+    "reports/validacion_independiente_victimas/resultado.json": "e417870fde3f4eb93ac00f1e49003155dcc590e548a8c9d9b3b032e60d0b3cdf"
+  },
+  "nota": "Manifiesto separado del dashboard oficial; no cambia el modelo ni el umbral vigente."
+}

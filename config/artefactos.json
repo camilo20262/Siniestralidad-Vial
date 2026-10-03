@@ -1,18 +1,91 @@
 {
-  "version_catalogo": 1,
-  "fecha": "2026-09-26",
+  "version_catalogo": 2,
+  "fecha": "2026-10-02",
   "autoridad_modelo": "models/victimas/modelo_principal.json",
+  "modelos": {
+    "rf_ajustado_victimas": {
+      "estado": "vigente",
+      "ruta": "models/victimas/pipeline_random_forest_ajustado_victimas.pkl",
+      "umbral_score": 0.52,
+      "nota": "Único modelo consumido por consultas y dashboard."
+    },
+    "rf_base_victimas": {
+      "estado": "historico",
+      "ruta": "models/victimas/pipeline_random_forest_victimas.pkl",
+      "alias": "models/victimas/pipeline_modelo_seleccionado.pkl",
+      "umbral_score": 0.55,
+      "nota": "Referencia base de 04B; el alias no es el principal vigente."
+    },
+    "logistica_victimas": {
+      "estado": "historico",
+      "ruta": "models/victimas/pipeline_logistica_victimas.pkl"
+    },
+    "xgboost_victimas": {
+      "estado": "historico",
+      "ruta": "models/victimas/pipeline_xgboost_victimas.pkl"
+    },
+    "logistica_todos_los_siniestros": {
+      "estado": "historico",
+      "ruta": "models/modelo_logistica.pkl"
+    },
+    "rf_todos_los_siniestros": {
+      "estado": "historico",
+      "ruta": "models/modelo_random_forest.pkl"
+    },
+    "xgboost_todos_los_siniestros": {
+      "estado": "historico",
+      "ruta": "models/modelo_xgboost.pkl"
+    }
+  },
   "principal": {
+    "estado": "vigente",
     "dataset": "data/processed/dataset_victimas_localidad_franja_fecha.parquet",
     "pipeline": "models/victimas/pipeline_random_forest_ajustado_victimas.pkl",
-    "notebooks": ["notebooks/02B_EDA_y_Analisis_Espacial_Con_Victimas.ipynb", "notebooks/03B_Preparacion_Datos_Con_Victimas.ipynb", "notebooks/04B_Modelado_Con_Victimas.ipynb", "notebooks/04C_Ajuste_Hiperparametros_Con_Victimas.ipynb", "notebooks/05B_Evaluacion_Con_Victimas.ipynb"],
-    "reportes": ["reports/eda_victimas", "reports/modeling_victimas", "reports/tuning_victimas", "reports/evaluation_victimas", "reports/modelo_principal"]
+    "notebooks": [
+      "notebooks/02B_EDA_y_Analisis_Espacial_Con_Victimas.ipynb",
+      "notebooks/03B_Preparacion_Datos_Con_Victimas.ipynb",
+      "notebooks/04B_Modelado_Con_Victimas.ipynb",
+      "notebooks/04C_Ajuste_Hiperparametros_Con_Victimas.ipynb",
+      "notebooks/05B_Evaluacion_Con_Victimas.ipynb"
+    ],
+    "reportes": [
+      "reports/eda_victimas",
+      "reports/modeling_victimas",
+      "reports/tuning_victimas",
+      "reports/evaluation_victimas",
+      "reports/modelo_principal"
+    ]
   },
-  "referencia_base_no_principal": ["models/victimas/pipeline_random_forest_victimas.pkl", "models/victimas/pipeline_modelo_seleccionado.pkl", "models/victimas/metadata_modelo.json"],
+  "referencia_base_no_principal": {
+    "estado": "historico",
+    "artefactos": [
+      "models/victimas/pipeline_random_forest_victimas.pkl",
+      "models/victimas/pipeline_modelo_seleccionado.pkl",
+      "models/victimas/metadata_modelo.json"
+    ]
+  },
   "legacy_todos_los_siniestros": {
+    "estado": "historico",
     "dataset": "data/processed/dataset_localidad_franja_fecha.parquet",
-    "notebooks": ["notebooks/03_Preparacion_de_los_Datos (3).ipynb", "notebooks/04_Modelado.ipynb", "notebooks/05_Evaluacion.ipynb"],
-    "reportes": "reports/evaluation"
+    "notebooks": [
+      "notebooks/03_Preparacion_de_los_Datos (3).ipynb",
+      "notebooks/04_Modelado.ipynb",
+      "notebooks/05_Evaluacion.ipynb"
+    ],
+    "modelos": [
+      "models/modelo_logistica.pkl",
+      "models/modelo_random_forest.pkl",
+      "models/modelo_xgboost.pkl",
+      "models/preprocesador_arboles.pkl",
+      "models/preprocesador_logistica.pkl"
+    ],
+    "reportes": "reports/evaluation",
+    "separacion": "Conservados en sus rutas originales para no romper notebooks cerrados, salidas ni citas históricas; portadas y models/README.md los marcan inequívocamente como legado."
   },
-  "politica": "Catálogo sin mover ni renombrar evidencias. El registro oficial es la autoridad de versión, esquema y umbral. Los experimentos históricos no son el modelo principal."
+  "validacion_adicional": {
+    "estado": "evidencia_complementaria",
+    "ruta": "reports/validacion_independiente_victimas",
+    "nota": "Reserva 2022 dentro de un procedimiento adicional; no reemplaza el modelo vigente."
+  },
+  "politica": "El registro oficial es la autoridad de versión, esquema y umbral. Los artefactos cerrados no se mueven ni renombran si ello rompe rutas, salidas o citas; en esos casos se conservan con portada inequívoca y estado histórico."
 }

@@ -20,25 +20,33 @@ ADVERTENCIA_SCORE = (
 )
 
 
+def validar_fecha_y_alcance(datos, fecha):
+    """Normaliza una fecha y comprueba que pertenezca al tramo retrospectivo."""
+    if isinstance(fecha, str) and not re.fullmatch(r'\d{4}-\d{2}-\d{2}', fecha):
+        raise ValueError('Fecha inválida; use AAAA-MM-DD sin hora ni zona horaria.')
+    try:
+        fecha = pd.Timestamp(fecha)
+    except (TypeError, ValueError) as exc:
+        raise ValueError('Fecha inválida; use AAAA-MM-DD.') from exc
+    if pd.isna(fecha) or fecha.tzinfo is not None or fecha != fecha.normalize():
+        raise ValueError('La fecha debe ser un día sin hora ni zona horaria.')
+    data = datos[datos.Periodo.eq('test')]
+    fechas = pd.to_datetime(data.Fecha_Acc)
+    if data.empty or not fechas.min() <= fecha <= fechas.max():
+        raise ValueError('Fecha fuera del periodo retrospectivo disponible (2023–2024).')
+    return fecha
+
+
 @dataclass
 class ConsultaRetrospectiva:
     modelo: ModeloPrincipal
     datos: pd.DataFrame
 
     def consultar(self, fecha, localidad, franja):
-        if isinstance(fecha, str) and not re.fullmatch(r'\d{4}-\d{2}-\d{2}', fecha):
-            raise ValueError('Fecha inválida; use AAAA-MM-DD sin hora ni zona horaria.')
-        try:
-            fecha = pd.Timestamp(fecha)
-        except (TypeError, ValueError) as exc:
-            raise ValueError('Fecha inválida; use AAAA-MM-DD.') from exc
-        if pd.isna(fecha) or fecha.tzinfo is not None or fecha != fecha.normalize():
-            raise ValueError('La fecha debe ser un día sin hora ni zona horaria.')
-        # El subconjunto test es la autoridad de fechas disponibles, no se extrapola.
+        fecha = validar_fecha_y_alcance(self.datos, fecha)
+        # El subconjunto test es la autoridad de casos disponibles, no se extrapola.
         data = self.datos[self.datos.Periodo.eq('test')]
         fechas = pd.to_datetime(data.Fecha_Acc)
-        if data.empty or not fechas.min() <= fecha <= fechas.max():
-            raise ValueError('Fecha fuera del periodo retrospectivo disponible (2023–2024).')
         fila = data[(fechas == fecha) & data.Localidad.eq(localidad) & data.Franja_Horaria.eq(franja)]
         if len(fila) != 1:
             raise ValueError('La consulta debe identificar un único caso de localidad y franja válidas.')

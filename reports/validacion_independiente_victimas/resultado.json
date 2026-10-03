@@ -1,0 +1,57 @@
+{
+  "estado": "estimacion_adicional_completada",
+  "fecha": "2026-10-02",
+  "proposito": "Separar una evaluación de la selección de configuración y umbral sin cambiar el modelo oficial.",
+  "seleccion": {
+    "cortes": [
+      {
+        "train_hasta": 2019,
+        "validacion": 2020
+      },
+      {
+        "train_hasta": 2020,
+        "validacion": 2021
+      }
+    ],
+    "anios_validacion": [
+      2020,
+      2021
+    ],
+    "candidatos": 8,
+    "mejor_candidato": 3,
+    "umbral": 0.5399999999999999
+  },
+  "evaluacion_separada": {
+    "train_hasta": 2021,
+    "anio": 2022,
+    "participo_en_seleccion": false,
+    "metricas": {
+      "Modelo": "Random Forest estimación temporal adicional",
+      "Candidato": 3,
+      "Umbral": 0.5399999999999999,
+      "Entrenamiento": "2018–2021",
+      "Evaluacion": "2022",
+      "N_Train": 116880,
+      "N_Evaluacion": 29200,
+      "Positivos_Evaluacion": 5533,
+      "Average_Precision": 0.307723655237088,
+      "AUC_ROC": 0.6958781999575394,
+      "F1": 0.40166716284608517,
+      "Precision": 0.29950275261942816,
+      "Recall": 0.6096150370504247,
+      "Especificidad": 0.6666666666666666,
+      "Balanced_Accuracy": 0.6381408518585456,
+      "Brier": 0.22275791460771696,
+      "TN": 15778,
+      "FP": 7889,
+      "FN": 2160,
+      "TP": 3373
+    }
+  },
+  "alcance": "Separación procedimental adicional. 2022 no participa en esta selección, pero ya había sido inspeccionado en el desarrollo histórico; no es una prueba prospectiva ni externa.",
+  "modelo_oficial_modificado": false,
+  "dataset": "data/processed/dataset_victimas_localidad_franja_fecha.parquet",
+  "dataset_sha256": "0e92fce1e9398e4b4ddc190126d605cb7c983d15ca614235fd07401302ee9a2d",
+  "version_python": "3.12.14",
+  "version_sklearn": "1.9.0"
+}

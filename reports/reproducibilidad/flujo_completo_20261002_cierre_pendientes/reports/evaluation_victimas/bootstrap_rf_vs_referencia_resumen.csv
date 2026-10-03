@@ -1,0 +1,4 @@
+﻿Comparacion,Metrica,Diferencia_A_Menos_B,P025,P975,Replicas_Validas,Bloques,Dias_Bloque,Semilla
+Random Forest ajustado menos Tasa localidad-franja-dia,Average_Precision,0.001176623316317682,-0.0026493841923174778,0.004766865481200404,300,105,7,42
+Random Forest ajustado menos Tasa localidad-franja-dia,AUC_ROC,0.000213982655275613,-0.0018884820370856953,0.002594575429336987,300,105,7,42
+Random Forest ajustado menos Tasa localidad-franja-dia,Brier,0.07831813678523905,0.07580322986528451,0.0804506552379783,300,105,7,42

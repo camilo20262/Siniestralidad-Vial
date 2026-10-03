@@ -1,0 +1,483 @@
+﻿Condicion_Especifica,Dia_Semana,Franja_Horaria,Registros_Actores
+Ciclista,Domingo,Madrugada,140
+Ciclista,Domingo,Mañana,507
+Ciclista,Domingo,Tarde,492
+Ciclista,Domingo,Noche,325
+Ciclista,Jueves,Madrugada,191
+Ciclista,Jueves,Mañana,918
+Ciclista,Jueves,Tarde,729
+Ciclista,Jueves,Noche,643
+Ciclista,Lunes,Madrugada,140
+Ciclista,Lunes,Mañana,810
+Ciclista,Lunes,Tarde,726
+Ciclista,Lunes,Noche,530
+Ciclista,Martes,Madrugada,148
+Ciclista,Martes,Mañana,978
+Ciclista,Martes,Tarde,767
+Ciclista,Martes,Noche,649
+Ciclista,Miércoles,Madrugada,145
+Ciclista,Miércoles,Mañana,953
+Ciclista,Miércoles,Tarde,769
+Ciclista,Miércoles,Noche,609
+Ciclista,Sábado,Madrugada,198
+Ciclista,Sábado,Mañana,728
+Ciclista,Sábado,Tarde,695
+Ciclista,Sábado,Noche,602
+Ciclista,Viernes,Madrugada,190
+Ciclista,Viernes,Mañana,978
+Ciclista,Viernes,Tarde,756
+Ciclista,Viernes,Noche,671
+Cond Carga,Domingo,Madrugada,49
+Cond Carga,Domingo,Mañana,74
+Cond Carga,Domingo,Tarde,59
+Cond Carga,Domingo,Noche,47
+Cond Carga,Jueves,Madrugada,83
+Cond Carga,Jueves,Mañana,292
+Cond Carga,Jueves,Tarde,314
+Cond Carga,Jueves,Noche,128
+Cond Carga,Lunes,Madrugada,73
+Cond Carga,Lunes,Mañana,230
+Cond Carga,Lunes,Tarde,277
+Cond Carga,Lunes,Noche,106
+Cond Carga,Martes,Madrugada,84
+Cond Carga,Martes,Mañana,306
+Cond Carga,Martes,Tarde,305
+Cond Carga,Martes,Noche,150
+Cond Carga,Miércoles,Madrugada,73
+Cond Carga,Miércoles,Mañana,272
+Cond Carga,Miércoles,Tarde,303
+Cond Carga,Miércoles,Noche,136
+Cond Carga,Sábado,Madrugada,118
+Cond Carga,Sábado,Mañana,241
+Cond Carga,Sábado,Tarde,215
+Cond Carga,Sábado,Noche,105
+Cond Carga,Viernes,Madrugada,109
+Cond Carga,Viernes,Mañana,301
+Cond Carga,Viernes,Tarde,296
+Cond Carga,Viernes,Noche,152
+Cond Livianos,Domingo,Madrugada,1020
+Cond Livianos,Domingo,Mañana,1105
+Cond Livianos,Domingo,Tarde,1471
+Cond Livianos,Domingo,Noche,1158
+Cond Livianos,Jueves,Madrugada,499
+Cond Livianos,Jueves,Mañana,1788
+Cond Livianos,Jueves,Tarde,1703
+Cond Livianos,Jueves,Noche,1292
+Cond Livianos,Lunes,Madrugada,472
+Cond Livianos,Lunes,Mañana,1575
+Cond Livianos,Lunes,Tarde,1589
+Cond Livianos,Lunes,Noche,1251
+Cond Livianos,Martes,Madrugada,341
+Cond Livianos,Martes,Mañana,1893
+Cond Livianos,Martes,Tarde,1813
+Cond Livianos,Martes,Noche,1329
+Cond Livianos,Miércoles,Madrugada,430
+Cond Livianos,Miércoles,Mañana,1736
+Cond Livianos,Miércoles,Tarde,1726
+Cond Livianos,Miércoles,Noche,1271
+Cond Livianos,Sábado,Madrugada,988
+Cond Livianos,Sábado,Mañana,1715
+Cond Livianos,Sábado,Tarde,2006
+Cond Livianos,Sábado,Noche,1752
+Cond Livianos,Viernes,Madrugada,628
+Cond Livianos,Viernes,Mañana,1792
+Cond Livianos,Viernes,Tarde,1820
+Cond Livianos,Viernes,Noche,1575
+Cond Servicio Especial,Domingo,Madrugada,30
+Cond Servicio Especial,Domingo,Mañana,28
+Cond Servicio Especial,Domingo,Tarde,21
+Cond Servicio Especial,Domingo,Noche,24
+Cond Servicio Especial,Jueves,Madrugada,40
+Cond Servicio Especial,Jueves,Mañana,74
+Cond Servicio Especial,Jueves,Tarde,62
+Cond Servicio Especial,Jueves,Noche,43
+Cond Servicio Especial,Lunes,Madrugada,50
+Cond Servicio Especial,Lunes,Mañana,83
+Cond Servicio Especial,Lunes,Tarde,69
+Cond Servicio Especial,Lunes,Noche,40
+Cond Servicio Especial,Martes,Madrugada,33
+Cond Servicio Especial,Martes,Mañana,75
+Cond Servicio Especial,Martes,Tarde,70
+Cond Servicio Especial,Martes,Noche,46
+Cond Servicio Especial,Miércoles,Madrugada,36
+Cond Servicio Especial,Miércoles,Mañana,83
+Cond Servicio Especial,Miércoles,Tarde,62
+Cond Servicio Especial,Miércoles,Noche,28
+Cond Servicio Especial,Sábado,Madrugada,19
+Cond Servicio Especial,Sábado,Mañana,30
+Cond Servicio Especial,Sábado,Tarde,34
+Cond Servicio Especial,Sábado,Noche,34
+Cond Servicio Especial,Viernes,Madrugada,46
+Cond Servicio Especial,Viernes,Mañana,58
+Cond Servicio Especial,Viernes,Tarde,68
+Cond Servicio Especial,Viernes,Noche,56
+Cond TPP,Domingo,Madrugada,90
+Cond TPP,Domingo,Mañana,401
+Cond TPP,Domingo,Tarde,419
+Cond TPP,Domingo,Noche,349
+Cond TPP,Jueves,Madrugada,169
+Cond TPP,Jueves,Mañana,881
+Cond TPP,Jueves,Tarde,775
+Cond TPP,Jueves,Noche,553
+Cond TPP,Lunes,Madrugada,146
+Cond TPP,Lunes,Mañana,849
+Cond TPP,Lunes,Tarde,841
+Cond TPP,Lunes,Noche,565
+Cond TPP,Martes,Madrugada,156
+Cond TPP,Martes,Mañana,984
+Cond TPP,Martes,Tarde,904
+Cond TPP,Martes,Noche,609
+Cond TPP,Miércoles,Madrugada,133
+Cond TPP,Miércoles,Mañana,915
+Cond TPP,Miércoles,Tarde,875
+Cond TPP,Miércoles,Noche,572
+Cond TPP,Sábado,Madrugada,132
+Cond TPP,Sábado,Mañana,597
+Cond TPP,Sábado,Tarde,679
+Cond TPP,Sábado,Noche,507
+Cond TPP,Viernes,Madrugada,160
+Cond TPP,Viernes,Mañana,857
+Cond TPP,Viernes,Tarde,807
+Cond TPP,Viernes,Noche,666
+Cond Taxi,Domingo,Madrugada,489
+Cond Taxi,Domingo,Mañana,365
+Cond Taxi,Domingo,Tarde,408
+Cond Taxi,Domingo,Noche,409
+Cond Taxi,Jueves,Madrugada,188
+Cond Taxi,Jueves,Mañana,490
+Cond Taxi,Jueves,Tarde,501
+Cond Taxi,Jueves,Noche,396
+Cond Taxi,Lunes,Madrugada,174
+Cond Taxi,Lunes,Mañana,472
+Cond Taxi,Lunes,Tarde,465
+Cond Taxi,Lunes,Noche,380
+Cond Taxi,Martes,Madrugada,134
+Cond Taxi,Martes,Mañana,555
+Cond Taxi,Martes,Tarde,494
+Cond Taxi,Martes,Noche,420
+Cond Taxi,Miércoles,Madrugada,164
+Cond Taxi,Miércoles,Mañana,547
+Cond Taxi,Miércoles,Tarde,512
+Cond Taxi,Miércoles,Noche,396
+Cond Taxi,Sábado,Madrugada,415
+Cond Taxi,Sábado,Mañana,413
+Cond Taxi,Sábado,Tarde,472
+Cond Taxi,Sábado,Noche,466
+Cond Taxi,Viernes,Madrugada,244
+Cond Taxi,Viernes,Mañana,530
+Cond Taxi,Viernes,Tarde,475
+Cond Taxi,Viernes,Noche,505
+Cond Vehículo Sin Info,Domingo,Madrugada,67
+Cond Vehículo Sin Info,Domingo,Mañana,61
+Cond Vehículo Sin Info,Domingo,Tarde,77
+Cond Vehículo Sin Info,Domingo,Noche,89
+Cond Vehículo Sin Info,Jueves,Madrugada,42
+Cond Vehículo Sin Info,Jueves,Mañana,99
+Cond Vehículo Sin Info,Jueves,Tarde,86
+Cond Vehículo Sin Info,Jueves,Noche,83
+Cond Vehículo Sin Info,Lunes,Madrugada,48
+Cond Vehículo Sin Info,Lunes,Mañana,75
+Cond Vehículo Sin Info,Lunes,Tarde,70
+Cond Vehículo Sin Info,Lunes,Noche,86
+Cond Vehículo Sin Info,Martes,Madrugada,31
+Cond Vehículo Sin Info,Martes,Mañana,91
+Cond Vehículo Sin Info,Martes,Tarde,97
+Cond Vehículo Sin Info,Martes,Noche,90
+Cond Vehículo Sin Info,Miércoles,Madrugada,26
+Cond Vehículo Sin Info,Miércoles,Mañana,97
+Cond Vehículo Sin Info,Miércoles,Tarde,78
+Cond Vehículo Sin Info,Miércoles,Noche,101
+Cond Vehículo Sin Info,Sábado,Madrugada,65
+Cond Vehículo Sin Info,Sábado,Mañana,99
+Cond Vehículo Sin Info,Sábado,Tarde,100
+Cond Vehículo Sin Info,Sábado,Noche,137
+Cond Vehículo Sin Info,Viernes,Madrugada,47
+Cond Vehículo Sin Info,Viernes,Mañana,105
+Cond Vehículo Sin Info,Viernes,Tarde,101
+Cond Vehículo Sin Info,Viernes,Noche,114
+Motociclista,Domingo,Madrugada,1148
+Motociclista,Domingo,Mañana,1445
+Motociclista,Domingo,Tarde,1734
+Motociclista,Domingo,Noche,1598
+Motociclista,Jueves,Madrugada,709
+Motociclista,Jueves,Mañana,2875
+Motociclista,Jueves,Tarde,2355
+Motociclista,Jueves,Noche,2295
+Motociclista,Lunes,Madrugada,655
+Motociclista,Lunes,Mañana,2460
+Motociclista,Lunes,Tarde,2280
+Motociclista,Lunes,Noche,2071
+Motociclista,Martes,Madrugada,560
+Motociclista,Martes,Mañana,2943
+Motociclista,Martes,Tarde,2442
+Motociclista,Martes,Noche,2273
+Motociclista,Miércoles,Madrugada,625
+Motociclista,Miércoles,Mañana,2893
+Motociclista,Miércoles,Tarde,2452
+Motociclista,Miércoles,Noche,2250
+Motociclista,Sábado,Madrugada,1224
+Motociclista,Sábado,Mañana,2341
+Motociclista,Sábado,Tarde,2626
+Motociclista,Sábado,Noche,2475
+Motociclista,Viernes,Madrugada,830
+Motociclista,Viernes,Mañana,2967
+Motociclista,Viernes,Tarde,2508
+Motociclista,Viernes,Noche,2606
+Pasajero Bicicleta,Domingo,Madrugada,8
+Pasajero Bicicleta,Domingo,Mañana,25
+Pasajero Bicicleta,Domingo,Tarde,36
+Pasajero Bicicleta,Domingo,Noche,36
+Pasajero Bicicleta,Jueves,Madrugada,5
+Pasajero Bicicleta,Jueves,Mañana,57
+Pasajero Bicicleta,Jueves,Tarde,52
+Pasajero Bicicleta,Jueves,Noche,41
+Pasajero Bicicleta,Lunes,Madrugada,2
+Pasajero Bicicleta,Lunes,Mañana,66
+Pasajero Bicicleta,Lunes,Tarde,57
+Pasajero Bicicleta,Lunes,Noche,39
+Pasajero Bicicleta,Martes,Madrugada,5
+Pasajero Bicicleta,Martes,Mañana,73
+Pasajero Bicicleta,Martes,Tarde,69
+Pasajero Bicicleta,Martes,Noche,47
+Pasajero Bicicleta,Miércoles,Madrugada,3
+Pasajero Bicicleta,Miércoles,Mañana,43
+Pasajero Bicicleta,Miércoles,Tarde,65
+Pasajero Bicicleta,Miércoles,Noche,36
+Pasajero Bicicleta,Sábado,Madrugada,8
+Pasajero Bicicleta,Sábado,Mañana,41
+Pasajero Bicicleta,Sábado,Tarde,38
+Pasajero Bicicleta,Sábado,Noche,55
+Pasajero Bicicleta,Viernes,Madrugada,13
+Pasajero Bicicleta,Viernes,Mañana,73
+Pasajero Bicicleta,Viernes,Tarde,56
+Pasajero Bicicleta,Viernes,Noche,44
+Pasajero Carga,Domingo,Madrugada,8
+Pasajero Carga,Domingo,Mañana,4
+Pasajero Carga,Domingo,Tarde,2
+Pasajero Carga,Domingo,Noche,4
+Pasajero Carga,Jueves,Madrugada,5
+Pasajero Carga,Jueves,Mañana,17
+Pasajero Carga,Jueves,Tarde,14
+Pasajero Carga,Jueves,Noche,7
+Pasajero Carga,Lunes,Madrugada,1
+Pasajero Carga,Lunes,Mañana,12
+Pasajero Carga,Lunes,Tarde,13
+Pasajero Carga,Lunes,Noche,1
+Pasajero Carga,Martes,Madrugada,15
+Pasajero Carga,Martes,Mañana,18
+Pasajero Carga,Martes,Tarde,21
+Pasajero Carga,Martes,Noche,8
+Pasajero Carga,Miércoles,Madrugada,2
+Pasajero Carga,Miércoles,Mañana,16
+Pasajero Carga,Miércoles,Tarde,19
+Pasajero Carga,Miércoles,Noche,6
+Pasajero Carga,Sábado,Madrugada,5
+Pasajero Carga,Sábado,Mañana,13
+Pasajero Carga,Sábado,Tarde,18
+Pasajero Carga,Sábado,Noche,7
+Pasajero Carga,Viernes,Madrugada,11
+Pasajero Carga,Viernes,Mañana,9
+Pasajero Carga,Viernes,Tarde,39
+Pasajero Carga,Viernes,Noche,7
+Pasajero Liviano,Domingo,Madrugada,454
+Pasajero Liviano,Domingo,Mañana,287
+Pasajero Liviano,Domingo,Tarde,350
+Pasajero Liviano,Domingo,Noche,312
+Pasajero Liviano,Jueves,Madrugada,119
+Pasajero Liviano,Jueves,Mañana,245
+Pasajero Liviano,Jueves,Tarde,235
+Pasajero Liviano,Jueves,Noche,245
+Pasajero Liviano,Lunes,Madrugada,152
+Pasajero Liviano,Lunes,Mañana,251
+Pasajero Liviano,Lunes,Tarde,221
+Pasajero Liviano,Lunes,Noche,251
+Pasajero Liviano,Martes,Madrugada,77
+Pasajero Liviano,Martes,Mañana,218
+Pasajero Liviano,Martes,Tarde,286
+Pasajero Liviano,Martes,Noche,219
+Pasajero Liviano,Miércoles,Madrugada,110
+Pasajero Liviano,Miércoles,Mañana,230
+Pasajero Liviano,Miércoles,Tarde,264
+Pasajero Liviano,Miércoles,Noche,236
+Pasajero Liviano,Sábado,Madrugada,357
+Pasajero Liviano,Sábado,Mañana,286
+Pasajero Liviano,Sábado,Tarde,332
+Pasajero Liviano,Sábado,Noche,409
+Pasajero Liviano,Viernes,Madrugada,220
+Pasajero Liviano,Viernes,Mañana,212
+Pasajero Liviano,Viernes,Tarde,293
+Pasajero Liviano,Viernes,Noche,324
+Pasajero Motocicleta,Domingo,Madrugada,315
+Pasajero Motocicleta,Domingo,Mañana,376
+Pasajero Motocicleta,Domingo,Tarde,527
+Pasajero Motocicleta,Domingo,Noche,454
+Pasajero Motocicleta,Jueves,Madrugada,169
+Pasajero Motocicleta,Jueves,Mañana,632
+Pasajero Motocicleta,Jueves,Tarde,435
+Pasajero Motocicleta,Jueves,Noche,509
+Pasajero Motocicleta,Lunes,Madrugada,162
+Pasajero Motocicleta,Lunes,Mañana,548
+Pasajero Motocicleta,Lunes,Tarde,468
+Pasajero Motocicleta,Lunes,Noche,485
+Pasajero Motocicleta,Martes,Madrugada,127
+Pasajero Motocicleta,Martes,Mañana,638
+Pasajero Motocicleta,Martes,Tarde,509
+Pasajero Motocicleta,Martes,Noche,522
+Pasajero Motocicleta,Miércoles,Madrugada,137
+Pasajero Motocicleta,Miércoles,Mañana,613
+Pasajero Motocicleta,Miércoles,Tarde,489
+Pasajero Motocicleta,Miércoles,Noche,494
+Pasajero Motocicleta,Sábado,Madrugada,311
+Pasajero Motocicleta,Sábado,Mañana,533
+Pasajero Motocicleta,Sábado,Tarde,573
+Pasajero Motocicleta,Sábado,Noche,618
+Pasajero Motocicleta,Viernes,Madrugada,185
+Pasajero Motocicleta,Viernes,Mañana,666
+Pasajero Motocicleta,Viernes,Tarde,488
+Pasajero Motocicleta,Viernes,Noche,632
+Pasajero Servicio Especial,Domingo,Madrugada,29
+Pasajero Servicio Especial,Domingo,Mañana,2
+Pasajero Servicio Especial,Domingo,Tarde,12
+Pasajero Servicio Especial,Domingo,Noche,12
+Pasajero Servicio Especial,Jueves,Madrugada,19
+Pasajero Servicio Especial,Jueves,Mañana,54
+Pasajero Servicio Especial,Jueves,Tarde,20
+Pasajero Servicio Especial,Jueves,Noche,1
+Pasajero Servicio Especial,Lunes,Madrugada,23
+Pasajero Servicio Especial,Lunes,Mañana,27
+Pasajero Servicio Especial,Lunes,Tarde,33
+Pasajero Servicio Especial,Lunes,Noche,15
+Pasajero Servicio Especial,Martes,Madrugada,30
+Pasajero Servicio Especial,Martes,Mañana,16
+Pasajero Servicio Especial,Martes,Tarde,60
+Pasajero Servicio Especial,Martes,Noche,8
+Pasajero Servicio Especial,Miércoles,Madrugada,34
+Pasajero Servicio Especial,Miércoles,Mañana,53
+Pasajero Servicio Especial,Miércoles,Tarde,44
+Pasajero Servicio Especial,Miércoles,Noche,7
+Pasajero Servicio Especial,Sábado,Madrugada,7
+Pasajero Servicio Especial,Sábado,Mañana,1
+Pasajero Servicio Especial,Sábado,Tarde,19
+Pasajero Servicio Especial,Sábado,Noche,12
+Pasajero Servicio Especial,Viernes,Madrugada,7
+Pasajero Servicio Especial,Viernes,Mañana,15
+Pasajero Servicio Especial,Viernes,Tarde,49
+Pasajero Servicio Especial,Viernes,Noche,24
+Pasajero Sin Info,Domingo,Madrugada,10
+Pasajero Sin Info,Domingo,Mañana,1
+Pasajero Sin Info,Domingo,Tarde,4
+Pasajero Sin Info,Domingo,Noche,2
+Pasajero Sin Info,Jueves,Madrugada,2
+Pasajero Sin Info,Jueves,Mañana,4
+Pasajero Sin Info,Jueves,Tarde,3
+Pasajero Sin Info,Jueves,Noche,4
+Pasajero Sin Info,Lunes,Madrugada,4
+Pasajero Sin Info,Lunes,Mañana,6
+Pasajero Sin Info,Lunes,Tarde,13
+Pasajero Sin Info,Lunes,Noche,1
+Pasajero Sin Info,Martes,Madrugada,3
+Pasajero Sin Info,Martes,Mañana,7
+Pasajero Sin Info,Martes,Tarde,4
+Pasajero Sin Info,Martes,Noche,1
+Pasajero Sin Info,Miércoles,Mañana,3
+Pasajero Sin Info,Miércoles,Tarde,6
+Pasajero Sin Info,Miércoles,Noche,7
+Pasajero Sin Info,Sábado,Madrugada,5
+Pasajero Sin Info,Sábado,Tarde,6
+Pasajero Sin Info,Sábado,Noche,5
+Pasajero Sin Info,Viernes,Madrugada,5
+Pasajero Sin Info,Viernes,Mañana,3
+Pasajero Sin Info,Viernes,Tarde,4
+Pasajero Sin Info,Viernes,Noche,10
+Pasajero Taxi,Domingo,Madrugada,194
+Pasajero Taxi,Domingo,Mañana,106
+Pasajero Taxi,Domingo,Tarde,111
+Pasajero Taxi,Domingo,Noche,125
+Pasajero Taxi,Jueves,Madrugada,63
+Pasajero Taxi,Jueves,Mañana,83
+Pasajero Taxi,Jueves,Tarde,117
+Pasajero Taxi,Jueves,Noche,86
+Pasajero Taxi,Lunes,Madrugada,67
+Pasajero Taxi,Lunes,Mañana,132
+Pasajero Taxi,Lunes,Tarde,115
+Pasajero Taxi,Lunes,Noche,82
+Pasajero Taxi,Martes,Madrugada,44
+Pasajero Taxi,Martes,Mañana,129
+Pasajero Taxi,Martes,Tarde,129
+Pasajero Taxi,Martes,Noche,92
+Pasajero Taxi,Miércoles,Madrugada,57
+Pasajero Taxi,Miércoles,Mañana,129
+Pasajero Taxi,Miércoles,Tarde,141
+Pasajero Taxi,Miércoles,Noche,86
+Pasajero Taxi,Sábado,Madrugada,154
+Pasajero Taxi,Sábado,Mañana,85
+Pasajero Taxi,Sábado,Tarde,112
+Pasajero Taxi,Sábado,Noche,154
+Pasajero Taxi,Viernes,Madrugada,71
+Pasajero Taxi,Viernes,Mañana,135
+Pasajero Taxi,Viernes,Tarde,135
+Pasajero Taxi,Viernes,Noche,118
+Pasajero Transporte Pasajeros,Domingo,Madrugada,33
+Pasajero Transporte Pasajeros,Domingo,Mañana,225
+Pasajero Transporte Pasajeros,Domingo,Tarde,324
+Pasajero Transporte Pasajeros,Domingo,Noche,212
+Pasajero Transporte Pasajeros,Jueves,Madrugada,124
+Pasajero Transporte Pasajeros,Jueves,Mañana,563
+Pasajero Transporte Pasajeros,Jueves,Tarde,535
+Pasajero Transporte Pasajeros,Jueves,Noche,339
+Pasajero Transporte Pasajeros,Lunes,Madrugada,93
+Pasajero Transporte Pasajeros,Lunes,Mañana,603
+Pasajero Transporte Pasajeros,Lunes,Tarde,618
+Pasajero Transporte Pasajeros,Lunes,Noche,405
+Pasajero Transporte Pasajeros,Martes,Madrugada,64
+Pasajero Transporte Pasajeros,Martes,Mañana,764
+Pasajero Transporte Pasajeros,Martes,Tarde,679
+Pasajero Transporte Pasajeros,Martes,Noche,359
+Pasajero Transporte Pasajeros,Miércoles,Madrugada,69
+Pasajero Transporte Pasajeros,Miércoles,Mañana,647
+Pasajero Transporte Pasajeros,Miércoles,Tarde,601
+Pasajero Transporte Pasajeros,Miércoles,Noche,359
+Pasajero Transporte Pasajeros,Sábado,Madrugada,36
+Pasajero Transporte Pasajeros,Sábado,Mañana,375
+Pasajero Transporte Pasajeros,Sábado,Tarde,469
+Pasajero Transporte Pasajeros,Sábado,Noche,321
+Pasajero Transporte Pasajeros,Viernes,Madrugada,130
+Pasajero Transporte Pasajeros,Viernes,Mañana,622
+Pasajero Transporte Pasajeros,Viernes,Tarde,538
+Pasajero Transporte Pasajeros,Viernes,Noche,408
+Peatón,Domingo,Madrugada,449
+Peatón,Domingo,Mañana,552
+Peatón,Domingo,Tarde,997
+Peatón,Domingo,Noche,793
+Peatón,Jueves,Madrugada,213
+Peatón,Jueves,Mañana,966
+Peatón,Jueves,Tarde,1176
+Peatón,Jueves,Noche,963
+Peatón,Lunes,Madrugada,200
+Peatón,Lunes,Mañana,901
+Peatón,Lunes,Tarde,1131
+Peatón,Lunes,Noche,857
+Peatón,Martes,Madrugada,153
+Peatón,Martes,Mañana,1037
+Peatón,Martes,Tarde,1232
+Peatón,Martes,Noche,951
+Peatón,Miércoles,Madrugada,191
+Peatón,Miércoles,Mañana,1030
+Peatón,Miércoles,Tarde,1162
+Peatón,Miércoles,Noche,950
+Peatón,Sábado,Madrugada,370
+Peatón,Sábado,Mañana,787
+Peatón,Sábado,Tarde,1208
+Peatón,Sábado,Noche,1292
+Peatón,Viernes,Madrugada,223
+Peatón,Viernes,Mañana,976
+Peatón,Viernes,Tarde,1206
+Peatón,Viernes,Noche,1107
+Sin Informacion,Jueves,Madrugada,1
+Sin Informacion,Jueves,Tarde,2
+Sin Informacion,Jueves,Noche,1
+Sin Informacion,Lunes,Noche,1
+Sin Informacion,Martes,Madrugada,1
+Sin Informacion,Miércoles,Tarde,2
+Sin Informacion,Viernes,Tarde,1
+Sin Informacion,Viernes,Noche,1

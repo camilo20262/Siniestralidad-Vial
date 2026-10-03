@@ -92,6 +92,14 @@ class ConsultaTest(unittest.TestCase):
             with self.subTest(date=date), self.assertRaises(ValueError):
                 self.consulta.consultar(date, loc, slot)
 
+    def test_validacion_temporal_reutilizable_no_ejecuta_modelo(self):
+        with patch.object(self.consulta.modelo, 'predecir',
+                          side_effect=AssertionError('no debe inferir')):
+            fecha = module.validar_fecha_y_alcance(self.consulta.datos, '2023-01-02')
+        self.assertEqual(fecha, pd.Timestamp('2023-01-02'))
+        with self.assertRaisesRegex(ValueError, 'periodo retrospectivo'):
+            module.validar_fecha_y_alcance(self.consulta.datos, '2025-01-01')
+
     def test_rechaza_duplicados(self):
         self.consulta.datos = pd.concat([self.data, self.data])
         with self.assertRaises(ValueError):

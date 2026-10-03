@@ -1,0 +1,79 @@
+{
+  "git_commit": "3919c98a8056a63e85d22eafb8b1eba3bfec8778",
+  "notebooks": [
+    {
+      "notebook": "02B_EDA_y_Analisis_Espacial_Con_Victimas.ipynb",
+      "sha256_original": "602699e68dee946e72e7706e947a55d3b7179f3782e19ec75ab0727dca1f79e3",
+      "codigo_sin_cambios": true
+    },
+    {
+      "notebook": "03B_Preparacion_Datos_Con_Victimas.ipynb",
+      "sha256_original": "0bbbe52f36172c19069fa33e185d44747386cd34418f93152f94c9bd3eb5a2f5",
+      "codigo_sin_cambios": true
+    },
+    {
+      "notebook": "04B_Modelado_Con_Victimas.ipynb",
+      "sha256_original": "401f7b0054b8619b4a5be6d57c23700eed47201ffd09ae0bcb7d9fa800e80958",
+      "codigo_sin_cambios": true
+    },
+    {
+      "notebook": "04C_Ajuste_Hiperparametros_Con_Victimas.ipynb",
+      "sha256_original": "edc3401a9f333ec17adc376a290c85b005207648f7fe09581b9975f2860d8939",
+      "codigo_sin_cambios": true
+    },
+    {
+      "notebook": "05B_Evaluacion_Con_Victimas.ipynb",
+      "sha256_original": "f760349abb6b10a002e2f2d657ff576e525f12c0ce28ebae614b1a3c8ad1518b",
+      "codigo_sin_cambios": true
+    }
+  ],
+  "excel_sha256": "afcb691b5918835c3392854b770895aeb62b4e00f1191708d10e6942bebf87f5",
+  "tolerancia_absoluta_scores_metricas": 1e-10,
+  "entorno": "venv nuevo sin system-site-packages; requirements.txt instalado independientemente",
+  "originales_modificados": false,
+  "entradas_adicionales": {
+    "data/raw/procedencia_excel.json": "02f95deb603f3489f498d415f1992175634ca07ce44c8debb3e76a7f180c905a",
+    "data/reference/localidades_sdp_referencia.geojson": "4dd83b3ba825c64e11e77a2aa39cbf505d2678a20d5ddba6217642f7b657344f",
+    "data/reference/localidades_sdp_referencia_metadata.json": "caf48366460f5b24aa654d0311633ba1ca26ba3cfc894f8797184c7b69dee55f",
+    ".python-version": "f50159fad3f4319868eb38717b91d55843c41e9803014c8de05e116a6d0bcfdc",
+    "scripts/preparar_dashboard.py": "9ba448b5a988b1dc12bb63f3f9180843df15233682df54e4b8dd2beccbe2ed86",
+    "scripts/verificar_dashboard.py": "9439b968960d38943236c6628296b7cd6863492d071d1f5b9c4fdba5d2645354",
+    "scripts/verificar_dashboard_http.py": "10d2107dc940d867900b4938752f3e2f38d0ca30c3bb65c3d301a8fabd27896c",
+    "scripts/verificar_flujo_completo.py": "5cf5869b2ddfdc9b29bb0a5f5bddc981bd44a70cc770633bcafe4c6d8be04c84",
+    "scripts/reproducir_cadena_aislada.py": "e61ca6bd919e1a954824fa7eafee1957287f33a5882745ac85fa1240515f705c"
+  },
+  "carpetas_codigo_adicionales": [
+    "dashboard"
+  ],
+  "codigo_sha256": {
+    "src/preparacion.py": "c953fbcc83464946e3e48c85de5108552abf9e0a2156688ffcde583bcc9d4a59",
+    "src/modelo_principal.py": "c04683193eab3fe1ea95b606822779b8824445c79025cc2b006e1fdca66d2710",
+    "src/validacion_independiente.py": "6eda854e52465e25b0afa083efd8e1a5a9c828684bf95e7195ea8edc1068979b",
+    "src/__init__.py": "796884422514510217239796f8ab5e012700421abe11e8a3ea41c7005b39e5df",
+    "src/consulta_retrospectiva.py": "420383850a6ffc431cf6c476953f6f1f5c9530949806383c7210bf8864945be2",
+    "src/rutas.py": "b656902e2718e9773e36dcc3675a9b541659774c7b833c3e9e6c03814ad61217",
+    "src/evaluacion_referencias.py": "51c7ded3abb2e1c2a2d820ae189ebd5589ff42e7f62b70579d7cd905c762aef8",
+    "scripts/verificar_dashboard_http.py": "10d2107dc940d867900b4938752f3e2f38d0ca30c3bb65c3d301a8fabd27896c",
+    "scripts/reproducir_cadena_aislada.py": "e61ca6bd919e1a954824fa7eafee1957287f33a5882745ac85fa1240515f705c",
+    "scripts/verificar_flujo_completo.py": "5cf5869b2ddfdc9b29bb0a5f5bddc981bd44a70cc770633bcafe4c6d8be04c84",
+    "scripts/verificar_modelo_principal.py": "b69e7977043002f2856c7d582bb52df93992d0dd26bce27c3a55af360832b8f9",
+    "scripts/verificar_dashboard.py": "9439b968960d38943236c6628296b7cd6863492d071d1f5b9c4fdba5d2645354",
+    "scripts/preparar_dashboard.py": "9ba448b5a988b1dc12bb63f3f9180843df15233682df54e4b8dd2beccbe2ed86",
+    "dashboard/charts.py": "764348a601ccabc8c23512dd84882a8d45feb9df382ba9462ea1aa32830104e3",
+    "dashboard/__init__.py": "1024f7ef759871e2f66fda83dc712933b6129b9c21e75daf96629bddb15fcde0",
+    "dashboard/README.md": "bc229cb0942cceb01e61bb20eba1c000b08399d953bc9c4900ea75b9b4595299",
+    "dashboard/app.py": "17e52b1bd94f42a813d23e2ab8be5a1d6579a3fc42dab687d02a56ec02cdb329",
+    "dashboard/data.py": "de2bc2340262806113a8f211e49d5dce0c9b8e35639b076518cea687be16a549",
+    "dashboard/dist/index.html": "9e582553c289b0060ba50768ac73176ce0f8d6b2e38d49abb1fcf8a634b36d8e",
+    "dashboard/dist/styles.css": "b189fab922d4b2ab0ebe4496c8c27f5e2d6b4555b12161dcd356da25f0a4a19f",
+    "dashboard/dist/app.js": "b0533a8e9642a40f89921682d0f4369ad0bf9a6413c7b5647e1e1c93cf78fbba",
+    "dashboard/dist/favicon.svg": "ef9054716e8ec5410c86e6883979bf6ca8bbfef9b2a05b4a84a406f5b9dcd69a",
+    "dashboard/.openai/hosting.json": "02708bb5dee707e32a6b0181ca69c9a048e00ba208654529a00dd3ef3ce179a3",
+    "dashboard/assets/dashboard.css": "9a3f1b8e384c647ce8281e01f42a32ce6e0bd48053f8ff78b376af9897189e92",
+    "dashboard/dist/data/metricas_por_localidad.csv": "4cb63fba419d16821edc86f7c97293bb3bd41ac4b693804127daff93f9ff79ca",
+    "dashboard/dist/data/metricas_por_franja.csv": "17509de0a288189c56a17893befbb9e50cfa169295a3319ceb790be08be1cb1d",
+    "dashboard/dist/data/importancia.csv": "76963a067d580d928ffa0ed62ff1304217df2996e292ac20214c2176e2825a1f",
+    "dashboard/dist/data/metricas_globales.csv": "a029f460ba259d74e7e55694f88c2adb5c5410419edc973f73e7d185a3b8f8f6"
+  },
+  "git_status_al_inicio": " M AUDITORIA_PROYECTO.md\n M README.md\n M config/artefactos.json\n M dashboard/README.md\n M data/raw/README.md\n M data/raw/procedencia_excel.json\n M docs/ESPECIFICACION_VIGENTE.md\n M models/victimas/README.md\n M notebooks/02_Comprension_de_los_Datos.ipynb\n M notebooks/03B_Preparacion_Datos_Con_Victimas.ipynb\n M \"notebooks/03_Preparacion_de_los_Datos (3).ipynb\"\n M notebooks/04B_Modelado_Con_Victimas.ipynb\n M notebooks/04_Modelado.ipynb\n M notebooks/05_Evaluacion.ipynb\n M reports/modelo_principal/ficha_tecnica_modelo.md\n M scripts/verificar_fuente.py\n M tests/test_catalogo.py\n M tests/test_comprension_datos.py\n?? docs/decisiones/\n?? legacy/\n?? models/README.md\n?? reports/auditoria_proyecto/AUDITORIA_TECNICA_2026-10-02.md\n?? reports/cierre_pendientes/\n?? reports/reproducibilidad/flujo_completo_20261002_cierre_pendientes/\n?? reports/validacion_independiente_victimas/\n?? scripts/generar_validacion_independiente.py\n?? src/validacion_independiente.py\n?? tests/test_validacion_independiente.py\n"
+}

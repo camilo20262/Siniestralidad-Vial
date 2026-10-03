@@ -1,6 +1,6 @@
 # Especificación vigente del modelo y sus consultas
 
-**Identificador documental:** ESP-MODELO-01 · **Revisión:** 1 · **Fecha:** 01/10/2026.
+**Identificador documental:** ESP-MODELO-01 · **Revisión:** 2 · **Fecha:** 02/10/2026.
 
 ## Decisión de alcance
 
@@ -19,6 +19,8 @@ La revisión de este documento es independiente de la versión del artefacto.
 La única autoridad ejecutable para identidad, pipeline, parámetros, esquema y
 umbral es el [registro oficial](../models/victimas/modelo_principal.json).
 Este documento especifica su uso; no crea un archivo de configuración paralelo.
+La [decisión DEC-UMB-01](decisiones/umbral_modelo.md) conserva la comparación
+numérica 0,52 frente a 0,55 y el estado de aprobación.
 
 ## Identidades que no deben confundirse
 
@@ -64,6 +66,12 @@ El cierre conserva RF ajustado como referencia académica. No implica superiorid
 concluyente frente a la tasa histórica localidad–franja–día ni probabilidades
 calibradas. Véanse la [ficha técnica](../reports/modelo_principal/ficha_tecnica_modelo.md)
 y la [evaluación](../reports/evaluation_victimas/conclusion_ejecutiva.md).
+
+Como estimación adicional, un procedimiento separado escoge configuración y
+umbral solo con 2020–2021 y reserva 2022 para evaluación. Sus resultados viven en
+[`reports/validacion_independiente_victimas/`](../reports/validacion_independiente_victimas/).
+No modifica este requisito: 2022 ya había sido inspeccionado en el desarrollo y
+el umbral 0,54 de ese experimento no sustituye el 0,52 oficial.
 
 ## Control de cambios y verificación
 

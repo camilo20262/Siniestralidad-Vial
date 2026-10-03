@@ -18,7 +18,8 @@
     "estado": "no_completada",
     "nota": "Se verificó el enlace publicado. La transferencia de comprobación fue interrumpida por su duración; el hash registrado identifica solo la copia local congelada. No se afirma igualdad binaria con la descarga actual."
   },
-  "licencia": {
+  "licencia": "pendiente de confirmación institucional",
+  "licencia_detalle": {
     "estado": "pendiente_confirmacion_especifica",
     "identificador": null,
     "nota": "La página consultada publica el Excel, pero no se verificó una licencia específica del archivo. No se asume una licencia abierta por la mera disponibilidad pública. Confirmar condiciones con la entidad antes de redistribuir."

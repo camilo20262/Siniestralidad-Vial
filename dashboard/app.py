@@ -9,12 +9,16 @@ from dash import Dash, Input, Output, State, dcc, html, no_update
 from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
 
-from dashboard import charts
+from dashboard import charts, data as dashboard_data
 from dashboard.data import load_data, resumen_metricas, SLOTS, DAYS, FLAGS
+from src.consulta_retrospectiva import validar_fecha_y_alcance
 
 CONFIG = {'displaylogo': False, 'scrollZoom': False,
           'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'sendChartToCloud'],
           'toImageButtonOptions': {'format': 'png', 'filename': 'siniestralidad_bogota'}}
+
+# Opt-in pendiente de aprobación académica del texto exacto antes de mostrarlo.
+MOSTRAR_CONTEXTO_LIMITACIONES_CONSULTA = False
 
 GRAPH_DESCRIPTIONS = {
     'overview-series': 'Serie mensual de siniestros con víctimas entre 2018 y 2024.',
@@ -93,6 +97,8 @@ def graph(id, figure=None, description=None):
     component=dcc.Graph(id=id, figure=figure if figure is not None else charts.empty('Cargando selección…'),
                         config=CONFIG, responsive=True,
                         style={'height': 490 if id=='query-map' else (figure.layout.height if figure is not None else 340)})
+    # dcc.Graph no admite aria-label en la versión fijada; el contenedor aporta
+    # nombre, descripción y foco sin modificar la interactividad de Plotly.
     return html.Div([component,html.Span(description,id=id+'-summary',className='sr-only')],
                     id=id+'-accessible',className='graph-accessible',role='group',tabIndex=0,
                     title=description,**{'aria-label':description})
@@ -126,6 +132,115 @@ def dropdown(id,label,options,value):
 
 def notice(text, warning=False):
     return html.Div(text,className='notice warning' if warning else 'notice',role='note')
+
+
+def validar_descarga_consulta(s, fecha, localidad, franja, incluir_localidad=True):
+    validar_fecha_y_alcance(s.consulta.datos, fecha)
+    if franja not in SLOTS:
+        raise ValueError('Seleccione una franja válida antes de descargar.')
+    if incluir_localidad and localidad not in s.localidades:
+        raise ValueError('Seleccione una localidad válida antes de descargar.')
+
+
+def validar_descarga_historia(s, year, localidad, franja, actor):
+    if year not in ['Todos', *range(2018, 2025)]:
+        raise ValueError('Seleccione un año entre 2018 y 2024.')
+    if localidad not in ['Todas', *s.localidades] or franja not in ['Todas', *SLOTS]:
+        raise ValueError('Seleccione una localidad y una franja válidas.')
+    if actor not in ['Todos', *FLAGS]:
+        raise ValueError('Seleccione un actor vial válido.')
+
+
+def validar_descarga_evaluacion(s, year, localidad, franja):
+    if year not in ['Todos', 2023, 2024]:
+        raise ValueError('Seleccione 2023, 2024 o Todos para descargar.')
+    if localidad not in ['Todas', *s.localidades] or franja not in ['Todas', *SLOTS]:
+        raise ValueError('Seleccione una localidad y una franja válidas.')
+
+
+def estado_descarga(validator, *args):
+    try:
+        validator(*args)
+    except (ValueError, TypeError) as exc:
+        return True, f'Descarga no disponible: {exc}'
+    return False, ''
+
+
+def descripcion_consulta(fecha, franja, localidad):
+    return f'Mapa de priorización para {localidad}, fecha {fecha}, franja {franja}; compara las 20 localidades.'
+
+
+def descripciones_historia(year, localidad, franja, actor):
+    scope=f'año {year}, localidad {localidad}, franja {franja}, actor {actor}'
+    return [f'Evolución mensual para {scope}.',f'Comparación de localidades para {scope}.',
+            f'Promedio por día de semana y franja para {scope}.',f'Conteos por franja para {scope}.']
+
+
+def descripciones_evaluacion(year, localidad, franja):
+    scope=f'año {year}, localidad {localidad}, franja {franja}'
+    return [f'Matriz de clasificación para {scope}.',f'Calibración para {scope}.',
+            f'Curva ROC para {scope}.',f'Curva de precisión y recall para {scope}.']
+
+
+def bloque_contextual_consulta(s, localidad):
+    if not MOSTRAR_CONTEXTO_LIMITACIONES_CONSULTA:
+        return None
+    references=s.reports['comparacion_referencias_historicas']
+    rf=references[references.Metodo.eq('Random Forest ajustado')]
+    baseline=references[references.Metodo.eq('Constante train')]
+    if len(rf)!=1 or len(baseline)!=1:
+        raise ValueError('No hay una comparación global única para contextualizar el resultado.')
+    rf_brier=float(rf.Brier.iloc[0]);baseline_brier=float(baseline.Brier.iloc[0])
+    territory=s.reports['metricas_random_forest_ajustado_por_localidad']
+    territorial=[]
+    if localidad=='CANDELARIA':
+        row=territory[territory.Localidad.eq(localidad)]
+        if len(row)!=1:
+            raise ValueError('No hay evidencia territorial única para Candelaria.')
+        maximum=float(s.predictions[s.predictions.Localidad.eq(localidad)].Score.max())
+        territorial.append(html.P(
+            f"Candelaria: {int(row.Positivos.iloc[0])} positivos globales, "
+            f"{int(row.TP.iloc[0])} detectados; score máximo {number(maximum,4)}."))
+    elif localidad=='SUMAPAZ':
+        row=territory[territory.Localidad.eq(localidad)]
+        if len(row)!=1:
+            raise ValueError('No hay evidencia territorial única para Sumapaz.')
+        territorial.append(html.P(
+            f"Sumapaz: solo {int(row.Positivos.iloc[0])} positivos globales; la muestra es insuficiente "
+            'para extraer una conclusión territorial firme.'))
+    return html.Div([
+        html.H3('Contexto global del modelo'),
+        html.P(f'En 2023–2024, el Brier del RF fue {number(rf_brier,4)} frente a '
+               f'{number(baseline_brier,4)} de la constante de entrenamiento; el RF no demostró '
+               'superioridad concluyente frente a la tasa histórica en AP/AUC.'),
+        *territorial,
+        html.P('Son resultados globales de 2023–2024, no una conclusión sobre este día puntual.'),
+        html.Button('Revisar la sección Evaluación',id='query-go-evaluation',className='button secondary'),
+    ],className='notice warning contextual-limitations')
+
+
+def tarjeta_validacion_independiente(s):
+    if not dashboard_data.MOSTRAR_VALIDACION_INDEPENDIENTE:
+        return None
+    result=s.reports.get('validacion_independiente')
+    if not isinstance(result,dict):
+        raise ValueError('La validación independiente opt-in no fue cargada.')
+    selection=result['seleccion'];evaluation=result['evaluacion_separada'];metrics=evaluation['metricas']
+    values=pd.DataFrame([{
+        'Candidato':selection['mejor_candidato'],
+        'Umbral experimental':selection['umbral'],
+        'Entrenamiento':metrics['Entrenamiento'],
+        'Evaluación':metrics['Evaluacion'],
+        'F1':metrics['F1'],
+        'AP':metrics['Average_Precision'],
+        'AUC-ROC':metrics['AUC_ROC'],
+        'Recall':metrics['Recall'],
+        'Brier':metrics['Brier'],
+    }])
+    return panel('Estimación temporal adicional — experimental','Evidencia complementaria desactivable; no cambia el modelo oficial.',[
+        notice('No sustituye el umbral 0,52 oficial. El año 2022 ya había sido inspeccionado durante el desarrollo; no es una prueba prospectiva ni externa.',True),
+        table(values),
+    ])
 
 
 def label_explanation(s, locality, slot):
@@ -196,15 +311,25 @@ def query_page(s):
                   html.Div(id='query-detail',className='case-panel',**{'aria-live':'polite'})],className='two-columns map-layout'),
         html.Div([html.Button('Descargar consulta JSON',id='download-query-button',className='button'),
                   html.Button('Descargar las 20 localidades CSV',id='download-map-button',className='button secondary')],className='actions'),
+        html.Div([html.Span(id='download-query-status'),html.Span(id='download-map-status')],
+                 className='download-status',role='status',**{'aria-live':'polite'}),
         panel('Comparación del día','Ordenada por score para la fecha y franja seleccionadas. El umbral es fijo: 0,52.',html.Div(id='query-ranking'))])
 
 
 def query_result(s,fecha,slot,locality,view):
     if view not in ['urbana','distrito']:
         raise ValueError('Encuadre no válido.')
-    row=s.consulta.consultar(fecha,locality,slot).iloc[0]
+    selected=s.consulta.consultar(fecha,locality,slot)
+    if selected.empty:
+        raise ValueError('La consulta no devolvió el caso seleccionado.')
+    row=selected.iloc[0]
     rows=s.map_rows(fecha,slot)
-    frozen=rows[rows.Localidad.eq(locality)].iloc[0]
+    frozen_rows=rows[rows.Localidad.eq(locality)]
+    if frozen_rows.empty:
+        raise ValueError('No existe una predicción congelada para la localidad seleccionada.')
+    if len(frozen_rows) != 1:
+        raise ValueError('Existe más de una predicción congelada para la localidad seleccionada.')
+    frozen=frozen_rows.iloc[0]
     if not np.isclose(row.Score_Priorizacion,frozen.Score_Priorizacion,atol=1e-12,rtol=0) or row.Alerta_Modelo!=frozen.Alerta_Modelo:
         raise ValueError('La consulta no coincide con la evaluación congelada.')
     histories=[('Promedio previo de 7 días',number(row.Accidentes_Prom_7d,2)),
@@ -216,11 +341,14 @@ def query_result(s,fecha,slot,locality,view):
             html.P(f'{pd.Timestamp(fecha):%d/%m/%Y} · {slot}',className='muted'),
             html.Div([html.Strong(number(row.Score_Priorizacion,3)),html.Span('Score de priorización')],className='score-value'),
             html.Div('Priorización alta' if row.Alerta_Modelo else 'Priorización baja',className='badge high' if row.Alerta_Modelo else 'badge low'),
-            html.P('Alerta cuando el score es mayor o igual a 0,52. No equivale a una probabilidad.',className='footnote'),
-            label_explanation(s,locality,slot),
+            html.P('Alerta cuando el score es mayor o igual a 0,52. No equivale a una probabilidad.',className='footnote')]
+    context=bloque_contextual_consulta(s,locality)
+    if context is not None:
+        detail.append(context)
+    detail.extend([label_explanation(s,locality,slot),
             html.H3('Antecedentes del caso'),html.Dl([item for n,v in histories for item in [html.Dt(n),html.Dd(v)]],className='antecedents'),
             html.P('No incluyen los siniestros del propio día.',className='footnote'),
-            html.Details([html.Summary('Ver trazabilidad e interpretación'),trace,html.P(row.Advertencia_Score)])]
+            html.Details([html.Summary('Ver trazabilidad e interpretación'),trace,html.P(row.Advertencia_Score)])])
     if slot=='Madrugada':
         detail.append(weakest_slot_warning(s))
     ranking=rows[['Localidad','Score_Priorizacion','Alerta_Modelo']].copy()
@@ -236,12 +364,14 @@ def history_page(s):
                   dropdown('history-slot','Franja',['Todas',*SLOTS],'Todas'),
                   dropdown('history-actor','Participación de actor',['Todos',*FLAGS],'Todos')],className='filters'),
         notice('Se cuentan siniestros, no personas. Un mismo siniestro puede involucrar varios tipos de actor; sus categorías no deben sumarse. Solo se incluyen indicadores de participación afirmativos.'),
-        html.Div(id='history-error',role='alert'),html.Div(id='history-kpis',className='kpi-grid',**{'aria-live':'polite'}),
+        html.Div(id='history-error',role='alert',**{'aria-live':'polite'}),
+        html.Div(id='history-kpis',className='kpi-grid',**{'aria-live':'polite'}),
         html.Div([panel('Evolución mensual','Incluye meses y días con cero registros.',graph('history-series')),
                   panel('Localidades','Conteos registrados; no tasas de exposición al tránsito.',graph('history-localities'))],className='two-columns'),
         html.Div([panel('Día de semana × franja','Promedio por día del calendario, incluida la ausencia de registros.',graph('history-heat')),
                   panel('Franjas horarias','Los filtros de año, territorio y actor se aplican a todos los gráficos.',graph('history-slots'))],className='two-columns'),
-        html.Button('Descargar resumen mensual CSV',id='download-history-button',className='button secondary')])
+        html.Button('Descargar resumen mensual CSV',id='download-history-button',className='button secondary'),
+        html.Div(id='download-history-status',className='download-status',role='status',**{'aria-live':'polite'})])
 
 
 def history_result(s,year,locality,slot,actor):
@@ -273,17 +403,21 @@ def evaluation_page(s):
         error_x=dict(type='data',array=imp.Desviacion),customdata=imp[['Variable']],
         hovertemplate='%{customdata[0]}<br>Caída AP: %{x:.4f}<extra></extra>'))
     fig=charts.finish(fig,height=420);fig.update_layout(margin=dict(l=180));fig.update_yaxes(tickfont=dict(size=10))
+    independent=tarjeta_validacion_independiente(s)
     return html.Div([intro('03 / EVALUACIÓN DEL MODELO','El desempeño también tiene límites.',
         'Random Forest ajustado · umbral fijo 0,52. Las métricas filtradas se recalculan sobre las predicciones conservadas de 2023–2024.'),
         html.Div([dropdown('eval-year','Año de evaluación',['Todos',2023,2024],'Todos'),
                   dropdown('eval-locality','Localidad',['Todas',*s.localidades],'Todas'),
                   dropdown('eval-slot','Franja',['Todas',*SLOTS],'Todas')],className='filters three'),
-        html.Div(id='eval-error',role='alert'),html.Div(id='eval-kpis',className='kpi-grid',**{'aria-live':'polite'}),html.Div(id='eval-note',**{'aria-live':'polite'}),
+        html.Div(id='eval-error',role='alert',**{'aria-live':'polite'}),
+        html.Div(id='eval-kpis',className='kpi-grid',**{'aria-live':'polite'}),
+        html.Div(id='eval-note',**{'aria-live':'polite'}),
         html.Div([panel('Aciertos y errores','Etiqueta observada frente a alerta del modelo.',graph('eval-confusion')),
                   panel('Calibración','La diagonal es la referencia ideal, no el comportamiento esperado del modelo.',graph('eval-calibration'))],className='two-columns'),
         html.Div([panel('Curva ROC','Ordenamiento de casos a distintos umbrales.',graph('eval-roc')),
                   panel('Precisión y recall','Línea punteada: prevalencia de la selección. Curvas simplificadas solo para dibujar.',graph('eval-pr'))],className='two-columns'),
         html.Button('Descargar métricas filtradas CSV',id='download-eval-button',className='button secondary'),
+        html.Div(id='download-eval-status',className='download-status',role='status',**{'aria-live':'polite'}),
         html.H2('Comparaciones del estudio completo',className='section-title'),
         notice('Las siguientes tablas e importancia de variables corresponden al conjunto completo 2023–2024; no cambian con los filtros superiores.'),
         weakest_slot_warning(s),
@@ -299,6 +433,7 @@ def evaluation_page(s):
         panel('Modelos comparados','Resultados finales de 05B; el modelo principal no se cambia desde la interfaz.',table(configs)),
         panel('¿Qué aporta frente a una referencia sencilla?','AP y AUC: mayor es mejor. Brier: menor es mejor.',table(refs)),
         notice('El RF no muestra superioridad concluyente frente a la tasa histórica localidad–franja–día. Su Brier global de 0,2221 es peor que el 0,1544 de la constante de entrenamiento.',True),
+        *([independent] if independent is not None else []),
         panel('Incertidumbre de la comparación','RF menos tasa localidad–franja–día. Bootstrap exploratorio pareado: 300 réplicas, bloques de 7 días.',table(boot)),
         panel('Importancia por permutación','Caída de Average Precision. Barras de error: desviación entre repeticiones, no intervalo de confianza. No implica causalidad.',graph('eval-importance',fig)),
         html.Div([panel('Candelaria','Un caso que la métrica global no resume',html.P('157 positivos y ninguno detectado con el umbral 0,52. El score máximo de 0,3227 no alcanza el umbral.')),
@@ -377,12 +512,15 @@ def create_app(service=None):
         return {'overview':overview,'query':query_page,'history':history_page,'evaluation':evaluation_page,'about':about_page}.get(value,overview)(s)
 
     @app.callback(Output('query-map','figure'),Output('query-detail','children'),Output('query-ranking','children'),Output('query-error','children'),
+                  Output('query-map-accessible','aria-label'),Output('query-map-summary','children'),
                   Input('query-date','date'),Input('query-slot','value'),Input('query-locality','value'),Input('query-view','value'))
     def update_query(fecha,slot,locality,view):
+        description=descripcion_consulta(fecha,slot,locality)
         try:
-            return (*query_result(s,fecha,slot,locality,view), '')
+            return (*query_result(s,fecha,slot,locality,view), '',description,description)
         except (ValueError,TypeError) as exc:
-            return charts.empty('Consulta no disponible.'),[],[],notice(str(exc),True)
+            description='Mapa no disponible para la selección actual.'
+            return charts.empty('Consulta no disponible.'),[],[],notice(str(exc),True),description,description
 
     @app.callback(Output('query-locality','value'),Input('query-map','clickData'),prevent_initial_call=True)
     def choose_locality(click):
@@ -392,23 +530,63 @@ def create_app(service=None):
                 return value
         return no_update
 
+    @app.callback(Output('navigation','value'),Input('query-go-evaluation','n_clicks'),prevent_initial_call=True)
+    def go_to_evaluation(n):
+        if not n:
+            raise PreventUpdate
+        return 'evaluation'
+
+    @app.callback(Output('download-query-button','disabled'),Output('download-query-status','children'),
+                  Input('query-date','date'),Input('query-locality','value'),Input('query-slot','value'))
+    def enable_query_download(fecha,locality,slot):
+        return estado_descarga(validar_descarga_consulta,s,fecha,locality,slot)
+
+    @app.callback(Output('download-map-button','disabled'),Output('download-map-status','children'),
+                  Input('query-date','date'),Input('query-slot','value'))
+    def enable_map_download(fecha,slot):
+        return estado_descarga(validar_descarga_consulta,s,fecha,None,slot,False)
+
     @app.callback(Output('history-kpis','children'),Output('history-series','figure'),Output('history-localities','figure'),
                   Output('history-heat','figure'),Output('history-slots','figure'),Output('history-error','children'),
+                  Output('history-series-accessible','aria-label'),Output('history-series-summary','children'),
+                  Output('history-localities-accessible','aria-label'),Output('history-localities-summary','children'),
+                  Output('history-heat-accessible','aria-label'),Output('history-heat-summary','children'),
+                  Output('history-slots-accessible','aria-label'),Output('history-slots-summary','children'),
                   Input('history-year','value'),Input('history-locality','value'),Input('history-slot','value'),Input('history-actor','value'))
     def update_history(year,locality,slot,actor):
+        descriptions=descripciones_historia(year,locality,slot,actor)
+        accessible=[item for value in descriptions for item in (value,value)]
         try:
-            return (*history_result(s,year,locality,slot,actor),'')
+            return (*history_result(s,year,locality,slot,actor),'',*accessible)
         except (ValueError,TypeError) as exc:
-            return [],*[charts.empty() for _ in range(4)],notice(str(exc),True)
+            unavailable=['Gráfico no disponible para la selección actual.']*8
+            return [],*[charts.empty() for _ in range(4)],notice(str(exc),True),*unavailable
+
+    @app.callback(Output('download-history-button','disabled'),Output('download-history-status','children'),
+                  Input('history-year','value'),Input('history-locality','value'),Input('history-slot','value'),Input('history-actor','value'))
+    def enable_history_download(year,locality,slot,actor):
+        return estado_descarga(validar_descarga_historia,s,year,locality,slot,actor)
 
     @app.callback(Output('eval-kpis','children'),Output('eval-note','children'),Output('eval-confusion','figure'),
                   Output('eval-calibration','figure'),Output('eval-roc','figure'),Output('eval-pr','figure'),Output('eval-error','children'),
+                  Output('eval-confusion-accessible','aria-label'),Output('eval-confusion-summary','children'),
+                  Output('eval-calibration-accessible','aria-label'),Output('eval-calibration-summary','children'),
+                  Output('eval-roc-accessible','aria-label'),Output('eval-roc-summary','children'),
+                  Output('eval-pr-accessible','aria-label'),Output('eval-pr-summary','children'),
                   Input('eval-year','value'),Input('eval-locality','value'),Input('eval-slot','value'))
     def update_eval(year,locality,slot):
+        descriptions=descripciones_evaluacion(year,locality,slot)
+        accessible=[item for value in descriptions for item in (value,value)]
         try:
-            return (*evaluation_result(s,year,locality,slot),'')
+            return (*evaluation_result(s,year,locality,slot),'',*accessible)
         except (ValueError,TypeError) as exc:
-            return [],'',*[charts.empty() for _ in range(4)],notice(str(exc),True)
+            unavailable=['Gráfico no disponible para la selección actual.']*8
+            return [],'',*[charts.empty() for _ in range(4)],notice(str(exc),True),*unavailable
+
+    @app.callback(Output('download-eval-button','disabled'),Output('download-eval-status','children'),
+                  Input('eval-year','value'),Input('eval-locality','value'),Input('eval-slot','value'))
+    def enable_eval_download(year,locality,slot):
+        return estado_descarga(validar_descarga_evaluacion,s,year,locality,slot)
 
     @app.callback(Output('download-query','data'),Input('download-query-button','n_clicks'),
                   State('query-date','date'),State('query-locality','value'),State('query-slot','value'),prevent_initial_call=True)
@@ -463,6 +641,23 @@ def create_app(service=None):
     return app
 
 
+def create_startup_error_app(message):
+    """Interfaz mínima y local cuando un contrato de datos impide arrancar."""
+    app=Dash(__name__,title='Dashboard no disponible')
+    app.index_string=app.index_string.replace('<html>','<html lang="es">')
+    app.layout=html.Main([
+        html.H1('El dashboard no pudo iniciar'),
+        html.Div(str(message),role='alert',className='notice warning'),
+        html.P('Revise Git LFS, la integridad de los recursos y dashboard/README.md. No se modificó ningún artefacto.'),
+    ],className='container startup-error')
+
+    @app.server.get('/healthz')
+    def health_error():
+        return {'status':'error','detalle':str(message),'alcance':'solo lectura'},503
+
+    return app
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--port',type=int,default=8050)
@@ -470,7 +665,7 @@ def main():
     try:
         app=create_app()
     except (FileNotFoundError,ValueError,RuntimeError) as exc:
-        parser.exit(1,f'No se pudo iniciar el dashboard: {exc}\nRevise Git LFS y el manual dashboard/README.md.\n')
+        app=create_startup_error_app(exc)
     app.run(host='127.0.0.1',port=args.port,debug=False)
 
 

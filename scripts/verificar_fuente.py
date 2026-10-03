@@ -26,7 +26,7 @@ def verificar():
     finally:
         workbook.close()
     return {'resultado': 'correcto', 'sha256_local': metadata['sha256_local'],
-            'hojas_verificadas': len(metadata['hojas']), 'licencia': metadata['licencia']['estado']}
+            'hojas_verificadas': len(metadata['hojas']), 'licencia': metadata['licencia']}
 
 
 if __name__ == '__main__':

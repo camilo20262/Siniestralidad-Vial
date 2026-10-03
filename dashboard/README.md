@@ -73,6 +73,22 @@ ejecutarlo sobre un directorio ya preparado ni borrar evidencias para forzarlo.
 5. **Metodología:** definición de etiqueta, separación temporal, identidad del
    modelo, procedencia, interpretación, limitaciones y guía de navegación.
 
+### Funciones opt-in pendientes de aprobación textual
+
+Dos bloques están implementados y probados, pero permanecen ocultos por defecto:
+
+- `MOSTRAR_VALIDACION_INDEPENDIENTE = False`, en `dashboard/data.py`, controla
+  una tarjeta con el experimento temporal separado de 2022. Su JSON se lee en
+  modo de solo lectura y se verifica contra
+  `dashboard/validacion_independiente_manifest.json`, separado del manifiesto
+  oficial del dashboard.
+- `MOSTRAR_CONTEXTO_LIMITACIONES_CONSULTA = False`, en `dashboard/app.py`,
+  controla el bloque contextual de Brier, comparación histórica y advertencias
+  de Candelaria/Sumapaz junto al resultado individual.
+
+Activarlos requiere aprobar primero el texto académico. Ninguna bandera cambia
+el modelo, el dataset, las predicciones congeladas ni el umbral oficial 0,52.
+
 ### Interpretación y descargas
 
 - El score no es una probabilidad calibrada. Una alerta baja no garantiza la
@@ -104,6 +120,10 @@ ejecutarlo sobre un directorio ya preparado ni borrar evidencias para forzarlo.
 Una instancia de datos se carga por proceso, con comprobaciones de integridad
 antes de habilitar las consultas. Los callbacks leen esa instancia y devuelven
 copias o resúmenes; no tienen rutas de actualización de datos ni entrenamiento.
+La fecha, el año, el mes y el día semanal del análisis descriptivo se preparan
+una sola vez al iniciar. La consulta individual ejecuta una sola inferencia: el
+mapa valida el alcance temporal de forma independiente y utiliza las
+predicciones congeladas verificadas.
 No hay telemetría ni mapas de terceros. La cartografía se simplifica únicamente
 en memoria para dibujar; el GeoJSON original permanece intacto. El botón de
 compartir gráficos con servicios externos está deshabilitado.
@@ -111,6 +131,17 @@ compartir gráficos con servicios externos está deshabilitado.
 Los eventos con participación de actor se agrupan por fecha, localidad y franja;
 el nuevo archivo no contiene nombres, identificadores personales ni códigos de
 accidente. El manifiesto registra la fuente y las huellas de recursos utilizados.
+
+Los errores estructurales del manifiesto, registro o GeoJSON se convierten en
+mensajes de contrato legibles. Si impiden el arranque local, se muestra una
+pantalla de diagnóstico en lugar de un traceback. Los botones de descarga se
+deshabilitan con una explicación cuando sus filtros no son exportables.
+
+Los resultados dinámicos de consulta, historia y evaluación usan regiones
+`aria-live`; cada gráfico tiene un contenedor enfocable con nombre y resumen
+textual. El indicador de foco usa `#b06f14`, con contraste aproximado 4,09:1
+sobre blanco y 3,77:1 sobre `#f5f6f3`. Son mejoras acotadas con WCAG 2.2 AA
+como referencia, no sustituyen la auditoría exhaustiva pendiente.
 
 ## Pruebas y diagnóstico
 
@@ -140,10 +171,12 @@ reporta son del servidor local, no de una conexión remota ni del navegador.
 ## Alcance de la entrega
 
 Versión local funcional para revisión académica. Pendientes independientes:
-aceptación por usuarios, despliegue público con configuración WSGI/HTTPS y revisión
-de condiciones de reutilización del Excel. La licencia específica de la fuente
-sigue pendiente de confirmación; no se presenta esta entrega como autorización
-para redistribuir microdatos ni como validación para uso operativo.
+aceptación formal por usuarios, despliegue público con configuración WSGI/HTTPS,
+pruebas de carga, telemetría y una auditoría exhaustiva de accesibilidad (teclado,
+lector de pantalla, contraste y pruebas con usuarios). También falta revisar las
+condiciones de reutilización del Excel. La licencia específica de la fuente sigue
+pendiente de confirmación; no se presenta esta entrega como autorización para
+redistribuir microdatos ni como validación para uso operativo.
 
 Documentación técnica consultada: [callbacks de Dash](https://dash.plotly.com/basic-callbacks)
 y [mapas coropléticos de Plotly](https://plotly.com/python/tile-county-choropleth/).

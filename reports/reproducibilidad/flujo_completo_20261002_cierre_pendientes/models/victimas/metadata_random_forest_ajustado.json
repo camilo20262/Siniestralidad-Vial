@@ -1,0 +1,30 @@
+{
+  "seleccion_sin_test": true,
+  "criterio": "Mayor Average Precision media 2020–2022",
+  "mejor_candidato": 3,
+  "hiperparametros": {
+    "n_estimators": 300,
+    "max_depth": null,
+    "min_samples_leaf": 20,
+    "max_features": "sqrt",
+    "class_weight": "balanced"
+  },
+  "umbral_temporal": 0.5199999999999999,
+  "metricas_test_retro": {
+    "Modelo": "Random Forest ajustado",
+    "Umbral": 0.5199999999999999,
+    "Average_Precision": 0.3098375996626644,
+    "AUC_ROC": 0.6933242182043409,
+    "F1": 0.40578901871113465,
+    "Precision": 0.2940629673038839,
+    "Recall": 0.654434250764526,
+    "Balanced_Accuracy": 0.6428182402000494,
+    "Brier": 0.2220882670045042,
+    "TN": 29895,
+    "FP": 17467,
+    "FN": 3842,
+    "TP": 7276
+  },
+  "version_python": "3.12.14",
+  "version_sklearn": "1.9.0"
+}

@@ -9,6 +9,9 @@ Se declara al **Random Forest ajustado con umbral de score 0,52** como modelo pr
 
 La configuración base se conserva como comparación: Random Forest de 200 árboles, profundidad máxima 12 y umbral 0,55. Los archivos de ambos modelos tienen identidad y resultados separados.
 
+La [decisión DEC-UMB-01](../../docs/decisiones/umbral_modelo.md) formaliza que
+0,52 es el único umbral oficial y conserva su comparación numérica contra 0,55.
+
 El [registro del modelo principal](../../models/victimas/modelo_principal.json) identifica el pipeline, sus hiperparámetros completos, variables, umbral, referencias y huellas SHA-256. La entrada de carga es `src.modelo_principal.cargar_modelo_principal()`. El archivo histórico `pipeline_modelo_seleccionado.pkl` corresponde al modelo base de 04B, aunque su nombre sugiera otra cosa.
 
 ## 2. Propósito y alcance
@@ -89,6 +92,16 @@ El candidato 3 obtuvo la mayor Average Precision media: **0,2552**, frente a **0
 Una vez elegida la configuración, se tomó el umbral que maximiza el F1 agregado de sus predicciones fuera de muestra de 2020–2022: 0,52. Las mismas validaciones participan en la selección de configuración y de umbral; las métricas de selección no constituyen una evaluación independiente. El periodo 2023–2024 no intervino en el cálculo de esta búsqueda, pero ya había sido inspeccionado durante el desarrollo: se mantiene su carácter retrospectivo.
 
 Finalmente se entrenó con 2018–2022. La elección por F1 no incorpora costos operativos acordados para falsas alertas y omisiones; el umbral sigue siendo exploratorio.
+
+### Estimación temporal adicional
+
+Para separar una evaluación de la selección, se ejecutó además un procedimiento
+que usa solo 2020–2021 para escoger configuración y umbral, reajusta con 2018–2021
+y evalúa 2022. Seleccionó el candidato 3 y umbral 0,54; en 2022 obtuvo F1
+0,4017, AP 0,3077, AUC-ROC 0,6959 y Brier 0,2228. Este resultado no reemplaza
+el modelo ni el umbral oficiales. Es una separación procedimental adicional,
+no una prueba prospectiva o nunca inspeccionada. Véase la
+[conclusión específica](../validacion_independiente_victimas/conclusion_ejecutiva.md).
 
 ## 6. Resultados verificados en 05B
 

@@ -584,6 +584,19 @@ details p {
 .button.secondary:hover {
   background:#e8f2ee
 }
+.button:disabled,.button:disabled:hover {
+  background:#dbe3e1;
+  border-color:#c8d3d0;
+  color:#52645f;
+  cursor:not-allowed;
+  opacity:.78
+}
+.download-status {
+  min-height:1.6em;
+  margin:-12px 0 18px;
+  color:#805414;
+  font-size:12px
+}
 .table-wrap {
   overflow:auto;
   max-height:500px
@@ -856,7 +869,6 @@ h1 {
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  cursor:pointer;
   flex:0 0 auto;
   margin:0
 }

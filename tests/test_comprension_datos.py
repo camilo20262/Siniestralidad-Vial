@@ -46,6 +46,15 @@ class ComprensionDatosTest(unittest.TestCase):
             self.assertEqual(call.args[0].index.tolist(),['Codigo','Texto'])
             self.assertEqual(list(call.args[0].columns),['Tipo de dato pandas'])
 
+    def test_licencia_pendiente_es_explicita(self):
+        provenance = json.loads((ROOT/'data/raw/procedencia_excel.json').read_text())
+        self.assertEqual(provenance['licencia'], 'pendiente de confirmación institucional')
+        self.assertEqual(provenance['licencia_detalle']['estado'], 'pendiente_confirmacion_especifica')
+        readme = (ROOT/'README.md').read_text()
+        self.assertIn('TODO institucional — licencia', readme)
+        self.assertIn('auditoría exhaustiva de', readme)
+        self.assertIn('accesibilidad', readme)
+
 
 if __name__=='__main__':
     unittest.main()
