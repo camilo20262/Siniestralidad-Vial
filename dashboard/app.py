@@ -1,6 +1,7 @@
 """Aplicación local: python -m dashboard.app. Sin escrituras ni entrenamiento."""
 import argparse
 from pathlib import Path
+from urllib.parse import quote
 
 import numpy as np
 import pandas as pd
@@ -15,6 +16,61 @@ CONFIG = {'displaylogo': False, 'scrollZoom': False,
           'modeBarButtonsToRemove': ['lasso2d', 'select2d', 'sendChartToCloud'],
           'toImageButtonOptions': {'format': 'png', 'filename': 'siniestralidad_bogota'}}
 
+GRAPH_DESCRIPTIONS = {
+    'overview-series': 'Serie mensual de siniestros con víctimas entre 2018 y 2024.',
+    'overview-localities': 'Comparación de las siete localidades con mayor conteo registrado.',
+    'query-map': 'Mapa de priorización por localidad para la selección actual.',
+    'history-series': 'Serie mensual de siniestros para los filtros históricos actuales.',
+    'history-localities': 'Comparación de localidades para los filtros históricos actuales.',
+    'history-heat': 'Mapa de calor por día de semana y franja para los filtros actuales.',
+    'history-slots': 'Comparación de franjas horarias para los filtros históricos actuales.',
+    'eval-confusion': 'Matriz de clasificación para los filtros de evaluación actuales.',
+    'eval-calibration': 'Relación entre score medio y frecuencia observada para la selección.',
+    'eval-roc': 'Curva ROC para los filtros de evaluación actuales.',
+    'eval-pr': 'Curva de precisión y recall para los filtros de evaluación actuales.',
+    'eval-territory-detection': 'Proporción de positivos detectados y omitidos por localidad.',
+    'eval-slot-detection': 'Proporción de positivos detectados y omitidos por franja.',
+    'eval-importance': 'Importancia por permutación de las variables del modelo principal.',
+}
+
+ICON_PATHS = {
+    'activity': '<path d="M3 12h4l2-7 4 14 2-7h6"/>',
+    'calendar': '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/>',
+    'chart': '<path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/>',
+    'clock': '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    'info': '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
+    'layers': '<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/>',
+    'map': '<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/>',
+}
+
+
+def _icon_name(text):
+    value=text.lower()
+    if any(word in value for word in ('mapa','localidad','territorio','geogr')):
+        return 'map'
+    if any(word in value for word in ('franja','mes','temporal','calendario','historia')):
+        return 'calendar'
+    if any(word in value for word in ('tiempo','promedio diario')):
+        return 'clock'
+    if any(word in value for word in ('modelo','f1','auc','precisión','recall','evaluación',
+                                       'aciertos','errores','calibración','curva','compar',
+                                       'resultado','detección','importancia')):
+        return 'chart'
+    if any(word in value for word in ('siniestro','casos','universo')):
+        return 'activity'
+    if any(word in value for word in ('unidad','variables','identidad','validación')):
+        return 'layers'
+    return 'info'
+
+
+def icon(text):
+    name=_icon_name(text)
+    svg=(f'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" '
+         f'viewBox="0 0 24 24" fill="none" stroke="#137c78" stroke-width="1.8" '
+         f'stroke-linecap="round" stroke-linejoin="round">{ICON_PATHS[name]}</svg>')
+    return html.Span(html.Img(src='data:image/svg+xml,'+quote(svg),alt=''),
+                     className='icon-badge',**{'aria-hidden':'true'})
+
 
 def number(value, decimals=0):
     if value is None or pd.isna(value):
@@ -23,7 +79,8 @@ def number(value, decimals=0):
 
 
 def kpi(label, value, note, accent=False):
-    return html.Div([html.Span(label, className='kpi-label'), html.Strong(value), html.Small(note)],
+    return html.Div([html.Div([icon(label),html.Span(label,className='kpi-label')],className='kpi-heading'),
+                     html.Strong(value),html.Small(note)],
                     className='kpi accent' if accent else 'kpi')
 
 
@@ -31,15 +88,20 @@ def intro(kicker, title, description):
     return html.Div([html.P(kicker, className='eyebrow'), html.H1(title), html.P(description, className='lede')],className='page-intro')
 
 
-def graph(id, figure=None):
-    return dcc.Graph(id=id, figure=figure if figure is not None else charts.empty('Cargando selección…'),
-                     config=CONFIG, responsive=True,
-                     style={'height': 490 if id=='query-map' else (figure.layout.height if figure is not None else 340)})
+def graph(id, figure=None, description=None):
+    description=description or GRAPH_DESCRIPTIONS.get(id,'Visualización interactiva del dashboard.')
+    component=dcc.Graph(id=id, figure=figure if figure is not None else charts.empty('Cargando selección…'),
+                        config=CONFIG, responsive=True,
+                        style={'height': 490 if id=='query-map' else (figure.layout.height if figure is not None else 340)})
+    return html.Div([component,html.Span(description,id=id+'-summary',className='sr-only')],
+                    id=id+'-accessible',className='graph-accessible',role='group',tabIndex=0,
+                    title=description,**{'aria-label':description})
 
 
 def panel(title, subtitle, content, extra=None):
     children = content if isinstance(content,list) else [content]
-    return html.Section([html.Div([html.Div([html.H2(title),html.P(subtitle)]),extra],className='panel-head'),*children],className='panel')
+    heading=html.Div([icon(title),html.Div([html.H2(title),html.P(subtitle)])],className='panel-title')
+    return html.Section([html.Div([heading,extra],className='panel-head'),*children],className='panel')
 
 
 def table(df, labels=None):
@@ -174,7 +236,7 @@ def history_page(s):
                   dropdown('history-slot','Franja',['Todas',*SLOTS],'Todas'),
                   dropdown('history-actor','Participación de actor',['Todos',*FLAGS],'Todos')],className='filters'),
         notice('Se cuentan siniestros, no personas. Un mismo siniestro puede involucrar varios tipos de actor; sus categorías no deben sumarse. Solo se incluyen indicadores de participación afirmativos.'),
-        html.Div(id='history-error',role='alert'),html.Div(id='history-kpis',className='kpi-grid'),
+        html.Div(id='history-error',role='alert'),html.Div(id='history-kpis',className='kpi-grid',**{'aria-live':'polite'}),
         html.Div([panel('Evolución mensual','Incluye meses y días con cero registros.',graph('history-series')),
                   panel('Localidades','Conteos registrados; no tasas de exposición al tránsito.',graph('history-localities'))],className='two-columns'),
         html.Div([panel('Día de semana × franja','Promedio por día del calendario, incluida la ausencia de registros.',graph('history-heat')),
@@ -216,7 +278,7 @@ def evaluation_page(s):
         html.Div([dropdown('eval-year','Año de evaluación',['Todos',2023,2024],'Todos'),
                   dropdown('eval-locality','Localidad',['Todas',*s.localidades],'Todas'),
                   dropdown('eval-slot','Franja',['Todas',*SLOTS],'Todas')],className='filters three'),
-        html.Div(id='eval-error',role='alert'),html.Div(id='eval-kpis',className='kpi-grid'),html.Div(id='eval-note'),
+        html.Div(id='eval-error',role='alert'),html.Div(id='eval-kpis',className='kpi-grid',**{'aria-live':'polite'}),html.Div(id='eval-note',**{'aria-live':'polite'}),
         html.Div([panel('Aciertos y errores','Etiqueta observada frente a alerta del modelo.',graph('eval-confusion')),
                   panel('Calibración','La diagonal es la referencia ideal, no el comportamiento esperado del modelo.',graph('eval-calibration'))],className='two-columns'),
         html.Div([panel('Curva ROC','Ordenamiento de casos a distintos umbrales.',graph('eval-roc')),

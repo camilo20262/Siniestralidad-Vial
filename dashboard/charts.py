@@ -8,7 +8,16 @@ from dashboard.data import DAYS, SLOTS
 TEAL = '#137c78'
 INK = '#172d3e'
 GOLD = '#d7942d'
-COLORS = [[0, '#e8f2ee'], [.3, '#b7d8cd'], [.55, '#66aa97'], [.8, '#247e77'], [1, '#174850']]
+MAP_COLORS = [[0, '#eef5f2'], [.12, '#d5e8e3'], [.22, '#a9d0c8'],
+              [.32, '#72b3aa'], [.42, '#378f88'], [.52, '#176762'],
+              [.62, '#5f684b'], [.76, '#816923'], [.9, '#a8731d'], [1, '#9f6814']]
+HEATMAP_COLORS = ['#edf7f5', '#d2ece8', '#a8d8d2', '#72bdb5', '#3b9b94', TEAL]
+SLOT_COLORS = {
+    'Madrugada': '#315d68',
+    'Mañana': '#c08a34',
+    'Tarde': '#3a9992',
+    'Noche': INK,
+}
 
 
 def finish(fig, title=None, height=340):
@@ -44,8 +53,10 @@ def line(frame, x, y, label='Siniestros registrados'):
 def bars(frame, x, y, horizontal=False, height=340):
     if frame.empty:
         return empty()
+    colors = ([SLOT_COLORS.get(value, TEAL) for value in frame[x]]
+              if x == 'Franja_Horaria' else TEAL)
     trace = go.Bar(x=frame[y] if horizontal else frame[x], y=frame[x] if horizontal else frame[y],
-                   orientation='h' if horizontal else 'v', marker_color=TEAL,
+                   orientation='h' if horizontal else 'v', marker_color=colors,
                    hovertemplate=('%{y}: %{x:,.3f}' if horizontal else '%{x}: %{y:,.0f}')+'<extra></extra>')
     fig = go.Figure(trace)
     finish(fig, height=height)
@@ -58,7 +69,7 @@ def bars(frame, x, y, horizontal=False, height=340):
 def map_figure(service, rows, selected, view):
     fig = go.Figure(go.Choroplethmap(
         geojson=service.geojson, featureidkey='properties.Localidad', locations=rows.Localidad,
-        z=rows.Score_Priorizacion, zmin=0, zmax=1, colorscale=COLORS,
+        z=rows.Score_Priorizacion, zmin=0, zmax=1, colorscale=MAP_COLORS,
         marker_line_color='white', marker_line_width=1, marker_opacity=.9,
         customdata=np.column_stack([rows.Alerta_Modelo.map({0:'Baja',1:'Alta'}), rows.Umbral_Score]),
         hovertemplate='<b>%{location}</b><br>Score: %{z:.3f}<br>Priorización: %{customdata[0]}<br>Umbral: %{customdata[1]}<extra></extra>',
@@ -67,7 +78,7 @@ def map_figure(service, rows, selected, view):
     if not chosen.empty:
         fig.add_trace(go.Choroplethmap(geojson=service.geojson, featureidkey='properties.Localidad',
             locations=chosen.Localidad, z=chosen.Score_Priorizacion, zmin=0, zmax=1,
-            colorscale=COLORS, marker_line_color=INK, marker_line_width=3,
+            colorscale=MAP_COLORS, marker_line_color=INK, marker_line_width=3,
             showscale=False, hoverinfo='skip'))
     center, zoom = ({'lat':4.64,'lon':-74.11}, 10) if view=='urbana' else ({'lat':4.30,'lon':-74.20}, 8.6)
     if selected=='SUMAPAZ' and view=='urbana':
@@ -82,10 +93,15 @@ def detection_by_group(frame, group, height=460):
     """Comparación global: detección entre positivos, conservando tamaños de muestra."""
     ordered = frame.sort_values('Recall')
     fig = go.Figure()
+    slot_breakdown = group == 'Franja_Horaria'
     for column, label, color in [('TP', 'Detectados', TEAL), ('FN', 'Omitidos', GOLD)]:
         fraction = ordered[column].div(ordered.Positivos.replace(0, np.nan))
+        marker = dict(color=([SLOT_COLORS.get(value, TEAL) for value in ordered[group]]
+                             if slot_breakdown else color))
+        if slot_breakdown and column == 'FN':
+            marker.update(opacity=.42, pattern_shape='/')
         fig.add_trace(go.Bar(x=fraction, y=ordered[group], orientation='h', name=label,
-            marker_color=color, customdata=np.column_stack([ordered[column], ordered.Positivos]),
+            marker=marker, customdata=np.column_stack([ordered[column], ordered.Positivos]),
             hovertemplate='%{y}<br>'+label+': %{customdata[0]:,}<br>Positivos: %{customdata[1]:,}<br>Proporción: %{x:.1%}<extra></extra>'))
     finish(fig, height=height)
     fig.update_layout(barmode='stack', margin=dict(l=145,b=80))
@@ -100,10 +116,58 @@ def day_heatmap(grid):
     # Un día aporta a cada franja seleccionada incluso cuando su conteo es cero.
     daily = grid.groupby(['Fecha_Acc','Dia_Num','Franja_Horaria'], observed=True).Siniestros.sum().reset_index()
     pivot = daily.groupby(['Dia_Num','Franja_Horaria']).Siniestros.mean().unstack().reindex(index=range(7),columns=SLOTS)
-    fig = go.Figure(go.Heatmap(x=SLOTS,y=DAYS,z=pivot.values,colorscale=COLORS,
-        colorbar=dict(title='Por día',thickness=12),hoverongaps=False,
-        hovertemplate='%{y} · %{x}<br>Promedio: %{z:.2f}<extra></extra>'))
-    return finish(fig)
+    values = pivot.to_numpy(dtype=float)
+    finite = values[np.isfinite(values)]
+    minimum = float(finite.min()) if finite.size else 0
+    maximum = float(finite.max()) if finite.size else 0
+
+    def cell_color(value):
+        if pd.isna(value):
+            return HEATMAP_COLORS[0]
+        if maximum == minimum:
+            position = 1 if maximum > 0 else 0
+        else:
+            position = (float(value)-minimum)/(maximum-minimum)
+        index = min(int(position*len(HEATMAP_COLORS)), len(HEATMAP_COLORS)-1)
+        return HEATMAP_COLORS[index]
+
+    def rounded_cell(x, y, radius=.1):
+        left,right,bottom,top=x-.41,x+.41,y-.4,y+.4
+        return (f'M {left+radius},{bottom} L {right-radius},{bottom} '
+                f'Q {right},{bottom} {right},{bottom+radius} L {right},{top-radius} '
+                f'Q {right},{top} {right-radius},{top} L {left+radius},{top} '
+                f'Q {left},{top} {left},{top-radius} L {left},{bottom+radius} '
+                f'Q {left},{bottom} {left+radius},{bottom} Z')
+
+    fig = go.Figure()
+    hover_x=[];hover_y=[];hover=[]
+    for day_index,day in enumerate(DAYS):
+        for slot_index,slot in enumerate(SLOTS):
+            value=values[day_index,slot_index]
+            fig.add_shape(type='path',path=rounded_cell(slot_index,day_index),
+                          fillcolor=cell_color(value),line=dict(width=0),layer='below')
+            hover_x.append(slot_index);hover_y.append(day_index)
+            hover.append(f'{day} · {slot}<br>Promedio: {value:.2f}' if pd.notna(value)
+                         else f'{day} · {slot}<br>Sin datos')
+    fig.add_trace(go.Scatter(x=hover_x,y=hover_y,mode='markers',showlegend=False,
+        marker=dict(size=38,color='rgba(0,0,0,0)'),text=hover,
+        hovertemplate='%{text}<extra></extra>'))
+    finish(fig)
+    fig.update_xaxes(tickmode='array',tickvals=list(range(len(SLOTS))),ticktext=SLOTS,
+                     range=[-.52,len(SLOTS)-.48],fixedrange=True)
+    fig.update_yaxes(tickmode='array',tickvals=list(range(len(DAYS))),ticktext=DAYS,
+                     range=[len(DAYS)-.48,-.52],fixedrange=True,showgrid=False)
+    fig.update_layout(margin=dict(l=82,r=22,t=20,b=72),hovermode='closest')
+    legend_start=.68
+    for index,color in enumerate(HEATMAP_COLORS):
+        x0=legend_start+index*.032
+        fig.add_shape(type='rect',xref='paper',yref='paper',x0=x0,x1=x0+.022,
+                      y0=-.25,y1=-.19,fillcolor=color,line=dict(color='#ffffff',width=1))
+    fig.add_annotation(x=legend_start-.015,y=-.22,xref='paper',yref='paper',text='Menos',
+                       showarrow=False,xanchor='right',font=dict(size=11,color=INK))
+    fig.add_annotation(x=legend_start+len(HEATMAP_COLORS)*.032,y=-.22,xref='paper',yref='paper',
+                       text='Más',showarrow=False,xanchor='left',font=dict(size=11,color=INK))
+    return fig
 
 
 def confusion(metrics):
@@ -112,7 +176,7 @@ def confusion(metrics):
     z = [[metrics['TN'],metrics['FP']],[metrics['FN'],metrics['TP']]]
     labels = [['Negativos<br>correctos','Falsas<br>alertas'],['Positivos<br>omitidos','Positivos<br>detectados']]
     fig = go.Figure(go.Heatmap(x=['Sin alerta','Con alerta'],y=['Etiqueta 0','Etiqueta 1'],z=z,
-        colorscale=COLORS, showscale=False, text=labels,
+        colorscale=MAP_COLORS, showscale=False, text=labels,
         texttemplate='%{text}<br><b>%{z:,}</b>', hovertemplate='%{text}: %{z:,}<extra></extra>'))
     fig.update_yaxes(autorange='reversed',title='Observado')
     fig.update_xaxes(title='Clasificación del modelo')
