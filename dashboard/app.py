@@ -1,11 +1,12 @@
 """Aplicación local: python -m dashboard.app. Sin escrituras ni entrenamiento."""
 import argparse
+import json
 from pathlib import Path
 from urllib.parse import quote
 
 import numpy as np
 import pandas as pd
-from dash import Dash, Input, Output, State, dcc, html, no_update
+from dash import Dash, Input, Output, State, ctx, dcc, html, no_update
 from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
 
@@ -19,6 +20,8 @@ CONFIG = {'displaylogo': False, 'scrollZoom': False,
 
 # Opt-in pendiente de aprobación académica del texto exacto antes de mostrarlo.
 MOSTRAR_CONTEXTO_LIMITACIONES_CONSULTA = False
+
+THEME_BOOTSTRAP = """<script id="theme-bootstrap">(function(){var t='dark';try{var r=localStorage.getItem('theme-store');if(r){try{var v=JSON.parse(r);if(v==='light'||v==='dark'){t=v;}else if(v&&typeof v==='object'&&(v.data==='light'||v.data==='dark')){t=v.data;}}catch(e){if(r==='light'||r==='dark'){t=r;}}}}catch(e){}document.documentElement.setAttribute('data-theme',t);})();</script>"""
 
 GRAPH_DESCRIPTIONS = {
     'overview-series': 'Serie mensual de siniestros con víctimas entre 2018 y 2024.',
@@ -45,6 +48,8 @@ ICON_PATHS = {
     'info': '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
     'layers': '<path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/>',
     'map': '<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15M15 6v15"/>',
+    'moon': '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+    'sun': '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>',
 }
 
 
@@ -67,13 +72,21 @@ def _icon_name(text):
     return 'info'
 
 
-def icon(text):
-    name=_icon_name(text)
+def icon_uri(name, stroke='#137c78'):
     svg=(f'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" '
-         f'viewBox="0 0 24 24" fill="none" stroke="#137c78" stroke-width="1.8" '
+         f'viewBox="0 0 24 24" fill="none" stroke="{stroke}" stroke-width="1.8" '
          f'stroke-linecap="round" stroke-linejoin="round">{ICON_PATHS[name]}</svg>')
-    return html.Span(html.Img(src='data:image/svg+xml,'+quote(svg),alt=''),
+    return 'data:image/svg+xml,'+quote(svg)
+
+
+def icon(text):
+    return html.Span(html.Img(src=icon_uri(_icon_name(text)),alt=''),
                      className='icon-badge',**{'aria-hidden':'true'})
+
+
+def configure_index(app):
+    app.index_string=(app.index_string.replace('<html>','<html lang="es" data-theme="dark">')
+                      .replace('<head>','<head>'+THEME_BOOTSTRAP))
 
 
 def number(value, decimals=0):
@@ -92,9 +105,9 @@ def intro(kicker, title, description):
     return html.Div([html.P(kicker, className='eyebrow'), html.H1(title), html.P(description, className='lede')],className='page-intro')
 
 
-def graph(id, figure=None, description=None):
+def graph(id, figure=None, description=None, theme='light'):
     description=description or GRAPH_DESCRIPTIONS.get(id,'Visualización interactiva del dashboard.')
-    component=dcc.Graph(id=id, figure=figure if figure is not None else charts.empty('Cargando selección…'),
+    component=dcc.Graph(id=id,figure=figure if figure is not None else charts.empty('Cargando selección…',theme),
                         config=CONFIG, responsive=True,
                         style={'height': 490 if id=='query-map' else (figure.layout.height if figure is not None else 340)})
     # dcc.Graph no admite aria-label en la versión fijada; el contenedor aporta
@@ -271,10 +284,17 @@ def weakest_slot_warning(s):
     ],True)
 
 
-def overview(s):
+def overview_figures(s, theme='light'):
     grid=s.history()
     monthly=grid.groupby('Mes',as_index=False).Siniestros.sum()
     top=grid.groupby('Localidad',as_index=False).Siniestros.sum().nlargest(7,'Siniestros').sort_values('Siniestros')
+    return charts.line(monthly,'Mes','Siniestros',theme=theme),charts.bars(
+        top,'Localidad','Siniestros',True,theme=theme)
+
+
+def overview(s, theme='light'):
+    grid=s.history()
+    series,localities=overview_figures(s,theme)
     return html.Div([
         html.Div([html.Div([html.P('BOGOTÁ D.C. / DATOS QUE CUENTAN',className='eyebrow'),
             html.H1(['Entender el pasado.',html.Br(),html.Span('Explorar las señales.',className='text-teal')]),
@@ -286,15 +306,15 @@ def overview(s):
         html.Div([kpi('Siniestros con víctimas',number(grid.Siniestros.sum()),'Eventos, no número de personas',True),
                   kpi('Localidades','20','Resolución territorial del modelo'),kpi('Casos evaluados','58.480','Localidad × fecha × franja'),
                   kpi('Modelo principal','Random Forest','Versión 1.0 · umbral 0,52')],className='kpi-grid'),
-        html.Div([panel('La historia, mes a mes','Siniestros con heridos o fallecidos · 2018–2024',graph('overview-series',charts.line(monthly,'Mes','Siniestros'))),
-                  panel('Dónde se concentran los registros','Siete localidades con mayor conteo · no ajustado por exposición',graph('overview-localities',charts.bars(top,'Localidad','Siniestros',True)))],className='two-columns wide-left'),
+        html.Div([panel('La historia, mes a mes','Siniestros con heridos o fallecidos · 2018–2024',graph('overview-series',series,theme=theme)),
+                  panel('Dónde se concentran los registros','Siete localidades con mayor conteo · no ajustado por exposición',graph('overview-localities',localities,theme=theme))],className='two-columns wide-left'),
         html.Div([panel('Explorar no es pronosticar','Cómo leer esta herramienta',html.P('La consulta reproduce casos de 2023–2024 con antecedentes históricos. El score ordena casos; no expresa la probabilidad de sufrir un accidente.')),
                   panel('Un universo definido','Siniestros con víctimas',html.P('Se excluyen los eventos de solo daños. Las franjas dividen cada día en cuatro intervalos de seis horas. El tipo de actor vial se usa únicamente para describir los registros.')),
                   panel('Resultados con contexto','Una evaluación que muestra sus límites',html.P('La tasa histórica sencilla obtiene un desempeño de ordenamiento similar al modelo. Consulta la evaluación, las falsas alertas y los errores por territorio.'))],className='three-columns'),
     ])
 
 
-def query_page(s):
+def query_page(s, theme='light'):
     ev=s.registro['datos']['evaluacion']
     return html.Div([intro('01 / CONSULTA RETROSPECTIVA','Un día, una franja, una localidad.',
         'Explora la puntuación del modelo y los antecedentes que acompañan a cada caso. Selecciona una localidad en el mapa o en el filtro.'),
@@ -307,7 +327,7 @@ def query_page(s):
         notice('El score es una puntuación de priorización, NO una probabilidad calibrada. Una alerta baja no garantiza ausencia de siniestros.'),
         html.Div(id='query-error',role='alert'),
         html.Div([panel('Mapa de priorización','Las 20 localidades tienen resultado. El encuadre urbano se acerca a Sumapaz al seleccionarla.',
-                        [graph('query-map'),html.P('Cartografía: SDP / Catastro. Instantánea de referencia, no límites históricos certificados. Fondo local sin teselas.',className='footnote')]),
+                        [graph('query-map',theme=theme),html.P('Cartografía: SDP / Catastro. Instantánea de referencia, no límites históricos certificados. Fondo local sin teselas.',className='footnote')]),
                   html.Div(id='query-detail',className='case-panel',**{'aria-live':'polite'})],className='two-columns map-layout'),
         html.Div([html.Button('Descargar consulta JSON',id='download-query-button',className='button'),
                   html.Button('Descargar las 20 localidades CSV',id='download-map-button',className='button secondary')],className='actions'),
@@ -316,7 +336,7 @@ def query_page(s):
         panel('Comparación del día','Ordenada por score para la fecha y franja seleccionadas. El umbral es fijo: 0,52.',html.Div(id='query-ranking'))])
 
 
-def query_result(s,fecha,slot,locality,view):
+def query_result(s,fecha,slot,locality,view,theme='light'):
     if view not in ['urbana','distrito']:
         raise ValueError('Encuadre no válido.')
     selected=s.consulta.consultar(fecha,locality,slot)
@@ -353,10 +373,10 @@ def query_result(s,fecha,slot,locality,view):
         detail.append(weakest_slot_warning(s))
     ranking=rows[['Localidad','Score_Priorizacion','Alerta_Modelo']].copy()
     ranking['Alerta_Modelo']=ranking.Alerta_Modelo.map({0:'Baja',1:'Alta'})
-    return charts.map_figure(s,rows,locality,view), detail, table(ranking,{'Alerta_Modelo':'Priorización','Score_Priorizacion':'Score'})
+    return charts.map_figure(s,rows,locality,view,theme),detail,table(ranking,{'Alerta_Modelo':'Priorización','Score_Priorizacion':'Score'})
 
 
-def history_page(s):
+def history_page(s, theme='light'):
     return html.Div([intro('02 / ANÁLISIS DESCRIPTIVO','Los registros, desde distintas perspectivas.',
         'Explora 2018–2024. Los filtros de esta sección describen siniestros registrados y no modifican el modelo.'),
         html.Div([dropdown('history-year','Año',['Todos',*range(2018,2025)],'Todos'),
@@ -366,15 +386,15 @@ def history_page(s):
         notice('Se cuentan siniestros, no personas. Un mismo siniestro puede involucrar varios tipos de actor; sus categorías no deben sumarse. Solo se incluyen indicadores de participación afirmativos.'),
         html.Div(id='history-error',role='alert',**{'aria-live':'polite'}),
         html.Div(id='history-kpis',className='kpi-grid',**{'aria-live':'polite'}),
-        html.Div([panel('Evolución mensual','Incluye meses y días con cero registros.',graph('history-series')),
-                  panel('Localidades','Conteos registrados; no tasas de exposición al tránsito.',graph('history-localities'))],className='two-columns'),
-        html.Div([panel('Día de semana × franja','Promedio por día del calendario, incluida la ausencia de registros.',graph('history-heat')),
-                  panel('Franjas horarias','Los filtros de año, territorio y actor se aplican a todos los gráficos.',graph('history-slots'))],className='two-columns'),
+        html.Div([panel('Evolución mensual','Incluye meses y días con cero registros.',graph('history-series',theme=theme)),
+                  panel('Localidades','Conteos registrados; no tasas de exposición al tránsito.',graph('history-localities',theme=theme))],className='two-columns'),
+        html.Div([panel('Día de semana × franja','Promedio por día del calendario, incluida la ausencia de registros.',graph('history-heat',theme=theme)),
+                  panel('Franjas horarias','Los filtros de año, territorio y actor se aplican a todos los gráficos.',graph('history-slots',theme=theme))],className='two-columns'),
         html.Button('Descargar resumen mensual CSV',id='download-history-button',className='button secondary'),
         html.Div(id='download-history-status',className='download-status',role='status',**{'aria-live':'polite'})])
 
 
-def history_result(s,year,locality,slot,actor):
+def history_result(s,year,locality,slot,actor,theme='light'):
     df=s.history(year,locality,slot,actor)
     total=int(df.Siniestros.sum()); days=df.Fecha_Acc.nunique()
     monthly=df.groupby('Mes',as_index=False).Siniestros.sum()
@@ -382,14 +402,28 @@ def history_result(s,year,locality,slot,actor):
     slots=df.groupby('Franja_Horaria').Siniestros.sum().reindex(SLOTS).dropna().reset_index()
     cards=[kpi('Siniestros registrados',number(total),'Con víctimas · selección actual',True),kpi('Promedio diario',number(total/days if days else 0,2),f'{number(days)} días del calendario'),
            kpi('Localidades incluidas',number(df.Localidad.nunique()),'Según los filtros seleccionados'),kpi('Participación de actor',actor,'Filtro descriptivo, no predictor')]
-    figs=[charts.line(monthly,'Mes','Siniestros'),charts.bars(territory,'Localidad','Siniestros',True,450),
-          charts.day_heatmap(df),charts.bars(slots,'Franja_Horaria','Siniestros')]
+    figs=[charts.line(monthly,'Mes','Siniestros',theme=theme),charts.bars(territory,'Localidad','Siniestros',True,450,theme),
+          charts.day_heatmap(df,theme),charts.bars(slots,'Franja_Horaria','Siniestros',theme=theme)]
     if not total:
-        figs=[charts.empty('Cero siniestros registrados para esta selección.') for _ in range(4)]
+        figs=[charts.empty('Cero siniestros registrados para esta selección.',theme) for _ in range(4)]
     return cards,*figs
 
 
-def evaluation_page(s):
+def evaluation_static_figures(s, theme='light'):
+    territory=s.reports['metricas_random_forest_ajustado_por_localidad']
+    slots=s.reports['metricas_random_forest_ajustado_por_franja']
+    imp=s.reports['importancia_permutacion_random_forest_ajustado'].sort_values('Caida_AP_Media')
+    short=imp.Variable.str.replace('Sin_Historial_Accidentes_','Sin historial ',regex=False).str.replace('Accidentes_Prom_','Promedio ',regex=False).str.replace('Accidentes_Semana_Anterior','Hace 7 días',regex=False).str.replace('_',' ',regex=False)
+    importance=go.Figure(go.Bar(x=imp.Caida_AP_Media,y=short,orientation='h',marker_color=charts.theme_palette(theme)['teal'],
+        error_x=dict(type='data',array=imp.Desviacion),customdata=imp[['Variable']],
+        hovertemplate='%{customdata[0]}<br>Caída AP: %{x:.4f}<extra></extra>'))
+    importance=charts.finish(importance,height=420,theme=theme)
+    importance.update_layout(margin=dict(l=180));importance.update_yaxes(tickfont=dict(size=10))
+    return (charts.detection_by_group(territory,'Localidad',560,theme),
+            charts.detection_by_group(slots,'Franja_Horaria',560,theme),importance)
+
+
+def evaluation_page(s, theme='light'):
     refs=s.reports['comparacion_referencias_historicas'][['Metodo','Average_Precision','AUC_ROC','Brier']]
     configs=s.reports['metricas_globales'][['Modelo','Umbral','F1','AUC_ROC','Average_Precision','Precision','Recall']]
     boot=s.reports['bootstrap_rf_vs_referencia_resumen'][['Metrica','Diferencia_A_Menos_B','P025','P975']]
@@ -397,12 +431,7 @@ def evaluation_page(s):
     slots=s.reports['metricas_random_forest_ajustado_por_franja']
     error_columns=['Observaciones','Positivos','TP','FN','FP','Precision','Recall','F1']
     error_labels={'TP':'Detectados','FN':'Omitidos','FP':'Falsas alertas','Franja_Horaria':'Franja'}
-    imp=s.reports['importancia_permutacion_random_forest_ajustado'].sort_values('Caida_AP_Media')
-    short=imp.Variable.str.replace('Sin_Historial_Accidentes_','Sin historial ',regex=False).str.replace('Accidentes_Prom_','Promedio ',regex=False).str.replace('Accidentes_Semana_Anterior','Hace 7 días',regex=False).str.replace('_',' ',regex=False)
-    fig=go.Figure(go.Bar(x=imp.Caida_AP_Media,y=short,orientation='h',marker_color=charts.TEAL,
-        error_x=dict(type='data',array=imp.Desviacion),customdata=imp[['Variable']],
-        hovertemplate='%{customdata[0]}<br>Caída AP: %{x:.4f}<extra></extra>'))
-    fig=charts.finish(fig,height=420);fig.update_layout(margin=dict(l=180));fig.update_yaxes(tickfont=dict(size=10))
+    territory_fig,slots_fig,importance_fig=evaluation_static_figures(s,theme)
     independent=tarjeta_validacion_independiente(s)
     return html.Div([intro('03 / EVALUACIÓN DEL MODELO','El desempeño también tiene límites.',
         'Random Forest ajustado · umbral fijo 0,52. Las métricas filtradas se recalculan sobre las predicciones conservadas de 2023–2024.'),
@@ -412,10 +441,10 @@ def evaluation_page(s):
         html.Div(id='eval-error',role='alert',**{'aria-live':'polite'}),
         html.Div(id='eval-kpis',className='kpi-grid',**{'aria-live':'polite'}),
         html.Div(id='eval-note',**{'aria-live':'polite'}),
-        html.Div([panel('Aciertos y errores','Etiqueta observada frente a alerta del modelo.',graph('eval-confusion')),
-                  panel('Calibración','La diagonal es la referencia ideal, no el comportamiento esperado del modelo.',graph('eval-calibration'))],className='two-columns'),
-        html.Div([panel('Curva ROC','Ordenamiento de casos a distintos umbrales.',graph('eval-roc')),
-                  panel('Precisión y recall','Línea punteada: prevalencia de la selección. Curvas simplificadas solo para dibujar.',graph('eval-pr'))],className='two-columns'),
+        html.Div([panel('Aciertos y errores','Etiqueta observada frente a alerta del modelo.',graph('eval-confusion',theme=theme)),
+                  panel('Calibración','La diagonal es la referencia ideal, no el comportamiento esperado del modelo.',graph('eval-calibration',theme=theme))],className='two-columns'),
+        html.Div([panel('Curva ROC','Ordenamiento de casos a distintos umbrales.',graph('eval-roc',theme=theme)),
+                  panel('Precisión y recall','Línea punteada: prevalencia de la selección. Curvas simplificadas solo para dibujar.',graph('eval-pr',theme=theme))],className='two-columns'),
         html.Button('Descargar métricas filtradas CSV',id='download-eval-button',className='button secondary'),
         html.Div(id='download-eval-status',className='download-status',role='status',**{'aria-live':'polite'}),
         html.H2('Comparaciones del estudio completo',className='section-title'),
@@ -423,9 +452,9 @@ def evaluation_page(s):
         weakest_slot_warning(s),
         html.Div([
             panel('Detección por localidad','Proporción de positivos detectados y omitidos. Pase sobre las barras para ver los conteos.',
-                  graph('eval-territory-detection',charts.detection_by_group(territory,'Localidad',560))),
+                  graph('eval-territory-detection',territory_fig,theme=theme)),
             panel('Detección por franja','Comparación global 2023–2024; no son probabilidades de sufrir un siniestro.',
-                  graph('eval-slot-detection',charts.detection_by_group(slots,'Franja_Horaria',560)))],className='two-columns'),
+                  graph('eval-slot-detection',slots_fig,theme=theme))],className='two-columns'),
         notice('Las proporciones no reflejan por sí solas el tamaño de muestra: Sumapaz solo tiene dos positivos. Estas diferencias son descriptivas y no demuestran una causa.'),
         panel('Errores por territorio y horario','Conteos absolutos para contextualizar recall y F1. Precisión, recall y F1 están en escala 0–1.',[
             html.Details([html.Summary('Ver las 20 localidades'),table(territory[['Localidad',*error_columns]],error_labels)]),
@@ -435,12 +464,12 @@ def evaluation_page(s):
         notice('El RF no muestra superioridad concluyente frente a la tasa histórica localidad–franja–día. Su Brier global de 0,2221 es peor que el 0,1544 de la constante de entrenamiento.',True),
         *([independent] if independent is not None else []),
         panel('Incertidumbre de la comparación','RF menos tasa localidad–franja–día. Bootstrap exploratorio pareado: 300 réplicas, bloques de 7 días.',table(boot)),
-        panel('Importancia por permutación','Caída de Average Precision. Barras de error: desviación entre repeticiones, no intervalo de confianza. No implica causalidad.',graph('eval-importance',fig)),
+        panel('Importancia por permutación','Caída de Average Precision. Barras de error: desviación entre repeticiones, no intervalo de confianza. No implica causalidad.',graph('eval-importance',importance_fig,theme=theme)),
         html.Div([panel('Candelaria','Un caso que la métrica global no resume',html.P('157 positivos y ninguno detectado con el umbral 0,52. El score máximo de 0,3227 no alcanza el umbral.')),
                   panel('Sumapaz','Una muestra pequeña',html.P('Solo dos positivos en la evaluación. Evita extraer conclusiones territoriales firmes a partir de este grupo.'))],className='two-columns')])
 
 
-def evaluation_result(s,year,locality,slot):
+def evaluation_result(s,year,locality,slot,theme='light'):
     df=s.evaluation(year,locality,slot);m=resumen_metricas(df)
     cards=[kpi('F1',number(m['F1'],4),'Equilibrio entre precisión y recall',True),kpi('AUC-ROC',number(m['AUC_ROC'],4),'Capacidad de ordenamiento'),
            kpi('Precisión',number(m['Precision']*100,2)+' %' if m['Precision'] is not None else '—','Alertas que corresponden a positivos'),
@@ -448,11 +477,11 @@ def evaluation_result(s,year,locality,slot):
     text=f"{number(m['Observaciones'])} observaciones · {number(m['Positivos'])} positivos · Average Precision: {number(m['Average_Precision'],4)} · Brier: {number(m['Brier'],4)}."
     if df.Alto_Riesgo.nunique()<2:
         text+=' La selección no contiene ambas clases; algunas métricas no son interpretables y se muestran como —.'
-    roc,pr=charts.curves(df)
-    return cards,notice(text),charts.confusion(m),charts.calibration(df),roc,pr
+    roc,pr=charts.curves(df,theme)
+    return cards,notice(text),charts.confusion(m,theme),charts.calibration(df,theme),roc,pr
 
 
-def about_page(s):
+def about_page(s, theme='light'):
     reg=s.registro
     steps=[('2018–2019 → 2020','Primer corte temporal'),('2018–2020 → 2021','Segundo corte temporal'),('2018–2021 → 2022','Tercer corte temporal'),('2018–2022 → 2023–2024','Entrenamiento final y evaluación retrospectiva')]
     return html.Div([intro('04 / METODOLOGÍA Y ALCANCE','Lo que estos resultados representan.',
@@ -495,11 +524,16 @@ def create_app(service=None):
              title='Siniestralidad · Bogotá',update_title='Actualizando…',suppress_callback_exceptions=True,
              meta_tags=[{'name':'viewport','content':'width=device-width, initial-scale=1'},
                         {'name':'description','content':'Exploración académica de siniestros con víctimas en Bogotá. Evaluación retrospectiva.'}])
-    app.index_string=app.index_string.replace('<html>','<html lang="es">')
+    configure_index(app)
     app.layout=html.Div([
+        dcc.Store(id='theme-store',storage_type='local',data='dark'),
         html.A('Saltar al contenido',href='#main-content',className='skip-link'),
         html.Header([html.Div([html.Span('SV',className='brand-symbol'),html.Div([html.Strong('Siniestralidad vial'),html.Small('BOGOTÁ · OBSERVACIÓN Y ANÁLISIS')])],className='brand'),
-                     html.Div([html.Span('Prototipo académico',className='header-tag'),html.Span('2018 — 2024',className='header-period')],className='header-right')],className='topbar'),
+                     html.Div([html.Span('Prototipo académico',className='header-tag'),
+                               html.Button(html.Img(id='theme-icon',src=icon_uri('sun','#f4c56a'),alt=''),
+                                           id='theme-toggle',n_clicks=0,className='theme-toggle',
+                                           title='Cambiar a modo claro',**{'aria-label':'Cambiar a modo claro','aria-pressed':'true'}),
+                               html.Span('2018 — 2024',className='header-period')],className='header-right')],className='topbar'),
         html.Nav(dcc.RadioItems(id='navigation',value='overview',options=[{'label':label,'value':value}
             for value,label in [('overview','Resumen'),('query','Consulta y mapa'),('history','Análisis histórico'),('evaluation','Evaluación'),('about','Metodología')]],
             inline=True,className='navigation',labelClassName='nav-tab',inputClassName='nav-radio'),**{'aria-label':'Secciones del dashboard'}),
@@ -507,20 +541,58 @@ def create_app(service=None):
         dcc.Download(id='download-query'),dcc.Download(id='download-map'),dcc.Download(id='download-history'),dcc.Download(id='download-eval'),
         html.Footer([html.Span('Siniestros con víctimas · Bogotá D.C.'),html.Span('RF v1.0 · Solo lectura · Sin validación prospectiva')],className='footer')])
 
+    app.clientside_callback(
+        """function(n,theme){
+            if(!n){return window.dash_clientside.no_update;}
+            return theme === 'dark' ? 'light' : 'dark';
+        }""",
+        Output('theme-store','data'),Input('theme-toggle','n_clicks'),State('theme-store','data'),
+        prevent_initial_call=True)
+
+    sun=json.dumps(icon_uri('sun','#f4c56a'))
+    moon=json.dumps(icon_uri('moon','#172d3e'))
+    app.clientside_callback(
+        f"""function(theme){{
+            var active=(theme === 'light' || theme === 'dark') ? theme : 'dark';
+            document.documentElement.setAttribute('data-theme',active);
+            var dark=active === 'dark';
+            return [dark ? {sun} : {moon},dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro',
+                    dark ? 'true' : 'false',dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'];
+        }}""",
+        Output('theme-icon','src'),Output('theme-toggle','aria-label'),
+        Output('theme-toggle','aria-pressed'),Output('theme-toggle','title'),
+        Input('theme-store','data'))
+
     @app.callback(Output('page-content','children'),Input('navigation','value'))
     def render_page(value):
-        return {'overview':overview,'query':query_page,'history':history_page,'evaluation':evaluation_page,'about':about_page}.get(value,overview)(s)
+        # El primer render usa el valor inicial oscuro; los callbacks de figuras
+        # aplican después cualquier preferencia local restaurada por dcc.Store.
+        return {'overview':overview,'query':query_page,'history':history_page,'evaluation':evaluation_page,'about':about_page}.get(value,overview)(s,'dark')
+
+    @app.callback(Output('overview-series','figure'),Output('overview-localities','figure'),Input('theme-store','data'))
+    def update_overview_theme(theme):
+        return overview_figures(s,charts.normalize_theme(theme,'dark'))
+
+    @app.callback(Output('eval-territory-detection','figure'),Output('eval-slot-detection','figure'),
+                  Output('eval-importance','figure'),Input('theme-store','data'))
+    def update_evaluation_static_theme(theme):
+        return evaluation_static_figures(s,charts.normalize_theme(theme,'dark'))
 
     @app.callback(Output('query-map','figure'),Output('query-detail','children'),Output('query-ranking','children'),Output('query-error','children'),
                   Output('query-map-accessible','aria-label'),Output('query-map-summary','children'),
-                  Input('query-date','date'),Input('query-slot','value'),Input('query-locality','value'),Input('query-view','value'))
-    def update_query(fecha,slot,locality,view):
+                  Input('query-date','date'),Input('query-slot','value'),Input('query-locality','value'),Input('query-view','value'),
+                  Input('theme-store','data'))
+    def update_query(fecha,slot,locality,view,theme):
+        theme=charts.normalize_theme(theme,'dark')
         description=descripcion_consulta(fecha,slot,locality)
         try:
-            return (*query_result(s,fecha,slot,locality,view), '',description,description)
+            if ctx.triggered_id=='theme-store':
+                rows=s.map_rows(fecha,slot)
+                return charts.map_figure(s,rows,locality,view,theme),no_update,no_update,no_update,no_update,no_update
+            return (*query_result(s,fecha,slot,locality,view,theme),'',description,description)
         except (ValueError,TypeError) as exc:
             description='Mapa no disponible para la selección actual.'
-            return charts.empty('Consulta no disponible.'),[],[],notice(str(exc),True),description,description
+            return charts.empty('Consulta no disponible.',theme),[],[],notice(str(exc),True),description,description
 
     @app.callback(Output('query-locality','value'),Input('query-map','clickData'),prevent_initial_call=True)
     def choose_locality(click):
@@ -552,15 +624,20 @@ def create_app(service=None):
                   Output('history-localities-accessible','aria-label'),Output('history-localities-summary','children'),
                   Output('history-heat-accessible','aria-label'),Output('history-heat-summary','children'),
                   Output('history-slots-accessible','aria-label'),Output('history-slots-summary','children'),
-                  Input('history-year','value'),Input('history-locality','value'),Input('history-slot','value'),Input('history-actor','value'))
-    def update_history(year,locality,slot,actor):
+                  Input('history-year','value'),Input('history-locality','value'),Input('history-slot','value'),Input('history-actor','value'),
+                  Input('theme-store','data'))
+    def update_history(year,locality,slot,actor,theme):
+        theme=charts.normalize_theme(theme,'dark')
         descriptions=descripciones_historia(year,locality,slot,actor)
         accessible=[item for value in descriptions for item in (value,value)]
         try:
-            return (*history_result(s,year,locality,slot,actor),'',*accessible)
+            result=history_result(s,year,locality,slot,actor,theme)
+            if ctx.triggered_id=='theme-store':
+                return no_update,*result[1:],no_update,*([no_update]*8)
+            return (*result,'',*accessible)
         except (ValueError,TypeError) as exc:
             unavailable=['Gráfico no disponible para la selección actual.']*8
-            return [],*[charts.empty() for _ in range(4)],notice(str(exc),True),*unavailable
+            return [],*[charts.empty(theme=theme) for _ in range(4)],notice(str(exc),True),*unavailable
 
     @app.callback(Output('download-history-button','disabled'),Output('download-history-status','children'),
                   Input('history-year','value'),Input('history-locality','value'),Input('history-slot','value'),Input('history-actor','value'))
@@ -573,15 +650,20 @@ def create_app(service=None):
                   Output('eval-calibration-accessible','aria-label'),Output('eval-calibration-summary','children'),
                   Output('eval-roc-accessible','aria-label'),Output('eval-roc-summary','children'),
                   Output('eval-pr-accessible','aria-label'),Output('eval-pr-summary','children'),
-                  Input('eval-year','value'),Input('eval-locality','value'),Input('eval-slot','value'))
-    def update_eval(year,locality,slot):
+                  Input('eval-year','value'),Input('eval-locality','value'),Input('eval-slot','value'),
+                  Input('theme-store','data'))
+    def update_eval(year,locality,slot,theme):
+        theme=charts.normalize_theme(theme,'dark')
         descriptions=descripciones_evaluacion(year,locality,slot)
         accessible=[item for value in descriptions for item in (value,value)]
         try:
-            return (*evaluation_result(s,year,locality,slot),'',*accessible)
+            result=evaluation_result(s,year,locality,slot,theme)
+            if ctx.triggered_id=='theme-store':
+                return no_update,no_update,*result[2:],no_update,*([no_update]*8)
+            return (*result,'',*accessible)
         except (ValueError,TypeError) as exc:
             unavailable=['Gráfico no disponible para la selección actual.']*8
-            return [],'',*[charts.empty() for _ in range(4)],notice(str(exc),True),*unavailable
+            return [],'',*[charts.empty(theme=theme) for _ in range(4)],notice(str(exc),True),*unavailable
 
     @app.callback(Output('download-eval-button','disabled'),Output('download-eval-status','children'),
                   Input('eval-year','value'),Input('eval-locality','value'),Input('eval-slot','value'))
@@ -644,7 +726,7 @@ def create_app(service=None):
 def create_startup_error_app(message):
     """Interfaz mínima y local cuando un contrato de datos impide arrancar."""
     app=Dash(__name__,title='Dashboard no disponible')
-    app.index_string=app.index_string.replace('<html>','<html lang="es">')
+    configure_index(app)
     app.layout=html.Main([
         html.H1('El dashboard no pudo iniciar'),
         html.Div(str(message),role='alert',className='notice warning'),

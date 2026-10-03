@@ -83,6 +83,32 @@ class DashboardTest(unittest.TestCase):
             self.assertEqual(self.client.get(path).status_code,200)
         self.assertEqual(self.client.get('/healthz').json['modelo'],REGISTRO['id_modelo'])
 
+    def test_tema_local_bootstrap_y_callbacks_clientside(self):
+        layout=json.dumps(self.client.get('/_dash-layout').get_json(),ensure_ascii=False)
+        self.assertIn('theme-store',layout)
+        self.assertIn('storage_type',layout)
+        self.assertIn('local',layout)
+        self.assertIn('"data": "dark"',layout)
+        self.assertIn('theme-toggle',layout)
+        self.assertIn('Cambiar a modo claro',layout)
+        clientside=[item for item in self.app._callback_list if item.get('clientside_function')]
+        self.assertEqual(len(clientside),2)
+        self.assertTrue(any(item['output']=='theme-store.data' for item in clientside))
+        self.assertTrue(any('theme-toggle.aria-label' in item['output'] for item in clientside))
+        self.assertIn("localStorage.getItem('theme-store')",self.app.index_string)
+        self.assertLess(self.app.index_string.index('theme-bootstrap'),
+                        self.app.index_string.index('{%app_entry%}'))
+
+    def test_cambio_tema_recolorea_mapa_sin_inferencia(self):
+        key=self.callback_key('..query-map.figure')
+        with patch.object(self.s.consulta.modelo,'predecir',wraps=self.s.consulta.modelo.predecir) as predict:
+            result=self.call(key,['2023-01-01','Mañana','KENNEDY','urbana','dark'],
+                             changed=['theme-store.data'])
+        self.assertEqual(predict.call_count,0)
+        figure=result['query-map']['figure']
+        self.assertEqual(figure['layout']['paper_bgcolor'],charts.THEME_PALETTES['dark']['map-paper'])
+        self.assertEqual(figure['data'][0]['colorscale'],charts.THEME_PALETTES['dark']['map_colors'])
+
     def test_cinco_paginas_serializan_sin_listas_anidadas(self):
         def walk(value):
             if isinstance(value,dict):
@@ -136,10 +162,10 @@ class DashboardTest(unittest.TestCase):
 
     def test_callbacks_consulta_y_error(self):
         key=next(k for k in self.app.callback_map if k.startswith('..query-map'))
-        result=self.call(key,['2023-01-01','Mañana','KENNEDY','urbana'])
+        result=self.call(key,['2023-01-01','Mañana','KENNEDY','urbana','light'])
         self.assertEqual(result['query-error']['children'],'')
         self.assertEqual(result['query-map']['figure']['layout']['map']['style'],'white-bg')
-        result=self.call(key,['2025-01-01','Mañana','KENNEDY','urbana'])
+        result=self.call(key,['2025-01-01','Mañana','KENNEDY','urbana','light'])
         self.assertTrue(result['query-error']['children'])
         self.assertEqual(result['query-detail']['children'],[])
 
@@ -173,7 +199,7 @@ class DashboardTest(unittest.TestCase):
         for prefix,values,error in [('..history-kpis',[2023,'KENNEDY','Mañana','Peatón'],'history-error'),
                                      ('..eval-kpis',[2023,'KENNEDY','Mañana'],'eval-error')]:
             key=next(k for k in self.app.callback_map if k.startswith(prefix))
-            response=self.call(key,values)
+            response=self.call(key,[*values,'light'])
             self.assertEqual(response[error]['children'],'')
             self.assertTrue(any(name.endswith('-accessible') and value.get('aria-label')
                                 for name,value in response.items()))
@@ -212,15 +238,13 @@ class DashboardTest(unittest.TestCase):
             self.assertIn('-accessible',body)
             self.assertIn('aria-label',body)
         key=self.callback_key('..query-map.figure')
-        result=self.call(key,['2023-01-01','Mañana','KENNEDY','urbana'])
+        result=self.call(key,['2023-01-01','Mañana','KENNEDY','urbana','light'])
         label=result['query-map-accessible']['aria-label']
         self.assertIn('KENNEDY',label)
         self.assertIn('2023-01-01',label)
         self.assertEqual(label,result['query-map-summary']['children'])
 
     def test_color_de_foco_supera_contraste_tres_a_uno(self):
-        css=(ROOT/'dashboard/assets/dashboard.css').read_text()
-        color=css.split('--focus:',1)[1].splitlines()[0].strip().rstrip(';')
         def luminance(hex_color):
             values=[int(hex_color.lstrip('#')[i:i+2],16)/255 for i in (0,2,4)]
             linear=[value/12.92 if value<=.04045 else ((value+.055)/1.055)**2.4 for value in values]
@@ -228,8 +252,10 @@ class DashboardTest(unittest.TestCase):
         def contrast(a,b):
             high,low=sorted([luminance(a),luminance(b)],reverse=True)
             return (high+.05)/(low+.05)
-        self.assertGreaterEqual(contrast(color,'#ffffff'),3)
-        self.assertGreaterEqual(contrast(color,'#f5f6f3'),3)
+        for theme in ('light','dark'):
+            colors=charts.THEME_PALETTES[theme]
+            self.assertGreaterEqual(contrast(colors['focus'],colors['surface']),3)
+            self.assertGreaterEqual(contrast(colors['focus'],colors['paper']),3)
 
     def test_validacion_independiente_opt_in_y_hash_separado(self):
         result=data_module.cargar_validacion_independiente()
@@ -326,7 +352,7 @@ class DashboardTest(unittest.TestCase):
     def test_callback_consulta_incluye_significado_y_aviso_segun_franja(self):
         key=next(k for k in self.app.callback_map if k.startswith('..query-map'))
         for slot in ['Mañana','Madrugada']:
-            response=self.call(key,['2023-01-01',slot,'KENNEDY','urbana'])
+            response=self.call(key,['2023-01-01',slot,'KENNEDY','urbana','light'])
             body=json.dumps(response['query-detail']['children'],ensure_ascii=False)
             self.assertIn('¿Qué intenta identificar esta alerta?',body)
             self.assertIn('2 o más siniestros',body)
