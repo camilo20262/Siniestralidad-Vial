@@ -6,3 +6,4 @@ pyarrow==23.0.1
 shapely==2.1.2
 dash==4.4.1
 plotly==7.1.0
+gunicorn==26.2.0
