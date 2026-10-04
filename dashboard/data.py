@@ -220,8 +220,19 @@ class DashboardData:
     def map_rows(self, fecha, franja):
         if franja not in SLOTS:
             raise ValueError('Seleccione una franja válida.')
+        raw_cache_key = (fecha, franja)
+        try:
+            cached = self._map_rows_cache.get(raw_cache_key)
+        except TypeError:
+            cached = None
+        if cached is not None:
+            return cached
         # Misma validación temporal que la consulta pública, sin inferencia redundante.
         dates = validar_fecha_y_alcance(self.consulta.datos, fecha)
+        cache_key = (dates, franja)
+        cached = self._map_rows_cache.get(cache_key)
+        if cached is not None:
+            return cached
         rows = self.predictions[(self.predictions.Fecha_Acc == dates) &
                                 self.predictions.Franja_Horaria.eq(franja)]
         if len(rows) != len(self.localidades):
@@ -229,7 +240,18 @@ class DashboardData:
         rows = rows[KEYS + ['Score', 'Prediccion']].rename(
             columns={'Score': 'Score_Priorizacion', 'Prediccion': 'Alerta_Modelo'})
         rows['Fecha_Acc'] = rows.Fecha_Acc.dt.strftime('%Y-%m-%d')
-        return self.attach_trace(rows.sort_values('Score_Priorizacion', ascending=False))
+        result = self.attach_trace(rows.sort_values('Score_Priorizacion', ascending=False))
+        self._map_rows_cache[cache_key] = result
+        try:
+            self._map_rows_cache[raw_cache_key] = result
+        except TypeError:
+            pass
+        return result
+
+    @cached_property
+    def _map_rows_cache(self):
+        """Resultados congelados por fecha y franja, reutilizados dentro del proceso."""
+        return {}
 
     def history(self, year='Todos', localidad='Todas', franja='Todas', actor='Todos'):
         if year not in ['Todos', *range(2018, 2025)]:

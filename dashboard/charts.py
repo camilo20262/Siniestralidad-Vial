@@ -111,25 +111,24 @@ def map_figure(service, rows, selected, view, theme='light'):
     map_style=('white-bg' if normalize_theme(theme)=='light' else {
         'version':8,'sources':{},'layers':[{'id':'background','type':'background',
                                            'paint':{'background-color':colors['map-paper']}}]})
+    selected_mask=rows.Localidad.eq(selected)
     fig = go.Figure(go.Choroplethmap(
         geojson=service.geojson, featureidkey='properties.Localidad', locations=rows.Localidad,
         z=rows.Score_Priorizacion, zmin=0, zmax=1, colorscale=colors['map_colors'],
-        marker_line_color=colors['map-line'], marker_line_width=1, marker_opacity=.9,
-        customdata=np.column_stack([rows.Alerta_Modelo.map({0:'Baja',1:'Alta'}), rows.Umbral_Score]),
-        hovertemplate='<b>%{location}</b><br>Score: %{z:.3f}<br>Priorización: %{customdata[0]}<br>Umbral: %{customdata[1]}<extra></extra>',
+        marker_line_color=np.where(selected_mask,colors['map-selected'],colors['map-line']),
+        marker_line_width=np.where(selected_mask,3,1), marker_opacity=.9,
+        customdata=np.column_stack([rows.Localidad,
+                                    rows.Alerta_Modelo.map({0:'Baja',1:'Alta'}),
+                                    rows.Umbral_Score]),
+        hovertemplate='<b>%{location}</b><br>Score: %{z:.3f}<br>Priorización: %{customdata[1]}<br>Umbral: %{customdata[2]}<extra></extra>',
         colorbar=dict(title='Score', thickness=12, len=.62, tickformat='.1f')))
-    chosen = rows[rows.Localidad.eq(selected)]
-    if not chosen.empty:
-        fig.add_trace(go.Choroplethmap(geojson=service.geojson, featureidkey='properties.Localidad',
-            locations=chosen.Localidad, z=chosen.Score_Priorizacion, zmin=0, zmax=1,
-            colorscale=colors['map_colors'], marker_line_color=colors['map-selected'], marker_line_width=3,
-            showscale=False, hoverinfo='skip'))
     center, zoom = ({'lat':4.64,'lon':-74.11}, 10) if view=='urbana' else ({'lat':4.30,'lon':-74.20}, 8.6)
     if selected=='SUMAPAZ' and view=='urbana':
         center, zoom = {'lat':4.03,'lon':-74.27}, 9
     layout=dict(map=dict(style=map_style,center=center,zoom=zoom),height=490,
                 margin=dict(l=0,r=0,t=0,b=0),paper_bgcolor=colors['map-paper'],
-                uirevision=f'{view}-{selected}',font=dict(family='Arial',color=colors['ink']))
+                uirevision=f'{view}-{selected}',clickmode='event',hovermode='closest',
+                font=dict(family='Arial',color=colors['ink']))
     if normalize_theme(theme)=='dark':
         layout['plot_bgcolor']=colors['map-paper']
     fig.update_layout(**layout)

@@ -83,37 +83,42 @@ def verificar():
                 def call(key, values, states=()):
                     payload = callback_payload(key, info['callbacks'][key], values, states)
                     return json.loads(request('/_dash-update-component', payload))['response']
-                for path in ['/', '/_dash-layout', '/_dash-dependencies', '/assets/dashboard.css']:
-                    request(path)
+                request('/')
+                layout = json.loads(request('/_dash-layout'))
+                request('/_dash-dependencies')
+                request('/assets/dashboard.css')
                 health = json.loads(request('/healthz'))
                 if health['modelo'] != registry['id_modelo']:
                     raise ValueError('El servidor no consume el registro de este ensayo.')
                 pages = ['overview', 'query', 'history', 'evaluation', 'about']
-                for page in pages:
-                    result = call('page-content.children', [page])
-                    if not result['page-content']['children']:
-                        raise ValueError(f'Página vacía: {page}')
+                layout_text = json.dumps(layout, ensure_ascii=False)
+                if any(f'page-{page}' not in layout_text for page in pages):
+                    raise ValueError('El layout no contiene las cinco vistas montadas.')
                 key = next(k for k in info['callbacks'] if k.startswith('..query-map'))
                 queries = [('2023-01-01', 'Mañana', 'KENNEDY'),
                            ('2024-02-29', 'Noche', 'CANDELARIA'),
                            ('2024-12-31', 'Madrugada', 'SUMAPAZ')]
                 for date, slot, locality in queries:
-                    result = call(key, [date, slot, locality, 'distrito'])
+                    result = call(key, [date, slot, locality, 'distrito', 'dark'])
                     if result['query-error']['children']:
                         raise ValueError(result['query-error']['children'])
                     if len(result['query-map']['figure']['data'][0]['locations']) != 20:
                         raise ValueError('Mapa sin las 20 localidades.')
-                invalid = call(key, ['2025-01-01', 'Noche', 'KENNEDY', 'distrito'])
+                invalid = call(key, ['2025-01-01', 'Noche', 'KENNEDY', 'distrito', 'dark'])
                 if not invalid['query-error']['children'] or invalid['query-detail']['children'] != []:
                     raise ValueError('La consulta futura no se rechazó limpiamente.')
-                selected = call('query-locality.value', [{'points': [{'location': 'SUMAPAZ'}]}])
-                if selected['query-locality']['value'] != 'SUMAPAZ':
+                figure = result['query-map']['figure']
+                index = figure['data'][0]['locations'].index('KENNEDY')
+                point = {'curveNumber': 0, 'pointNumber': index,
+                         'customdata': figure['data'][0]['customdata'][index]}
+                selected = call('query-locality.value', [{'points': [point]}])
+                if selected['query-locality']['value'] != 'KENNEDY':
                     raise ValueError('La selección del mapa no se propaga.')
                 for prefix, values, error in [
-                    ('..history-kpis', ['Todos', 'Todas', 'Todas', 'Todos'], 'history-error'),
-                    ('..history-kpis', [2024, 'KENNEDY', 'Noche', 'Peatón'], 'history-error'),
-                    ('..eval-kpis', ['Todos', 'Todas', 'Todas'], 'eval-error'),
-                    ('..eval-kpis', [2023, 'SUMAPAZ', 'Madrugada'], 'eval-error')]:
+                    ('..history-kpis', ['Todos', 'Todas', 'Todas', 'Todos', 'dark'], 'history-error'),
+                    ('..history-kpis', [2024, 'KENNEDY', 'Noche', 'Peatón', 'dark'], 'history-error'),
+                    ('..eval-kpis', ['Todos', 'Todas', 'Todas', 'dark'], 'eval-error'),
+                    ('..eval-kpis', [2023, 'SUMAPAZ', 'Madrugada', 'dark'], 'eval-error')]:
                     callback = next(k for k in info['callbacks'] if k.startswith(prefix))
                     if call(callback, values)[error]['children']:
                         raise ValueError(f'Error al filtrar {prefix}')

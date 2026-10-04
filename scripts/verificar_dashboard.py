@@ -46,15 +46,10 @@ def verificar():
     for path in ['/','/healthz','/_dash-layout','/_dash-dependencies','/assets/dashboard.css']:
         if client.get(path).status_code!=200:
             raise ValueError(f'Fallo HTTP en {path}')
-    pages=[]
-    for page in ['overview','query','history','evaluation','about']:
-        response=client.post('/_dash-update-component',json={'output':'page-content.children',
-            'outputs':{'id':'page-content','property':'children'},
-            'inputs':[{'id':'navigation','property':'value','value':page}],
-            'state':[],'changedPropIds':['navigation.value']})
-        if response.status_code!=200:
-            raise ValueError(f'No se pudo renderizar {page}')
-        pages.append(page)
+    layout=json.dumps(client.get('/_dash-layout').get_json(),ensure_ascii=False)
+    pages=['overview','query','history','evaluation','about']
+    if any(f'page-{page}' not in layout for page in pages):
+        raise ValueError('El layout no contiene las cinco vistas montadas.')
     if any(sha256_archivo(Path(p))!=h for p,h in hashes.items()):
         raise ValueError('Se modificó una evidencia oficial durante la verificación.')
     return {'resultado':'correcto','modelo':s.registro['id_modelo'],'paginas_verificadas':pages,

@@ -1,5 +1,6 @@
 """Aplicación local: python -m dashboard.app. Sin escrituras ni entrenamiento."""
 import argparse
+from functools import lru_cache
 import json
 from pathlib import Path
 from urllib.parse import quote
@@ -183,6 +184,38 @@ def descripcion_consulta(fecha, franja, localidad):
     return f'Mapa de priorización para {localidad}, fecha {fecha}, franja {franja}; compara las 20 localidades.'
 
 
+def localidad_desde_click(click, localidades):
+    """Resuelve la localidad emitida por Plotly sin depender de un solo campo."""
+    if not isinstance(click,dict) or not isinstance(click.get('points'),list) or not click['points']:
+        return None
+    point=click['points'][0]
+    if not isinstance(point,dict):
+        return None
+    candidates=[point.get('location')]
+    customdata=point.get('customdata')
+    if isinstance(customdata,dict):
+        candidates.extend(customdata.get(key) for key in ('Localidad','localidad','location','name'))
+    elif isinstance(customdata,(list,tuple,np.ndarray)):
+        candidates.extend(customdata)
+    else:
+        candidates.append(customdata)
+    properties=point.get('properties')
+    if isinstance(properties,dict):
+        candidates.extend(properties.get(key) for key in ('Localidad','LOCNOMBRE','location','name'))
+    candidates.extend([point.get('text'),point.get('hovertext')])
+    canonical={dashboard_data.normalize(value):value for value in localidades}
+    for candidate in candidates:
+        if not isinstance(candidate,str):
+            continue
+        try:
+            value=canonical.get(dashboard_data.normalize(candidate))
+        except ValueError:
+            continue
+        if value is not None:
+            return value
+    return None
+
+
 def descripciones_historia(year, localidad, franja, actor):
     scope=f'año {year}, localidad {localidad}, franja {franja}, actor {actor}'
     return [f'Evolución mensual para {scope}.',f'Comparación de localidades para {scope}.',
@@ -284,8 +317,8 @@ def weakest_slot_warning(s):
     ],True)
 
 
-def overview_figures(s, theme='light'):
-    grid=s.history()
+def overview_figures(s, theme='light', grid=None):
+    grid=s.history() if grid is None else grid
     monthly=grid.groupby('Mes',as_index=False).Siniestros.sum()
     top=grid.groupby('Localidad',as_index=False).Siniestros.sum().nlargest(7,'Siniestros').sort_values('Siniestros')
     return charts.line(monthly,'Mes','Siniestros',theme=theme),charts.bars(
@@ -294,7 +327,7 @@ def overview_figures(s, theme='light'):
 
 def overview(s, theme='light'):
     grid=s.history()
-    series,localities=overview_figures(s,theme)
+    series,localities=overview_figures(s,theme,grid)
     return html.Div([
         html.Div([html.Div([html.P('BOGOTÁ D.C. / DATOS QUE CUENTAN',className='eyebrow'),
             html.H1(['Entender el pasado.',html.Br(),html.Span('Explorar las señales.',className='text-teal')]),
@@ -525,6 +558,29 @@ def create_app(service=None):
              meta_tags=[{'name':'viewport','content':'width=device-width, initial-scale=1'},
                         {'name':'description','content':'Exploración académica de siniestros con víctimas en Bogotá. Evaluación retrospectiva.'}])
     configure_index(app)
+
+    @lru_cache(maxsize=64)
+    def cached_query_result(fecha,slot,locality,view,theme):
+        return query_result(s,fecha,slot,locality,view,theme)
+
+    @lru_cache(maxsize=32)
+    def cached_history_result(year,locality,slot,actor,theme):
+        return history_result(s,year,locality,slot,actor,theme)
+
+    @lru_cache(maxsize=32)
+    def cached_evaluation_result(year,locality,slot,theme):
+        return evaluation_result(s,year,locality,slot,theme)
+
+    @lru_cache(maxsize=2)
+    def cached_overview_figures(theme):
+        return overview_figures(s,theme)
+
+    @lru_cache(maxsize=2)
+    def cached_evaluation_static_figures(theme):
+        return evaluation_static_figures(s,theme)
+
+    pages={'overview':overview(s,'dark'),'query':query_page(s,'dark'),'history':history_page(s,'dark'),
+           'evaluation':evaluation_page(s,'dark'),'about':about_page(s,'dark')}
     app.layout=html.Div([
         dcc.Store(id='theme-store',storage_type='local',data='dark'),
         html.A('Saltar al contenido',href='#main-content',className='skip-link'),
@@ -537,7 +593,11 @@ def create_app(service=None):
         html.Nav(dcc.RadioItems(id='navigation',value='overview',options=[{'label':label,'value':value}
             for value,label in [('overview','Resumen'),('query','Consulta y mapa'),('history','Análisis histórico'),('evaluation','Evaluación'),('about','Metodología')]],
             inline=True,className='navigation',labelClassName='nav-tab',inputClassName='nav-radio'),**{'aria-label':'Secciones del dashboard'}),
-        html.Main(dcc.Loading(html.Div(id='page-content'),type='circle',color=charts.TEAL,delay_show=250),id='main-content',className='container'),
+        html.Main(html.Div([
+            html.Div(dcc.Loading(component,type='circle',color=charts.TEAL,delay_show=250),
+                     id=f'page-{name}',hidden=name!='overview',className='dashboard-page')
+            for name,component in pages.items()
+        ],id='page-content'),id='main-content',className='container'),
         dcc.Download(id='download-query'),dcc.Download(id='download-map'),dcc.Download(id='download-history'),dcc.Download(id='download-eval'),
         html.Footer([html.Span('Siniestros con víctimas · Bogotá D.C.'),html.Span('RF v1.0 · Solo lectura · Sin validación prospectiva')],className='footer')])
 
@@ -563,20 +623,23 @@ def create_app(service=None):
         Output('theme-toggle','aria-pressed'),Output('theme-toggle','title'),
         Input('theme-store','data'))
 
-    @app.callback(Output('page-content','children'),Input('navigation','value'))
-    def render_page(value):
-        # El primer render usa el valor inicial oscuro; los callbacks de figuras
-        # aplican después cualquier preferencia local restaurada por dcc.Store.
-        return {'overview':overview,'query':query_page,'history':history_page,'evaluation':evaluation_page,'about':about_page}.get(value,overview)(s,'dark')
+    app.clientside_callback(
+        """function(value){
+            const pages=['overview','query','history','evaluation','about'];
+            window.requestAnimationFrame(function(){window.dispatchEvent(new Event('resize'));});
+            return pages.map(function(page){return page !== value;});
+        }""",
+        Output('page-overview','hidden'),Output('page-query','hidden'),Output('page-history','hidden'),
+        Output('page-evaluation','hidden'),Output('page-about','hidden'),Input('navigation','value'))
 
     @app.callback(Output('overview-series','figure'),Output('overview-localities','figure'),Input('theme-store','data'))
     def update_overview_theme(theme):
-        return overview_figures(s,charts.normalize_theme(theme,'dark'))
+        return cached_overview_figures(charts.normalize_theme(theme,'dark'))
 
     @app.callback(Output('eval-territory-detection','figure'),Output('eval-slot-detection','figure'),
                   Output('eval-importance','figure'),Input('theme-store','data'))
     def update_evaluation_static_theme(theme):
-        return evaluation_static_figures(s,charts.normalize_theme(theme,'dark'))
+        return cached_evaluation_static_figures(charts.normalize_theme(theme,'dark'))
 
     @app.callback(Output('query-map','figure'),Output('query-detail','children'),Output('query-ranking','children'),Output('query-error','children'),
                   Output('query-map-accessible','aria-label'),Output('query-map-summary','children'),
@@ -589,18 +652,15 @@ def create_app(service=None):
             if ctx.triggered_id=='theme-store':
                 rows=s.map_rows(fecha,slot)
                 return charts.map_figure(s,rows,locality,view,theme),no_update,no_update,no_update,no_update,no_update
-            return (*query_result(s,fecha,slot,locality,view,theme),'',description,description)
+            return (*cached_query_result(fecha,slot,locality,view,theme),'',description,description)
         except (ValueError,TypeError) as exc:
             description='Mapa no disponible para la selección actual.'
             return charts.empty('Consulta no disponible.',theme),[],[],notice(str(exc),True),description,description
 
     @app.callback(Output('query-locality','value'),Input('query-map','clickData'),prevent_initial_call=True)
     def choose_locality(click):
-        if click and click.get('points'):
-            value=click['points'][0].get('location')
-            if value in s.localidades:
-                return value
-        return no_update
+        value=localidad_desde_click(click,s.localidades)
+        return value if value is not None else no_update
 
     @app.callback(Output('navigation','value'),Input('query-go-evaluation','n_clicks'),prevent_initial_call=True)
     def go_to_evaluation(n):
@@ -631,7 +691,7 @@ def create_app(service=None):
         descriptions=descripciones_historia(year,locality,slot,actor)
         accessible=[item for value in descriptions for item in (value,value)]
         try:
-            result=history_result(s,year,locality,slot,actor,theme)
+            result=cached_history_result(year,locality,slot,actor,theme)
             if ctx.triggered_id=='theme-store':
                 return no_update,*result[1:],no_update,*([no_update]*8)
             return (*result,'',*accessible)
@@ -657,7 +717,7 @@ def create_app(service=None):
         descriptions=descripciones_evaluacion(year,locality,slot)
         accessible=[item for value in descriptions for item in (value,value)]
         try:
-            result=evaluation_result(s,year,locality,slot,theme)
+            result=cached_evaluation_result(year,locality,slot,theme)
             if ctx.triggered_id=='theme-store':
                 return no_update,no_update,*result[2:],no_update,*([no_update]*8)
             return (*result,'',*accessible)

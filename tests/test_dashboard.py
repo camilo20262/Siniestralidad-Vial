@@ -92,9 +92,10 @@ class DashboardTest(unittest.TestCase):
         self.assertIn('theme-toggle',layout)
         self.assertIn('Cambiar a modo claro',layout)
         clientside=[item for item in self.app._callback_list if item.get('clientside_function')]
-        self.assertEqual(len(clientside),2)
+        self.assertEqual(len(clientside),3)
         self.assertTrue(any(item['output']=='theme-store.data' for item in clientside))
         self.assertTrue(any('theme-toggle.aria-label' in item['output'] for item in clientside))
+        self.assertTrue(any('page-overview.hidden' in item['output'] for item in clientside))
         self.assertIn("localStorage.getItem('theme-store')",self.app.index_string)
         self.assertLess(self.app.index_string.index('theme-bootstrap'),
                         self.app.index_string.index('{%app_entry%}'))
@@ -118,9 +119,13 @@ class DashboardTest(unittest.TestCase):
                 for v in value.values():walk(v)
             elif isinstance(value,list):
                 for v in value:walk(v)
+        layout=self.client.get('/_dash-layout').get_json()
+        walk(layout)
+        body=json.dumps(layout,ensure_ascii=False)
         for page in ['overview','query','history','evaluation','about']:
             with self.subTest(page=page):
-                walk(self.call('page-content.children',[page]))
+                self.assertIn(f'page-{page}',body)
+        self.assertNotIn('page-content.children',self.app.callback_map)
 
     def test_mapa_20_localidades_sin_etiquetas_observadas(self):
         result=self.s.map_rows('2023-01-01','Mañana')
@@ -192,7 +197,14 @@ class DashboardTest(unittest.TestCase):
         pd.testing.assert_frame_equal(self.s.consulta.datos,before)
 
     def test_click_mapa_selecciona_localidad(self):
-        result=self.call('query-locality.value',[{'points':[{'location':'SUMAPAZ'}]}])
+        rows=self.s.map_rows('2023-01-01','Mañana')
+        figure=charts.map_figure(self.s,rows,'KENNEDY','urbana')
+        self.assertEqual(len(figure.data),1)
+        index=list(figure.data[0].locations).index('SUMAPAZ')
+        customdata=list(figure.data[0].customdata[index])
+        self.assertEqual(customdata[0],'SUMAPAZ')
+        click={'points':[{'curveNumber':0,'pointNumber':index,'customdata':customdata}]}
+        result=self.call('query-locality.value',[click])
         self.assertEqual(result['query-locality']['value'],'SUMAPAZ')
 
     def test_callbacks_historia_y_evaluacion(self):
@@ -232,8 +244,23 @@ class DashboardTest(unittest.TestCase):
         self.assertEqual(enabled['download-query-status']['children'],'')
 
     def test_aria_live_y_descripciones_de_graficos(self):
+        layout=self.client.get('/_dash-layout').get_json()
+        def find(value,target):
+            if isinstance(value,dict):
+                if value.get('props',{}).get('id')==target:
+                    return value
+                for child in value.values():
+                    result=find(child,target)
+                    if result is not None:
+                        return result
+            elif isinstance(value,list):
+                for child in value:
+                    result=find(child,target)
+                    if result is not None:
+                        return result
+            return None
         for page in ['query','history','evaluation']:
-            body=json.dumps(self.call('page-content.children',[page]),ensure_ascii=False)
+            body=json.dumps(find(layout,f'page-{page}'),ensure_ascii=False)
             self.assertIn('aria-live',body)
             self.assertIn('-accessible',body)
             self.assertIn('aria-label',body)
