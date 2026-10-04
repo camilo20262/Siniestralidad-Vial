@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "flask",
+  "fluid": true,
+  "functions": {
+    "wsgi.py": {
+      "maxDuration": 60,
+      "includeFiles": "{dashboard/assets/**,data/dashboard/**,data/processed/dataset_victimas_localidad_franja_fecha.parquet,data/reference/localidades_sdp_referencia.geojson,models/victimas/modelo_principal.json,models/victimas/pipeline_random_forest_ajustado_victimas.pkl,reports/evaluation_victimas/predicciones_random_forest_ajustado_2023_2024.parquet,reports/evaluation_victimas/metricas_globales.csv,reports/evaluation_victimas/comparacion_referencias_historicas.csv,reports/evaluation_victimas/bootstrap_rf_vs_referencia_resumen.csv,reports/evaluation_victimas/importancia_permutacion_random_forest_ajustado.csv,reports/evaluation_victimas/calibracion_por_deciles.csv,reports/evaluation_victimas/metricas_random_forest_ajustado_por_localidad.csv,reports/evaluation_victimas/metricas_random_forest_ajustado_por_franja.csv}",
+      "excludeFiles": "{.venv/**,dashboard/dist/**,data/raw/**,docs/**,legacy/**,notebooks/**,reports/reproducibilidad/**,scripts/**,tests/**,**/__pycache__/**,**/*.pyc}"
+    }
+  }
+}
