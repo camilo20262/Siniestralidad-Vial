@@ -16,6 +16,7 @@ class FlujoCompletoTest(unittest.TestCase):
                 (root/folder).mkdir(parents=True)
             (root/'data/raw/base-anuario-de-siniestralidad-2024.xlsx').write_bytes(b'fixture')
             (root/'requirements.txt').write_text('')
+            (root/'requirements-dev.txt').write_text('-r requirements.txt\n')
             (root/'scripts/verificar_modelo_principal.py').write_text('# fixture')
             (root/'src/rutas.py').write_text('# fixture')
             names = ['eda.ipynb', 'preparacion.ipynb']
@@ -29,6 +30,7 @@ class FlujoCompletoTest(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, 'fin del fixture'):
                     flow.chain.setup(run, names=names)
             self.assertEqual(sorted(p.name for p in (run/'notebooks').iterdir()), names)
+            self.assertEqual((run/'requirements-dev.txt').read_text(), '-r requirements.txt\n')
             for name in names:
                 nb = nbformat.read(run/'notebooks'/name, as_version=4)
                 self.assertEqual(nb.cells[0].source, '1 + 1')

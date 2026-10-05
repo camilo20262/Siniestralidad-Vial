@@ -17,4 +17,4 @@ if __name__ == '__main__':
         resultado = cargar_consulta().consultar(args.fecha, args.localidad, args.franja)
     except (ValueError, RuntimeError) as exc:
         parser.exit(2, f'Consulta rechazada: {exc}\n')
-    print(resultado.to_json(orient='records', force_ascii=False, indent=2))
+    print(resultado.to_json(orient='records', date_format='iso', force_ascii=False, indent=2))

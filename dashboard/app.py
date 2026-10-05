@@ -739,7 +739,7 @@ def create_app(service=None):
             frame=s.consulta.consultar(fecha,locality,slot)
         except (ValueError,TypeError):
             raise PreventUpdate
-        return dict(content=frame.to_json(orient='records',force_ascii=False,indent=2),filename=f'consulta_{fecha}.json',type='application/json')
+        return dict(content=frame.to_json(orient='records',date_format='iso',force_ascii=False,indent=2),filename=f'consulta_{fecha}.json',type='application/json')
 
     @app.callback(Output('download-map','data'),Input('download-map-button','n_clicks'),
                   State('query-date','date'),State('query-slot','value'),prevent_initial_call=True)

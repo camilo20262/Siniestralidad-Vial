@@ -5,6 +5,9 @@ xgboost==3.4.0
 openpyxl==3.1.5
 holidays==0.90
 jupyterlab==4.5.4
+jupyter-client==8.10.0
+ipykernel==7.3.0
+ipython==9.17.1
 nbformat==5.10.4
 nbclient==0.10.2
 seaborn==0.13.2

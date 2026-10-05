@@ -58,7 +58,8 @@ def protected_snapshot():
         files += [p for p in (ROOT / folder).rglob('*') if p.is_file()
                   and '__pycache__' not in p.parts
                   and not p.is_relative_to(ROOT / 'reports/reproducibilidad')]
-    files += [ROOT / 'requirements.txt', ROOT / 'scripts/verificar_modelo_principal.py']
+    files += [ROOT / 'requirements.txt', ROOT / 'requirements-dev.txt',
+              ROOT / 'scripts/verificar_modelo_principal.py']
     return {str(p.relative_to(ROOT)): digest(p) for p in sorted(set(files))}
 
 
@@ -83,6 +84,7 @@ def setup(run, names=None, extra_inputs=(), extra_folders=()):
         for p in code_paths:
             shutil.copy2(p, run / folder / p.name)
     shutil.copy2(ROOT / 'requirements.txt', run / 'requirements.txt')
+    shutil.copy2(ROOT / 'requirements-dev.txt', run / 'requirements-dev.txt')
     # Solo entradas y código adicionales: nunca modelos o resultados esperados.
     for relative in extra_inputs:
         target = run / relative
@@ -106,7 +108,7 @@ def setup(run, names=None, extra_inputs=(), extra_folders=()):
     write_json(run / 'procedencia.json', {'git_commit': subprocess.check_output(
         ['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(), 'notebooks': provenance,
         'excel_sha256': digest(run / raw), 'tolerancia_absoluta_scores_metricas': SCORE_ATOL,
-        'entorno': 'venv nuevo sin system-site-packages; requirements.txt instalado independientemente',
+        'entorno': 'venv nuevo sin system-site-packages; requirements-dev.txt instalado independientemente',
         'originales_modificados': False,
         'entradas_adicionales': {str(p): digest(run / p) for p in extra_inputs},
         'carpetas_codigo_adicionales': list(extra_folders),
@@ -120,7 +122,7 @@ def setup(run, names=None, extra_inputs=(), extra_folders=()):
     python = run / '.venv/bin/python'
     announce(run, 'Instalando las dependencias declaradas')
     with (run / 'instalacion.log').open('w') as log:
-        subprocess.run([str(python), '-m', 'pip', 'install', '-r', str(run / 'requirements.txt')],
+        subprocess.run([str(python), '-m', 'pip', 'install', '-r', str(run / 'requirements-dev.txt')],
                        cwd=run, stdout=log, stderr=subprocess.STDOUT, check=True)
     with (run / 'dependencias_congeladas.txt').open('w') as log:
         subprocess.run([str(python), '-m', 'pip', 'freeze'], stdout=log, check=True)

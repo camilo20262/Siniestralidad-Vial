@@ -80,8 +80,16 @@ class DashboardTest(unittest.TestCase):
 
     def test_servidor_layout_salud_y_activos(self):
         for path in ['/','/_dash-layout','/_dash-dependencies','/healthz','/assets/dashboard.css']:
-            self.assertEqual(self.client.get(path).status_code,200)
-        self.assertEqual(self.client.get('/healthz').json['modelo'],REGISTRO['id_modelo'])
+            response=self.client.get(path)
+            try:
+                self.assertEqual(response.status_code,200)
+            finally:
+                response.close()
+        response=self.client.get('/healthz')
+        try:
+            self.assertEqual(response.json['modelo'],REGISTRO['id_modelo'])
+        finally:
+            response.close()
 
     def test_tema_local_bootstrap_y_callbacks_clientside(self):
         layout=json.dumps(self.client.get('/_dash-layout').get_json(),ensure_ascii=False)
@@ -109,6 +117,19 @@ class DashboardTest(unittest.TestCase):
         figure=result['query-map']['figure']
         self.assertEqual(figure['layout']['paper_bgcolor'],charts.THEME_PALETTES['dark']['map-paper'])
         self.assertEqual(figure['data'][0]['colorscale'],charts.THEME_PALETTES['dark']['map_colors'])
+
+    def test_cambio_tema_no_pasa_por_cache_cu01(self):
+        key=self.callback_key('..query-map.figure')
+        with patch.object(app_module,'query_result',side_effect=AssertionError('No debe consultar')) as query, \
+             patch.object(self.s,'map_rows',wraps=self.s.map_rows) as map_rows, \
+             patch.object(self.s.consulta.modelo,'predecir',wraps=self.s.consulta.modelo.predecir) as predict:
+            result=self.call(key,['2023-01-01','Mañana','KENNEDY','urbana','dark'],
+                             changed=['theme-store.data'])
+        self.assertEqual(query.call_count,0)
+        self.assertEqual(map_rows.call_count,1)
+        self.assertEqual(predict.call_count,0)
+        self.assertEqual(result['query-map']['figure']['layout']['paper_bgcolor'],
+                         charts.THEME_PALETTES['dark']['map-paper'])
 
     def test_cinco_paginas_serializan_sin_listas_anidadas(self):
         def walk(value):
@@ -188,6 +209,43 @@ class DashboardTest(unittest.TestCase):
         with patch.object(self.s.consulta.modelo,'predecir',wraps=self.s.consulta.modelo.predecir) as predict:
             query_result(self.s,'2023-01-01','Mañana','KENNEDY','urbana')
         self.assertEqual(predict.call_count,1)
+
+    def test_cache_cu01_misma_clave_ejecuta_una_inferencia(self):
+        key=self.callback_key('..query-map.figure')
+        values=['2023-01-01','Mañana','KENNEDY','urbana','light']
+        with patch.object(self.s.consulta.modelo,'predecir',wraps=self.s.consulta.modelo.predecir) as predict:
+            first=self.call(key,values,changed=['query-date.date'])
+            second=self.call(key,values,changed=['query-date.date'])
+        self.assertEqual(predict.call_count,1)
+        self.assertEqual(first['query-map']['figure'],second['query-map']['figure'])
+        self.assertEqual(first['query-detail']['children'],second['query-detail']['children'])
+        self.assertEqual(first['query-ranking']['children'],second['query-ranking']['children'])
+
+    def test_cache_cu01_clave_incluye_todos_los_parametros(self):
+        key=self.callback_key('..query-map.figure')
+        base=['2023-01-01','Mañana','KENNEDY','urbana','light']
+        variants=[
+            ['2023-01-02','Mañana','KENNEDY','urbana','light'],
+            ['2023-01-01','Noche','KENNEDY','urbana','light'],
+            ['2023-01-01','Mañana','CANDELARIA','urbana','light'],
+            ['2023-01-01','Mañana','KENNEDY','distrito','light'],
+            ['2023-01-01','Mañana','KENNEDY','urbana','dark'],
+        ]
+        with patch.object(self.s.consulta.modelo,'predecir',wraps=self.s.consulta.modelo.predecir) as predict:
+            self.call(key,base,changed=['query-date.date'])
+            for values in variants:
+                self.call(key,values,changed=['query-date.date'])
+        self.assertEqual(predict.call_count,1+len(variants))
+
+    def test_cache_cu01_no_conserva_errores(self):
+        key=self.callback_key('..query-map.figure')
+        values=['2025-01-01','Mañana','KENNEDY','urbana','light']
+        with patch.object(self.s.consulta,'consultar',wraps=self.s.consulta.consultar) as consultar:
+            first=self.call(key,values,changed=['query-date.date'])
+            second=self.call(key,values,changed=['query-date.date'])
+        self.assertEqual(consultar.call_count,2)
+        self.assertTrue(first['query-error']['children'])
+        self.assertTrue(second['query-error']['children'])
 
     def test_historia_usa_columnas_precalculadas_sin_reconvertir_fechas(self):
         before=self.s.consulta.datos.copy(deep=True)

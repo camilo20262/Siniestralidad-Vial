@@ -61,7 +61,7 @@ Las mediciones de tiempo son locales y no constituyen una prueba de carga.
 
 ### Cadena de modelado sin EDA ni dashboard
 
-Desde la raíz del proyecto, con las dependencias de `requirements.txt`
+Desde la raíz del proyecto, con las dependencias de `requirements-dev.txt`
 instaladas en el entorno que inicia el proceso:
 
 ```sh

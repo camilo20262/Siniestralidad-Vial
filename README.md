@@ -96,20 +96,26 @@ Siniestralidad_Vial/
 ├── scripts/                      # Generación de notebooks y verificación
 ├── dashboard/                     # Dashboard web interactivo
 ├── requirements.txt
+├── requirements-dev.txt
 └── README.md
 ```
 
 ## Ejecución reproducible
 
-El entorno local verificado usa Python **3.12.14**, Git y Git LFS. La versión de Python se registra en `.python-version`. Después de clonar el repositorio y descargar los archivos LFS:
+El entorno local verificado usa Python **3.12.14**, Git y Git LFS. La versión de Python se registra en `.python-version`. Compruebe que `python3 --version` indique 3.12.14 antes de crear el entorno. Después de clonar el repositorio y descargar los archivos LFS:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt
+python -m pip install -r requirements-dev.txt
 cd notebooks
 jupyter lab
 ```
+
+`requirements.txt` contiene las dependencias de ejecución del dashboard;
+`requirements-dev.txt` añade las necesarias para notebooks, verificadores,
+pruebas y reproducción aislada. Para usar únicamente la aplicación con los
+artefactos ya preparados, basta instalar `requirements.txt`.
 
 Los metadatos históricos del modelo base declaran Python **3.14.5**; no son una
 instrucción para cambiar el entorno actual. La [nota de procedencia de entornos](docs/PROCEDENCIA_ENTORNOS_MODELOS.md)
@@ -206,7 +212,7 @@ su umbral 0,52; 2022 ya había sido inspeccionado en el desarrollo histórico y
 no se presenta como prueba prospectiva. Consulte la
 [evidencia separada](reports/validacion_independiente_victimas/conclusion_ejecutiva.md).
 
-La primera ejecución de 02B descarga la cartografía si falta; las siguientes verifican y reutilizan la copia local. Las dependencias geográficas están incluidas en `requirements.txt`. Los antiguos scripts generadores se detienen si detectan estos notebooks ampliados, para evitar sobrescribirlos.
+La primera ejecución de 02B descarga la cartografía si falta; las siguientes verifican y reutilizan la copia local. Las dependencias geográficas y de notebooks están incluidas en `requirements-dev.txt`. Los antiguos scripts generadores se detienen si detectan estos notebooks ampliados, para evitar sobrescribirlos.
 
 ## Dashboard
 
@@ -226,7 +232,9 @@ interpretación y diagnóstico. La maqueta `dashboard/dist/` se conserva como le
 Los datos oficiales y el modelo no se modifican. `data/dashboard/` contiene
 agregados descriptivos adicionales comprobados contra el EDA. La consulta solo
 admite 2023–2024; los scores no se presentan como probabilidades. La cartografía
-es local y no necesita claves ni servicios de mapas. No hay despliegue público.
+es local y no necesita claves ni servicios de mapas. El repositorio incluye
+`wsgi.py` y `vercel.json` como opciones de publicación; este documento no
+acredita que exista un despliegue público activo.
 
 Verificación con datos reales: `python scripts/verificar_dashboard.py`.
 
@@ -239,7 +247,7 @@ La evaluación 2023–2024 es retrospectiva y ya participó en la comparación f
 > `data/raw/procedencia_excel.json` registra
 > `"licencia": "pendiente de confirmación institucional"`.
 
-También quedan fuera de este cierre el despliegue público, la aceptación formal
+También quedan fuera de este cierre la verificación de un despliegue público, la aceptación formal
 con usuarios, las pruebas de carga, la telemetría y una auditoría exhaustiva de
 accesibilidad. La aplicación es local y esos pendientes deben resolverse antes de
 presentarla como producto operativo o público.

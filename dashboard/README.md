@@ -12,7 +12,8 @@ del modelo; no se ofrece un cambio de umbral desde el dashboard.
 
 ## Instalación e inicio
 
-Desde la raíz del repositorio, con Python 3.12 y Git LFS:
+Desde la raíz del repositorio, con Python 3.12.14 y Git LFS. Compruebe que
+`python3 --version` indique 3.12.14 antes de crear el entorno:
 
 ```sh
 git lfs pull
@@ -28,9 +29,11 @@ Abra **http://127.0.0.1:8050**. Para otro puerto:
 python -m dashboard.app --port 8051
 ```
 
-Detenga la aplicación con Ctrl+C. El servicio se limita a la dirección local y
-se ejecuta sin modo de depuración. No se ha realizado un despliegue público;
-el servidor de desarrollo no debe exponerse directamente a Internet.
+Detenga la aplicación con Ctrl+C. Este comando escucha solo en la dirección
+local y se ejecuta sin modo de depuración. El repositorio contiene un adaptador
+WSGI (`wsgi.py`), Gunicorn y `vercel.json`, pero su presencia no demuestra un
+despliegue público activo. El servidor de desarrollo no debe exponerse
+directamente a Internet.
 
 Los agregados `data/dashboard/` se incluyen en el repositorio. Si se trabaja con
 una copia en la que todavía no existen, se pueden construir una vez:
@@ -43,6 +46,8 @@ Este comando necesita el Excel original de Git LFS. Contrasta sus huellas y los
 conteos contra el dataset y el EDA, genera únicamente los archivos nuevos de
 `data/dashboard/` y rechaza sobrescribir archivos existentes. No volver a
 ejecutarlo sobre un directorio ya preparado ni borrar evidencias para forzarlo.
+Para ejecutar este generador y los verificadores instale `requirements-dev.txt`;
+`requirements.txt` cubre el dashboard con artefactos ya preparados.
 
 ## Guía de uso
 
@@ -171,7 +176,7 @@ reporta son del servidor local, no de una conexión remota ni del navegador.
 ## Alcance de la entrega
 
 Versión local funcional para revisión académica. Pendientes independientes:
-aceptación formal por usuarios, despliegue público con configuración WSGI/HTTPS,
+aceptación formal por usuarios, verificar y operar un despliegue público con HTTPS,
 pruebas de carga, telemetría y una auditoría exhaustiva de accesibilidad (teclado,
 lector de pantalla, contraste y pruebas con usuarios). También falta revisar las
 condiciones de reutilización del Excel. La licencia específica de la fuente sigue

@@ -31,7 +31,7 @@ class DashboardVisualTest(unittest.TestCase):
     def test_tema_claro_conserva_paleta_y_oscuro_es_explicito(self):
         light=charts.THEME_PALETTES['light']
         self.assertEqual({key:light[key] for key in ('ink','muted','teal','paper','line','gold','focus','alert-high','alert-high-bg')},{
-            'ink':'#172d3e','muted':'#647580','teal':'#137c78','paper':'#f5f6f3',
+            'ink':'#172d3e','muted':'#5f707a','teal':'#137c78','paper':'#f5f6f3',
             'line':'#e1e7e6','gold':'#d7942d','focus':'#b06f14',
             'alert-high':'#98463f','alert-high-bg':'#f8e9e6'})
         css=(Path(ROOT)/'dashboard/assets/dashboard.css').read_text(encoding='utf-8')
@@ -100,6 +100,12 @@ class DashboardVisualTest(unittest.TestCase):
             self.assertGreaterEqual(_contrast(color,colors['surface']),3)
         for endpoint in ('map-0','map-9'):
             self.assertGreaterEqual(_contrast(colors[endpoint],colors['map-paper']),3)
+
+    def test_texto_secundario_tema_claro_se_lee_en_ambos_fondos(self):
+        colors=charts.THEME_PALETTES['light']
+        for background in ('paper','surface'):
+            with self.subTest(background=background):
+                self.assertGreaterEqual(_contrast(colors['muted'],colors[background]),4.5)
 
     def test_controles_del_calendario_oscuro_son_legibles(self):
         colors=charts.THEME_PALETTES['dark']
