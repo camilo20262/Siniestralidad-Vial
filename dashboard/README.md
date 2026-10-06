@@ -1,4 +1,4 @@
-# Dashboard local de siniestralidad con víctimas
+# Dashboard de siniestralidad con víctimas
 
 Aplicación en Python Dash de solo lectura. Reutiliza el modelo académico
 `rf_victimas_bogota_v1.0`, umbral 0,52. No entrena ni modifica los datos oficiales.
@@ -30,10 +30,28 @@ python -m dashboard.app --port 8051
 ```
 
 Detenga la aplicación con Ctrl+C. Este comando escucha solo en la dirección
-local y se ejecuta sin modo de depuración. El repositorio contiene un adaptador
-WSGI (`wsgi.py`), Gunicorn y `vercel.json`, pero su presencia no demuestra un
-despliegue público activo. El servidor de desarrollo no debe exponerse
-directamente a Internet.
+local y se ejecuta sin modo de depuración. El servidor de desarrollo no debe
+exponerse directamente a Internet.
+
+## Despliegue público académico
+
+El despliegue público principal, validado con el estado actual del repositorio,
+está disponible en Railway:
+**https://siniestralidad-vial-production.up.railway.app**. Usa `wsgi.py` como
+entrada WSGI y sirve la aplicación Flask/Dash mediante Gunicorn:
+
+```sh
+gunicorn wsgi:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+```
+
+El endpoint `/healthz` permite comprobar la disponibilidad del servicio. Tanto
+la consulta como la evaluación tienen alcance retrospectivo 2023–2024. La URL
+pública facilita la revisión del prototipo académico; no representa un sistema
+institucional en producción ni una autorización para uso operativo.
+
+El repositorio mantiene `vercel.json` y la entrada WSGI como alternativa
+compatible y evaluada para Vercel. No se considera el despliegue público
+principal mientras su deployment actual permanezca obsoleto y protegido.
 
 Los agregados `data/dashboard/` se incluyen en el repositorio. Si se trabaja con
 una copia en la que todavía no existen, se pueden construir una vez:
@@ -175,13 +193,15 @@ reporta son del servidor local, no de una conexión remota ni del navegador.
 
 ## Alcance de la entrega
 
-Versión local funcional para revisión académica. Pendientes independientes:
-aceptación formal por usuarios, verificar y operar un despliegue público con HTTPS,
-pruebas de carga, telemetría y una auditoría exhaustiva de accesibilidad (teclado,
-lector de pantalla, contraste y pruebas con usuarios). También falta revisar las
+Versión funcional para revisión académica, disponible tanto localmente como en
+el despliegue público principal de Railway. Permanecen como pendientes
+independientes la aceptación formal por usuarios, las pruebas de carga, la
+telemetría y una auditoría exhaustiva de accesibilidad (teclado, lector de
+pantalla, contraste y pruebas con usuarios). También falta revisar las
 condiciones de reutilización del Excel. La licencia específica de la fuente sigue
-pendiente de confirmación; no se presenta esta entrega como autorización para
-redistribuir microdatos ni como validación para uso operativo.
+pendiente de confirmación; la disponibilidad pública no convierte esta entrega
+en un sistema institucional ni constituye autorización para redistribuir
+microdatos o usar el prototipo operativamente.
 
 Documentación técnica consultada: [callbacks de Dash](https://dash.plotly.com/basic-callbacks)
 y [mapas coropléticos de Plotly](https://plotly.com/python/tile-county-choropleth/).

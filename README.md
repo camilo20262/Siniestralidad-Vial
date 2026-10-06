@@ -233,8 +233,15 @@ Los datos oficiales y el modelo no se modifican. `data/dashboard/` contiene
 agregados descriptivos adicionales comprobados contra el EDA. La consulta solo
 admite 2023–2024; los scores no se presentan como probabilidades. La cartografía
 es local y no necesita claves ni servicios de mapas. El repositorio incluye
-`wsgi.py` y `vercel.json` como opciones de publicación; este documento no
-acredita que exista un despliegue público activo.
+`wsgi.py` como entrada WSGI. El despliegue público principal, validado con el
+estado actual del repositorio, está disponible en Railway:
+**https://siniestralidad-vial-production.up.railway.app**. Allí Flask/Dash se
+ejecuta con Gunicorn y expone `/healthz` para comprobar el estado del servicio.
+Su alcance es exclusivamente retrospectivo para 2023–2024: es un prototipo
+académico accesible públicamente, no un sistema institucional en producción.
+`vercel.json` conserva Vercel como alternativa compatible y evaluada, pero no
+se presenta como despliegue público principal mientras su deployment vigente
+permanezca obsoleto y protegido.
 
 Verificación con datos reales: `python scripts/verificar_dashboard.py`.
 
@@ -247,9 +254,10 @@ La evaluación 2023–2024 es retrospectiva y ya participó en la comparación f
 > `data/raw/procedencia_excel.json` registra
 > `"licencia": "pendiente de confirmación institucional"`.
 
-También quedan fuera de este cierre la verificación de un despliegue público, la aceptación formal
-con usuarios, las pruebas de carga, la telemetría y una auditoría exhaustiva de
-accesibilidad. La aplicación es local y esos pendientes deben resolverse antes de
-presentarla como producto operativo o público.
+También quedan fuera de este cierre la aceptación formal con usuarios, las
+pruebas de carga, la telemetría y una auditoría exhaustiva de accesibilidad.
+La disponibilidad pública del prototipo en Railway no equivale a validación
+operativa ni institucional; esos pendientes deben resolverse antes de
+presentarlo como producto de producción.
 
 Reportes recomendados: [ficha técnica](reports/modelo_principal/ficha_tecnica_modelo.md), [conclusión ejecutiva](reports/evaluation_victimas/conclusion_ejecutiva.md), [métricas globales](reports/evaluation_victimas/metricas_globales.csv), [métricas del ajustado por localidad](reports/evaluation_victimas/metricas_random_forest_ajustado_por_localidad.csv) y [calibración](reports/evaluation_victimas/comparacion_brier_lineas_base.csv).
