@@ -10,6 +10,7 @@ import pandas as pd
 from dash import Dash, Input, Output, State, ctx, dcc, html, no_update
 from dash.exceptions import PreventUpdate
 import plotly.graph_objects as go
+from shapely.geometry import Point, shape
 
 from dashboard import charts, data as dashboard_data
 from dashboard.data import load_data, resumen_metricas, SLOTS, DAYS, FLAGS
@@ -184,26 +185,28 @@ def descripcion_consulta(fecha, franja, localidad):
     return f'Mapa de priorización para {localidad}, fecha {fecha}, franja {franja}; compara las 20 localidades.'
 
 
-def localidad_desde_click(click, localidades):
+def localidad_desde_click(click, localidades, geojson=None):
     """Resuelve la localidad emitida por Plotly sin depender de un solo campo."""
-    if not isinstance(click,dict) or not isinstance(click.get('points'),list) or not click['points']:
+    if not isinstance(click,dict):
         return None
-    point=click['points'][0]
-    if not isinstance(point,dict):
-        return None
-    candidates=[point.get('location')]
-    customdata=point.get('customdata')
-    if isinstance(customdata,dict):
-        candidates.extend(customdata.get(key) for key in ('Localidad','localidad','location','name'))
-    elif isinstance(customdata,(list,tuple,np.ndarray)):
-        candidates.extend(customdata)
-    else:
-        candidates.append(customdata)
-    properties=point.get('properties')
-    if isinstance(properties,dict):
-        candidates.extend(properties.get(key) for key in ('Localidad','LOCNOMBRE','location','name'))
-    candidates.extend([point.get('text'),point.get('hovertext')])
     canonical={dashboard_data.normalize(value):value for value in localidades}
+    points=click.get('points') if isinstance(click.get('points'),list) else []
+    candidates=[]
+    for point in points:
+        if not isinstance(point,dict):
+            continue
+        candidates.append(point.get('location'))
+        customdata=point.get('customdata')
+        if isinstance(customdata,dict):
+            candidates.extend(customdata.get(key) for key in ('Localidad','localidad','location','name'))
+        elif isinstance(customdata,(list,tuple,np.ndarray)):
+            candidates.extend(customdata)
+        else:
+            candidates.append(customdata)
+        properties=point.get('properties')
+        if isinstance(properties,dict):
+            candidates.extend(properties.get(key) for key in ('Localidad','LOCNOMBRE','location','name'))
+        candidates.extend([point.get('text'),point.get('hovertext')])
     for candidate in candidates:
         if not isinstance(candidate,str):
             continue
@@ -213,6 +216,24 @@ def localidad_desde_click(click, localidades):
             continue
         if value is not None:
             return value
+    if geojson is None:
+        return None
+    coordinate_pairs=[]
+    for point in points:
+        if isinstance(point,dict):
+            coordinate_pairs.append((point.get('x'),point.get('y')))
+    x_values=click.get('xvals') if isinstance(click.get('xvals'),list) else []
+    y_values=click.get('yvals') if isinstance(click.get('yvals'),list) else []
+    coordinate_pairs.extend(zip(x_values,y_values))
+    for longitude,latitude in coordinate_pairs:
+        if not isinstance(longitude,(int,float)) or not isinstance(latitude,(int,float)):
+            continue
+        clicked=Point(longitude,latitude)
+        for feature in geojson.get('features',[]):
+            if shape(feature['geometry']).covers(clicked):
+                locality=feature.get('properties',{}).get('Localidad')
+                if isinstance(locality,str):
+                    return canonical.get(dashboard_data.normalize(locality))
     return None
 
 
@@ -644,22 +665,26 @@ def create_app(service=None):
     @app.callback(Output('query-map','figure'),Output('query-detail','children'),Output('query-ranking','children'),Output('query-error','children'),
                   Output('query-map-accessible','aria-label'),Output('query-map-summary','children'),
                   Input('query-date','date'),Input('query-slot','value'),Input('query-locality','value'),Input('query-view','value'),
-                  Input('theme-store','data'))
-    def update_query(fecha,slot,locality,view,theme):
+                  Input('theme-store','data'),State('query-map','relayoutData'))
+    def update_query(fecha,slot,locality,view,theme,relayout):
         theme=charts.normalize_theme(theme,'dark')
         description=descripcion_consulta(fecha,slot,locality)
         try:
             if ctx.triggered_id=='theme-store':
                 rows=s.map_rows(fecha,slot)
-                return charts.map_figure(s,rows,locality,view,theme),no_update,no_update,no_update,no_update,no_update
-            return (*cached_query_result(fecha,slot,locality,view,theme),'',description,description)
+                figure=charts.map_figure(s,rows,locality,view,theme)
+                charts.preserve_map_view(figure,relayout,locality,view)
+                return figure,no_update,no_update,no_update,no_update,no_update
+            result=cached_query_result(fecha,slot,locality,view,theme)
+            figure=charts.preserve_map_view(go.Figure(result[0]),relayout,locality,view)
+            return figure,*result[1:],'',description,description
         except (ValueError,TypeError) as exc:
             description='Mapa no disponible para la selección actual.'
             return charts.empty('Consulta no disponible.',theme),[],[],notice(str(exc),True),description,description
 
     @app.callback(Output('query-locality','value'),Input('query-map','clickData'),prevent_initial_call=True)
     def choose_locality(click):
-        value=localidad_desde_click(click,s.localidades)
+        value=localidad_desde_click(click,s.localidades,s.geojson)
         return value if value is not None else no_update
 
     @app.callback(Output('navigation','value'),Input('query-go-evaluation','n_clicks'),prevent_initial_call=True)

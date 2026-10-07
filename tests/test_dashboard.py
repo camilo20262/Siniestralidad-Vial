@@ -11,7 +11,7 @@ import dashboard.data as data_module
 from dashboard.data import (DashboardData, preparar_actores, preparar_base_historica,
                             resumen_metricas, normalize, KEYS, REPORTS, SLOTS)
 from dashboard.app import (create_app, create_startup_error_app, query_result,
-                           history_result, evaluation_result)
+                           history_result, evaluation_result, localidad_desde_click)
 from dashboard.app import label_explanation, weakest_slot_warning
 from plotly.utils import PlotlyJSONEncoder
 from dashboard import charts
@@ -58,9 +58,11 @@ class DashboardTest(unittest.TestCase):
         callback=self.app.callback_map[key]
         outputs=callback['output']
         outputs=[{'id':o.component_id,'property':o.component_property} for o in outputs] if isinstance(outputs,list) else {'id':outputs.component_id,'property':outputs.component_property}
+        state_values=list(states or [])
+        state_values.extend([None]*(len(callback['state'])-len(state_values)))
         result=self.client.post('/_dash-update-component',json={'output':key,'outputs':outputs,
             'inputs':[dict(spec,value=value) for spec,value in zip(callback['inputs'],inputs)],
-            'state':[dict(spec,value=value) for spec,value in zip(callback['state'],states or [])],
+            'state':[dict(spec,value=value) for spec,value in zip(callback['state'],state_values)],
             'changedPropIds':changed or [f"{callback['inputs'][0]['id']}.{callback['inputs'][0]['property']}"]})
         self.assertEqual(result.status_code,200,result.data[:500])
         return result.json['response']
@@ -116,7 +118,8 @@ class DashboardTest(unittest.TestCase):
         self.assertEqual(predict.call_count,0)
         figure=result['query-map']['figure']
         self.assertEqual(figure['layout']['paper_bgcolor'],charts.THEME_PALETTES['dark']['map-paper'])
-        self.assertEqual(figure['data'][0]['colorscale'],charts.THEME_PALETTES['dark']['map_colors'])
+        self.assertEqual(figure['data'][-1]['marker']['colorscale'],
+                         charts.THEME_PALETTES['dark']['map_colors'])
 
     def test_cambio_tema_no_pasa_por_cache_cu01(self):
         key=self.callback_key('..query-map.figure')
@@ -190,8 +193,17 @@ class DashboardTest(unittest.TestCase):
         key=next(k for k in self.app.callback_map if k.startswith('..query-map'))
         result=self.call(key,['2023-01-01','Mañana','KENNEDY','urbana','light'])
         self.assertEqual(result['query-error']['children'],'')
-        self.assertEqual(result['query-map']['figure']['data'][0]['type'],'choropleth')
-        self.assertEqual(result['query-map']['figure']['layout']['geo']['projection']['type'],'mercator')
+        figure=result['query-map']['figure']
+        self.assertEqual(figure['data'][0]['type'],'scatter')
+        self.assertEqual(len([trace for trace in figure['data'] if trace.get('name') in self.s.localidades]),20)
+        self.assertTrue(figure['layout']['clickanywhere'])
+        self.assertEqual(figure['layout']['yaxis']['scaleanchor'],'x')
+        relayout={'xaxis.range[0]':-74.25,'xaxis.range[1]':-73.98,
+                  'yaxis.range[0]':4.54,'yaxis.range[1]':4.74}
+        result=self.call(key,['2023-01-01','Mañana','SUBA','urbana','light'],
+                         states=[relayout],changed=['query-locality.value'])
+        self.assertEqual(result['query-map']['figure']['layout']['xaxis']['range'],[-74.25,-73.98])
+        self.assertEqual(result['query-map']['figure']['layout']['yaxis']['range'],[4.54,4.74])
         result=self.call(key,['2025-01-01','Mañana','KENNEDY','urbana','light'])
         self.assertTrue(result['query-error']['children'])
         self.assertEqual(result['query-detail']['children'],[])
@@ -258,13 +270,18 @@ class DashboardTest(unittest.TestCase):
     def test_click_mapa_selecciona_localidad(self):
         rows=self.s.map_rows('2023-01-01','Mañana')
         figure=charts.map_figure(self.s,rows,'KENNEDY','urbana')
-        self.assertEqual(len(figure.data),1)
-        index=list(figure.data[0].locations).index('SUMAPAZ')
-        customdata=list(figure.data[0].customdata[index])
+        trace=next(item for item in figure.data if item.name=='SUMAPAZ')
+        index=list(figure.data).index(trace)
+        customdata=list(trace.customdata[0])
         self.assertEqual(customdata[0],'SUMAPAZ')
-        click={'points':[{'curveNumber':0,'pointNumber':index,'customdata':customdata}]}
+        click={'points':[{'curveNumber':index,'pointNumber':0,'customdata':customdata}]}
         result=self.call('query-locality.value',[click])
         self.assertEqual(result['query-locality']['value'],'SUMAPAZ')
+        geojson={'features':[{'properties':{'Localidad':'SUMAPAZ'},
+                             'geometry':{'type':'Polygon','coordinates':[
+                                 [[-74.4,3.8],[-74.1,3.8],[-74.1,4.2],[-74.4,4.2],[-74.4,3.8]]]}}]}
+        click={'points':[],'xvals':[-74.25],'yvals':[4.0]}
+        self.assertEqual(localidad_desde_click(click,['SUMAPAZ'],geojson),'SUMAPAZ')
 
     def test_callbacks_historia_y_evaluacion(self):
         for prefix,values,error in [('..history-kpis',[2023,'KENNEDY','Mañana','Peatón'],'history-error'),
@@ -458,7 +475,7 @@ class DashboardTest(unittest.TestCase):
 
     def test_sumapaz_y_estados_vacios_serializan(self):
         fig,*_=query_result(self.s,'2023-01-01','Noche','SUMAPAZ','urbana')
-        self.assertEqual(fig.data[0].type,'choropleth')
-        self.assertEqual(fig.layout.uirevision,'query-map-urbana')
+        self.assertEqual(fig.data[0].type,'scatter')
+        self.assertEqual(fig.layout.uirevision,'query-map-urbana-sumapaz')
         result=history_result(self.s,2023,'SUMAPAZ','Noche','Peatón')
         for fig in result[1:]:self.assertIn('Cero siniestros',fig.layout.annotations[0].text)

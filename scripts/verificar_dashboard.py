@@ -34,7 +34,7 @@ def verificar():
         t=perf_counter()
         result=query_result(s,date,slot,loc,'distrito')
         measured[f'consulta_{date}_{loc}']=round(perf_counter()-t,4)
-        if len(result[0].data[0].locations)!=20:
+        if len([trace for trace in result[0].data if trace.name in s.localidades])!=20:
             raise ValueError('El mapa no contiene las veinte localidades.')
     for label,fn,args in [('historia_completa',history_result,('Todos','Todas','Todas','Todos')),
                           ('historia_filtrada',history_result,(2024,'KENNEDY','Noche','Peatón')),

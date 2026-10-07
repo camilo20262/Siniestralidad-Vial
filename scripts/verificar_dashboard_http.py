@@ -99,18 +99,21 @@ def verificar():
                            ('2024-02-29', 'Noche', 'CANDELARIA'),
                            ('2024-12-31', 'Madrugada', 'SUMAPAZ')]
                 for date, slot, locality in queries:
-                    result = call(key, [date, slot, locality, 'distrito', 'dark'])
+                    result = call(key, [date, slot, locality, 'distrito', 'dark'], [None])
                     if result['query-error']['children']:
                         raise ValueError(result['query-error']['children'])
-                    if len(result['query-map']['figure']['data'][0]['locations']) != 20:
+                    traces=result['query-map']['figure']['data']
+                    if len([trace for trace in traces
+                            if trace.get('name') in registry['categorias']['Localidad']]) != 20:
                         raise ValueError('Mapa sin las 20 localidades.')
-                invalid = call(key, ['2025-01-01', 'Noche', 'KENNEDY', 'distrito', 'dark'])
+                invalid = call(key, ['2025-01-01', 'Noche', 'KENNEDY', 'distrito', 'dark'], [None])
                 if not invalid['query-error']['children'] or invalid['query-detail']['children'] != []:
                     raise ValueError('La consulta futura no se rechazó limpiamente.')
                 figure = result['query-map']['figure']
-                index = figure['data'][0]['locations'].index('KENNEDY')
-                point = {'curveNumber': 0, 'pointNumber': index,
-                         'customdata': figure['data'][0]['customdata'][index]}
+                index = next(index for index,trace in enumerate(figure['data'])
+                             if trace.get('name')=='KENNEDY')
+                point = {'curveNumber': index, 'pointNumber': 0,
+                         'customdata': figure['data'][index]['customdata'][0]}
                 selected = call('query-locality.value', [{'points': [point]}])
                 if selected['query-locality']['value'] != 'KENNEDY':
                     raise ValueError('La selección del mapa no se propaga.')

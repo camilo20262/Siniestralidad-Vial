@@ -5,6 +5,7 @@ import re
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+from plotly.colors import sample_colorscale
 from sklearn.metrics import precision_recall_curve, roc_curve
 from dashboard.data import DAYS, SLOTS
 
@@ -129,87 +130,93 @@ def bars(frame, x, y, horizontal=False, height=340, theme='light', show_values=F
     return fig
 
 
-def _map_view_ranges(geojson, selected, view):
-    """Calcula un encuadre local sin depender del motor de teselas."""
-    features=geojson['features']
-    if view=='urbana':
-        target={'SUMAPAZ'} if selected=='SUMAPAZ' else {
-            feature['properties']['Localidad'] for feature in features
-            if feature['properties']['Localidad']!='SUMAPAZ'}
-        features=[feature for feature in features
-                  if feature['properties']['Localidad'] in target]
-
-    def coordinates(value):
-        if (isinstance(value,(list,tuple)) and len(value)>=2
-                and all(isinstance(item,(int,float)) for item in value[:2])):
-            yield float(value[0]),float(value[1])
-            return
-        if isinstance(value,(list,tuple)):
-            for item in value:
-                yield from coordinates(item)
-
-    points=[point for feature in features
-            for point in coordinates(feature['geometry']['coordinates'])]
-    if not points:
-        raise ValueError('No hay coordenadas cartográficas para el encuadre solicitado.')
-    lons,lats=zip(*points)
-    lon_span=max(max(lons)-min(lons),.01)
-    lat_span=max(max(lats)-min(lats),.01)
-    return ([min(lons)-lon_span*.06,max(lons)+lon_span*.06],
-            [min(lats)-lat_span*.06,max(lats)+lat_span*.06])
+def _polygon_coordinates(geometry):
+    """Convierte Polygon/MultiPolygon en segmentos cartesianos separados."""
+    polygons=(geometry['coordinates'] if geometry['type']=='MultiPolygon'
+              else [geometry['coordinates']])
+    x_values=[]
+    y_values=[]
+    for polygon in polygons:
+        for ring in polygon:
+            x_values.extend(point[0] for point in ring)
+            y_values.extend(point[1] for point in ring)
+            x_values.append(None)
+            y_values.append(None)
+    return x_values,y_values
 
 
-def _geo_projection_geojson(geojson):
-    """Adapta la orientación de los anillos a la convención de d3-geo."""
-    def area(ring):
-        return sum(
-            first[0]*second[1]-second[0]*first[1]
-            for first,second in zip(ring,ring[1:]))/2
+def _map_camera(selected, view):
+    """Encuadres con proporción estable para el lienzo horizontal del panel."""
+    if view!='urbana':
+        return [-74.975,-73.425],[3.725,4.875],'district'
+    if selected=='SUMAPAZ':
+        return [-74.70,-73.84],[3.71,4.35],'sumapaz'
+    return [-74.38,-73.84],[4.44,4.84],'urban'
 
-    def orient(ring, clockwise):
-        ring=list(ring)
-        if (area(ring)<0) != clockwise:
-            ring.reverse()
-        return ring
 
-    def polygon(coordinates):
-        return [orient(ring,index==0) for index,ring in enumerate(coordinates)]
+def preserve_map_view(fig, relayout, selected, view):
+    """Reaplica el encuadre manipulado por el usuario si pertenece a la misma vista."""
+    if not isinstance(relayout,dict):
+        return fig
 
-    features=[]
-    for feature in geojson['features']:
-        geometry=feature['geometry']
-        coordinates=geometry['coordinates']
-        if geometry['type']=='Polygon':
-            coordinates=polygon(coordinates)
-        elif geometry['type']=='MultiPolygon':
-            coordinates=[polygon(item) for item in coordinates]
-        features.append({**feature,'geometry':{**geometry,'coordinates':coordinates}})
-    return {**geojson,'features':features}
+    def axis_range(axis):
+        values=relayout.get(f'{axis}.range')
+        if not isinstance(values,(list,tuple)) or len(values)!=2:
+            values=[relayout.get(f'{axis}.range[0]'),relayout.get(f'{axis}.range[1]')]
+        return values if all(isinstance(value,(int,float)) for value in values) else None
+
+    x_range=axis_range('xaxis')
+    y_range=axis_range('yaxis')
+    if x_range is None or y_range is None:
+        return fig
+    focus=_map_camera(selected,view)[2]
+    latitude_center=sum(y_range)/2
+    if (focus=='urban' and latitude_center<4.4) or (focus=='sumapaz' and latitude_center>=4.4):
+        return fig
+    fig.update_xaxes(range=x_range)
+    fig.update_yaxes(range=y_range)
+    return fig
 
 
 def map_figure(service, rows, selected, view, theme='light'):
     colors=theme_palette(theme)
-    selected_mask=rows.Localidad.eq(selected)
-    fig = go.Figure(go.Choropleth(
-        geojson=_geo_projection_geojson(service.geojson),
-        featureidkey='properties.Localidad', locations=rows.Localidad,
-        ids=rows.Localidad,uid='query-localities',
-        z=rows.Score_Priorizacion, zmin=0, zmax=1, colorscale=colors['map_colors'],
-        marker_line_color=np.where(selected_mask,colors['map-selected'],colors['map-line']),
-        marker_line_width=np.where(selected_mask,3,1), marker_opacity=.9,
-        customdata=np.column_stack([rows.Localidad,
-                                    rows.Alerta_Modelo.map({0:'Baja',1:'Alta'}),
-                                    rows.Umbral_Score]),
-        hovertemplate='<b>%{location}</b><br>Score: %{z:.3f}<br>Priorización: %{customdata[1]}<br>Umbral: %{customdata[2]}<extra></extra>',
-        colorbar=dict(title='Score', thickness=12, len=.62, tickformat='.1f')))
-    lon_range,lat_range=_map_view_ranges(service.geojson,selected,view)
-    layout=dict(geo=dict(visible=False,bgcolor=colors['map-paper'],fitbounds=False,
-                         projection=dict(type='mercator',minscale=.75,maxscale=8),
-                         lonaxis=dict(range=lon_range,showgrid=False),
-                         lataxis=dict(range=lat_range,showgrid=False)),height=490,
-                margin=dict(l=0,r=0,t=0,b=0),paper_bgcolor=colors['map-paper'],
-                plot_bgcolor=colors['map-paper'],uirevision=f'query-map-{view}',
-                clickmode='event',hovermode='closest',dragmode='pan',
+    features={feature['properties']['Localidad']:feature
+              for feature in service.geojson['features']}
+    fig=go.Figure()
+    for row in rows.itertuples(index=False):
+        feature=features.get(row.Localidad)
+        if feature is None:
+            continue
+        x_values,y_values=_polygon_coordinates(feature['geometry'])
+        priority='Alta' if row.Alerta_Modelo else 'Baja'
+        metadata=[row.Localidad,float(row.Score_Priorizacion),priority,float(row.Umbral_Score)]
+        hover_text=(f'<b>{row.Localidad}</b><br>Score: {metadata[1]:.3f}<br>'
+                    f'Priorización: {priority}<br>Umbral: {metadata[3]:.2f}')
+        fig.add_trace(go.Scatter(
+            x=x_values,y=y_values,mode='lines',fill='toself',hoveron='points+fills',
+            name=row.Localidad,uid=f'query-locality-{row.Localidad}',showlegend=False,
+            fillcolor=sample_colorscale(colors['map_colors'],[metadata[1]])[0],opacity=.9,
+            line=dict(color=colors['map-selected'] if row.Localidad==selected else colors['map-line'],
+                      width=3 if row.Localidad==selected else 1),
+            meta=metadata,text=hover_text,hoverinfo='text',
+            customdata=[[row.Localidad]]*len(x_values),
+            hovertemplate=None))
+    fig.add_trace(go.Scatter(
+        x=[None],y=[None],mode='markers',uid='query-map-colorbar',showlegend=False,
+        hoverinfo='skip',marker=dict(color=[0],cmin=0,cmax=1,colorscale=colors['map_colors'],
+                                    showscale=True,colorbar=dict(title='Score',thickness=12,
+                                                                len=.62,tickformat='.1f'))))
+    x_range,y_range,focus=_map_camera(selected,view)
+    revision=f'query-map-{view}-{focus}'
+    layout=dict(height=490,margin=dict(l=0,r=0,t=0,b=0),
+                paper_bgcolor=colors['map-paper'],plot_bgcolor=colors['map-paper'],
+                xaxis=dict(range=x_range,visible=False,showgrid=False,zeroline=False,
+                           constrain='domain',fixedrange=False,uirevision=revision),
+                yaxis=dict(range=y_range,visible=False,showgrid=False,zeroline=False,
+                           scaleanchor='x',scaleratio=1,constrain='domain',fixedrange=False,
+                           uirevision=revision),
+                uirevision=revision,
+                clickmode='event',clickanywhere=True,hovermode='closest',dragmode='pan',
                 font=dict(family='Arial',color=colors['ink']),
                 hoverlabel=dict(bgcolor=colors['surface'],font_color=colors['ink'],
                                 bordercolor=colors['line'],font_size=13))

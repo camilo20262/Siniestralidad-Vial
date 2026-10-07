@@ -92,18 +92,21 @@ class DashboardVisualTest(unittest.TestCase):
                            'Score_Priorizacion':[.7,.2],
                            'Alerta_Modelo':[1,0],'Umbral_Score':[.52,.52]})
         figure=charts.map_figure(Service(),rows,'KENNEDY','urbana','dark')
-        self.assertEqual(figure.data[0].type,'choropleth')
-        self.assertEqual(figure.data[0].uid,'query-localities')
-        self.assertEqual(figure.layout.geo.projection.type,'mercator')
+        self.assertEqual([trace.type for trace in figure.data],['scatter']*3)
+        self.assertEqual(figure.data[0].uid,'query-locality-KENNEDY')
+        self.assertEqual(figure.data[0].hoveron,'points+fills')
+        self.assertEqual(figure.layout.yaxis.scaleanchor,'x')
+        self.assertEqual(figure.layout.yaxis.scaleratio,1)
         self.assertEqual(figure.layout.dragmode,'pan')
+        self.assertTrue(figure.layout.clickanywhere)
+        self.assertFalse(figure.layout.xaxis.fixedrange)
+        self.assertEqual(figure.layout.xaxis.uirevision,figure.layout.uirevision)
         self.assertNotIn('map',figure.layout.to_plotly_json())
-        ring=figure.data[0].geojson['features'][0]['geometry']['coordinates'][0]
-        signed_area=sum(first[0]*second[1]-second[0]*first[1]
-                        for first,second in zip(ring,ring[1:]))/2
-        self.assertLess(signed_area,0)
+        self.assertNotIn('geo',figure.layout.to_plotly_json())
         sumapaz=charts.map_figure(Service(),rows,'SUMAPAZ','urbana','dark')
-        self.assertLess(sumapaz.layout.geo.lataxis.range[0],3.8)
-        self.assertLess(sumapaz.layout.geo.lataxis.range[1],4.3)
+        self.assertLess(sumapaz.layout.yaxis.range[0],3.8)
+        self.assertLess(sumapaz.layout.yaxis.range[1],4.4)
+        self.assertEqual(sumapaz.layout.uirevision,'query-map-urbana-sumapaz')
 
     def test_tarjetas_paneles_y_graficos_exponen_identidad_accesible(self):
         components=[kpi('Siniestros registrados','10','Selección actual'),
