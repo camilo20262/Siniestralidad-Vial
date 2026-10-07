@@ -322,7 +322,7 @@ def overview_figures(s, theme='light', grid=None):
     monthly=grid.groupby('Mes',as_index=False).Siniestros.sum()
     top=grid.groupby('Localidad',as_index=False).Siniestros.sum().nlargest(7,'Siniestros').sort_values('Siniestros')
     return charts.line(monthly,'Mes','Siniestros',theme=theme),charts.bars(
-        top,'Localidad','Siniestros',True,theme=theme)
+        top,'Localidad','Siniestros',True,theme=theme,show_values=True)
 
 
 def overview(s, theme='light'):

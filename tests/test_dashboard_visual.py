@@ -45,6 +45,20 @@ class DashboardVisualTest(unittest.TestCase):
         self.assertEqual(list(figure.data[0].marker.color),
                          [charts.SLOT_COLORS[slot] for slot in SLOTS])
 
+    def test_resumen_reserva_aire_en_eje_y_muestra_valores_exactos(self):
+        monthly=pd.DataFrame({'Mes':pd.to_datetime(['2018-01-01','2024-12-01']),
+                              'Siniestros':[100,120]})
+        line=charts.line(monthly,'Mes','Siniestros')
+        self.assertLess(pd.Timestamp(line.layout.xaxis.range[0]),monthly.Mes.min())
+        self.assertGreater(pd.Timestamp(line.layout.xaxis.range[1]),monthly.Mes.max())
+
+        localities=pd.DataFrame({'Localidad':['BOSA','KENNEDY'],'Siniestros':[9876,12345]})
+        bars=charts.bars(localities,'Localidad','Siniestros',horizontal=True,show_values=True)
+        self.assertEqual(list(bars.data[0].text),['9.876','12.345'])
+        self.assertEqual(bars.data[0].textposition,'outside')
+        self.assertFalse(bars.data[0].cliponaxis)
+        self.assertGreater(bars.layout.xaxis.range[1],localities.Siniestros.max())
+
     def test_heatmap_usa_celdas_redondeadas_y_leyenda_simple(self):
         rows=[]
         for day_index,day in enumerate(DAYS):
@@ -63,6 +77,33 @@ class DashboardVisualTest(unittest.TestCase):
         self.assertGreaterEqual(len(charts.MAP_COLORS),9)
         self.assertEqual(charts.confusion({'Observaciones':10,'TN':3,'FP':1,'FN':2,'TP':4}).data[0].colorscale,
                          tuple((position,color) for position,color in charts.MAP_COLORS))
+
+    def test_mapa_interactivo_evitar_renderizador_de_teselas_inestable(self):
+        class Service:
+            geojson={'type':'FeatureCollection','features':[
+                {'type':'Feature','properties':{'Localidad':'KENNEDY'},
+                 'geometry':{'type':'Polygon','coordinates':[
+                     [[-74.1,4.6],[-74.1,4.7],[-74.2,4.7],[-74.1,4.6]]]}},
+                {'type':'Feature','properties':{'Localidad':'SUMAPAZ'},
+                 'geometry':{'type':'Polygon','coordinates':[
+                     [[-74.2,3.8],[-74.1,4.2],[-74.4,4.2],[-74.2,3.8]]]}}
+            ]}
+        rows=pd.DataFrame({'Localidad':['KENNEDY','SUMAPAZ'],
+                           'Score_Priorizacion':[.7,.2],
+                           'Alerta_Modelo':[1,0],'Umbral_Score':[.52,.52]})
+        figure=charts.map_figure(Service(),rows,'KENNEDY','urbana','dark')
+        self.assertEqual(figure.data[0].type,'choropleth')
+        self.assertEqual(figure.data[0].uid,'query-localities')
+        self.assertEqual(figure.layout.geo.projection.type,'mercator')
+        self.assertEqual(figure.layout.dragmode,'pan')
+        self.assertNotIn('map',figure.layout.to_plotly_json())
+        ring=figure.data[0].geojson['features'][0]['geometry']['coordinates'][0]
+        signed_area=sum(first[0]*second[1]-second[0]*first[1]
+                        for first,second in zip(ring,ring[1:]))/2
+        self.assertLess(signed_area,0)
+        sumapaz=charts.map_figure(Service(),rows,'SUMAPAZ','urbana','dark')
+        self.assertLess(sumapaz.layout.geo.lataxis.range[0],3.8)
+        self.assertLess(sumapaz.layout.geo.lataxis.range[1],4.3)
 
     def test_tarjetas_paneles_y_graficos_exponen_identidad_accesible(self):
         components=[kpi('Siniestros registrados','10','Selección actual'),
@@ -89,7 +130,9 @@ class DashboardVisualTest(unittest.TestCase):
                 ('pill-text','pill-bg'),('pill-neutral-text','pill-neutral-bg'),
                 ('notice-text','notice-bg'),('warning-text','warning-bg'),
                 ('low-text','low-bg'),('disabled-text','disabled-bg'),
-                ('table-head-text','table-head-bg')]
+                ('table-head-text','table-head-bg'),('nav-text','nav'),
+                ('panel-title','surface'),('kpi-label','surface'),
+                ('hero-aside-copy','hero-aside-bg')]
         for foreground,background in normal:
             with self.subTest(pair=f'{foreground}/{background}'):
                 self.assertGreaterEqual(_contrast(colors[foreground],colors[background]),4.5)

@@ -190,7 +190,8 @@ class DashboardTest(unittest.TestCase):
         key=next(k for k in self.app.callback_map if k.startswith('..query-map'))
         result=self.call(key,['2023-01-01','Mañana','KENNEDY','urbana','light'])
         self.assertEqual(result['query-error']['children'],'')
-        self.assertEqual(result['query-map']['figure']['layout']['map']['style'],'white-bg')
+        self.assertEqual(result['query-map']['figure']['data'][0]['type'],'choropleth')
+        self.assertEqual(result['query-map']['figure']['layout']['geo']['projection']['type'],'mercator')
         result=self.call(key,['2025-01-01','Mañana','KENNEDY','urbana','light'])
         self.assertTrue(result['query-error']['children'])
         self.assertEqual(result['query-detail']['children'],[])
@@ -457,6 +458,7 @@ class DashboardTest(unittest.TestCase):
 
     def test_sumapaz_y_estados_vacios_serializan(self):
         fig,*_=query_result(self.s,'2023-01-01','Noche','SUMAPAZ','urbana')
-        self.assertEqual(fig.layout.map.center.lat,4.03)
+        self.assertEqual(fig.data[0].type,'choropleth')
+        self.assertEqual(fig.layout.uirevision,'query-map-urbana')
         result=history_result(self.s,2023,'SUMAPAZ','Noche','Peatón')
         for fig in result[1:]:self.assertIn('Cero siniestros',fig.layout.annotations[0].text)

@@ -86,34 +86,114 @@ def line(frame, x, y, label='Siniestros registrados', theme='light'):
                               fill='tozeroy', fillcolor=colors['chart-fill'], name=label,
                               hovertemplate='%{x}<br>%{y:,.0f}<extra>'+label+'</extra>'))
     fig.update_yaxes(title=label)
-    return finish(fig,theme=theme)
+    finish(fig,theme=theme)
+    values=frame[x].dropna()
+    if not values.empty and pd.api.types.is_datetime64_any_dtype(values.dtype):
+        start,end=values.min(),values.max()
+        span=end-start
+        padding=max(span*.025,pd.Timedelta(days=15))
+        fig.update_xaxes(range=[start-padding,end+padding],automargin=True)
+    else:
+        fig.update_xaxes(automargin=True)
+    return fig
 
 
-def bars(frame, x, y, horizontal=False, height=340, theme='light'):
+def bars(frame, x, y, horizontal=False, height=340, theme='light', show_values=False):
     colors=theme_palette(theme)
     if frame.empty:
         return empty(theme=theme)
     marker_colors = ([colors['slot_colors'].get(value,colors['teal']) for value in frame[x]]
                      if x == 'Franja_Horaria' else colors['teal'])
-    trace = go.Bar(x=frame[y] if horizontal else frame[x], y=frame[x] if horizontal else frame[y],
-                   orientation='h' if horizontal else 'v', marker_color=marker_colors,
-                   hovertemplate=('%{y}: %{x:,.3f}' if horizontal else '%{x}: %{y:,.0f}')+'<extra></extra>')
+    trace_options={
+        'x':frame[y] if horizontal else frame[x],
+        'y':frame[x] if horizontal else frame[y],
+        'orientation':'h' if horizontal else 'v',
+        'marker_color':marker_colors,
+        'hovertemplate':('%{y}: %{x:,.0f}' if horizontal else '%{x}: %{y:,.0f}')+'<extra></extra>',
+    }
+    if horizontal and show_values:
+        trace_options.update(
+            text=[f'{value:,.0f}'.replace(',','.') for value in frame[y]],
+            texttemplate='%{text}',textposition='outside',cliponaxis=False,
+            textfont=dict(size=12,color=colors['ink']))
+    trace = go.Bar(**trace_options)
     fig = go.Figure(trace)
     finish(fig,height=height,theme=theme)
     if horizontal:
         fig.update_yaxes(automargin=True, tickfont=dict(size=10))
-        fig.update_layout(margin=dict(l=140))
+        fig.update_layout(margin=dict(l=140,r=28))
+        if show_values:
+            maximum=pd.to_numeric(frame[y],errors='coerce').max()
+            if pd.notna(maximum) and maximum>0:
+                fig.update_xaxes(range=[0,float(maximum)*1.18])
     return fig
+
+
+def _map_view_ranges(geojson, selected, view):
+    """Calcula un encuadre local sin depender del motor de teselas."""
+    features=geojson['features']
+    if view=='urbana':
+        target={'SUMAPAZ'} if selected=='SUMAPAZ' else {
+            feature['properties']['Localidad'] for feature in features
+            if feature['properties']['Localidad']!='SUMAPAZ'}
+        features=[feature for feature in features
+                  if feature['properties']['Localidad'] in target]
+
+    def coordinates(value):
+        if (isinstance(value,(list,tuple)) and len(value)>=2
+                and all(isinstance(item,(int,float)) for item in value[:2])):
+            yield float(value[0]),float(value[1])
+            return
+        if isinstance(value,(list,tuple)):
+            for item in value:
+                yield from coordinates(item)
+
+    points=[point for feature in features
+            for point in coordinates(feature['geometry']['coordinates'])]
+    if not points:
+        raise ValueError('No hay coordenadas cartográficas para el encuadre solicitado.')
+    lons,lats=zip(*points)
+    lon_span=max(max(lons)-min(lons),.01)
+    lat_span=max(max(lats)-min(lats),.01)
+    return ([min(lons)-lon_span*.06,max(lons)+lon_span*.06],
+            [min(lats)-lat_span*.06,max(lats)+lat_span*.06])
+
+
+def _geo_projection_geojson(geojson):
+    """Adapta la orientación de los anillos a la convención de d3-geo."""
+    def area(ring):
+        return sum(
+            first[0]*second[1]-second[0]*first[1]
+            for first,second in zip(ring,ring[1:]))/2
+
+    def orient(ring, clockwise):
+        ring=list(ring)
+        if (area(ring)<0) != clockwise:
+            ring.reverse()
+        return ring
+
+    def polygon(coordinates):
+        return [orient(ring,index==0) for index,ring in enumerate(coordinates)]
+
+    features=[]
+    for feature in geojson['features']:
+        geometry=feature['geometry']
+        coordinates=geometry['coordinates']
+        if geometry['type']=='Polygon':
+            coordinates=polygon(coordinates)
+        elif geometry['type']=='MultiPolygon':
+            coordinates=[polygon(item) for item in coordinates]
+        features.append({**feature,'geometry':{**geometry,'coordinates':coordinates}})
+    return {**geojson,'features':features}
 
 
 def map_figure(service, rows, selected, view, theme='light'):
     colors=theme_palette(theme)
-    map_style=('white-bg' if normalize_theme(theme)=='light' else {
-        'version':8,'sources':{},'layers':[{'id':'background','type':'background',
-                                           'paint':{'background-color':colors['map-paper']}}]})
     selected_mask=rows.Localidad.eq(selected)
-    fig = go.Figure(go.Choroplethmap(
-        geojson=service.geojson, featureidkey='properties.Localidad', locations=rows.Localidad,
+    fig = go.Figure(go.Choropleth(
+        geojson=_geo_projection_geojson(service.geojson),
+        featureidkey='properties.Localidad', locations=rows.Localidad,
+        ids=rows.Localidad,uid='query-localities',
         z=rows.Score_Priorizacion, zmin=0, zmax=1, colorscale=colors['map_colors'],
         marker_line_color=np.where(selected_mask,colors['map-selected'],colors['map-line']),
         marker_line_width=np.where(selected_mask,3,1), marker_opacity=.9,
@@ -122,15 +202,17 @@ def map_figure(service, rows, selected, view, theme='light'):
                                     rows.Umbral_Score]),
         hovertemplate='<b>%{location}</b><br>Score: %{z:.3f}<br>Priorización: %{customdata[1]}<br>Umbral: %{customdata[2]}<extra></extra>',
         colorbar=dict(title='Score', thickness=12, len=.62, tickformat='.1f')))
-    center, zoom = ({'lat':4.64,'lon':-74.11}, 10) if view=='urbana' else ({'lat':4.30,'lon':-74.20}, 8.6)
-    if selected=='SUMAPAZ' and view=='urbana':
-        center, zoom = {'lat':4.03,'lon':-74.27}, 9
-    layout=dict(map=dict(style=map_style,center=center,zoom=zoom),height=490,
+    lon_range,lat_range=_map_view_ranges(service.geojson,selected,view)
+    layout=dict(geo=dict(visible=False,bgcolor=colors['map-paper'],fitbounds=False,
+                         projection=dict(type='mercator',minscale=.75,maxscale=8),
+                         lonaxis=dict(range=lon_range,showgrid=False),
+                         lataxis=dict(range=lat_range,showgrid=False)),height=490,
                 margin=dict(l=0,r=0,t=0,b=0),paper_bgcolor=colors['map-paper'],
-                uirevision=f'{view}-{selected}',clickmode='event',hovermode='closest',
-                font=dict(family='Arial',color=colors['ink']))
-    if normalize_theme(theme)=='dark':
-        layout['plot_bgcolor']=colors['map-paper']
+                plot_bgcolor=colors['map-paper'],uirevision=f'query-map-{view}',
+                clickmode='event',hovermode='closest',dragmode='pan',
+                font=dict(family='Arial',color=colors['ink']),
+                hoverlabel=dict(bgcolor=colors['surface'],font_color=colors['ink'],
+                                bordercolor=colors['line'],font_size=13))
     fig.update_layout(**layout)
     return fig
 
