@@ -1,0 +1,320 @@
+{
+  "version_esquema": 1,
+  "id_modelo": "rf_victimas_bogota_v1.0",
+  "version": "1.0",
+  "fecha_cierre": "2026-09-12",
+  "estado": "principal_academico",
+  "nombre": "Random Forest ajustado",
+  "alcance_cierre": "Versión de referencia de la tesis; evaluación retrospectiva, sin aprobación para uso operativo.",
+  "artefacto": {
+    "ruta": "models/victimas/pipeline_random_forest_ajustado_victimas.pkl",
+    "sha256": "ae2aff29ce1e73f820cfccc9c11a5e1115b2ab4bb86ecc7f0b5bfd89dc31222a",
+    "tipo": "sklearn.pipeline.Pipeline",
+    "incluye_preprocesamiento": true
+  },
+  "decision": {
+    "clase_positiva": 1,
+    "columna_score": "Score_Priorizacion",
+    "columna_alerta": "Alerta_Modelo",
+    "umbral_score": 0.52,
+    "operador": ">=",
+    "umbral_original_metadata": 0.5199999999999999,
+    "interpretacion": "Puntuación no calibrada para priorización académica de la etiqueta Alto_Riesgo.",
+    "umbral_territorial_adoptado": false
+  },
+  "hiperparametros": {
+    "bootstrap": true,
+    "ccp_alpha": 0,
+    "class_weight": "balanced",
+    "criterion": "gini",
+    "max_depth": null,
+    "max_features": "sqrt",
+    "max_leaf_nodes": null,
+    "max_samples": null,
+    "min_impurity_decrease": 0,
+    "min_samples_leaf": 20,
+    "min_samples_split": 2,
+    "min_weight_fraction_leaf": 0,
+    "monotonic_cst": null,
+    "n_estimators": 300,
+    "n_jobs": -1,
+    "oob_score": false,
+    "random_state": 42,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "variables": [
+    "Localidad",
+    "Franja_Horaria",
+    "Dia_Semana",
+    "Mes",
+    "Es_Fin_de_Semana",
+    "Es_Festivo",
+    "Accidentes_Prom_7d",
+    "Accidentes_Prom_30d",
+    "Accidentes_Semana_Anterior",
+    "Sin_Historial_Accidentes_Prom_7d",
+    "Sin_Historial_Accidentes_Prom_30d",
+    "Sin_Historial_Accidentes_Semana_Anterior"
+  ],
+  "tipos_dataset": {
+    "Localidad": "str",
+    "Franja_Horaria": "str",
+    "Dia_Semana": "str",
+    "Mes": "int32",
+    "Es_Fin_de_Semana": "int64",
+    "Es_Festivo": "int64",
+    "Accidentes_Prom_7d": "float64",
+    "Accidentes_Prom_30d": "float64",
+    "Accidentes_Semana_Anterior": "float64",
+    "Sin_Historial_Accidentes_Prom_7d": "int64",
+    "Sin_Historial_Accidentes_Prom_30d": "int64",
+    "Sin_Historial_Accidentes_Semana_Anterior": "int64"
+  },
+  "categorias": {
+    "Localidad": [
+      "ANTONIO NARIÑO",
+      "BARRIOS UNIDOS",
+      "BOSA",
+      "CANDELARIA",
+      "CHAPINERO",
+      "CIUDAD BOLÍVAR",
+      "ENGATIVÁ",
+      "FONTIBÓN",
+      "KENNEDY",
+      "LOS MÁRTIRES",
+      "PUENTE ARANDA",
+      "RAFAEL URIBE URIBE",
+      "SAN CRISTÓBAL",
+      "SANTA FE",
+      "SUBA",
+      "SUMAPAZ",
+      "TEUSAQUILLO",
+      "TUNJUELITO",
+      "USAQUÉN",
+      "USME"
+    ],
+    "Franja_Horaria": [
+      "Madrugada",
+      "Mañana",
+      "Noche",
+      "Tarde"
+    ],
+    "Dia_Semana": [
+      "Friday",
+      "Monday",
+      "Saturday",
+      "Sunday",
+      "Thursday",
+      "Tuesday",
+      "Wednesday"
+    ]
+  },
+  "preprocesamiento": {
+    "categoricas": [
+      "Localidad",
+      "Franja_Horaria",
+      "Dia_Semana"
+    ],
+    "transformacion": "OneHotEncoder(handle_unknown='ignore')",
+    "numericas": "Passthrough sin estandarización",
+    "contrato_carga": "El cargador de referencia rechaza categorías fuera del universo evaluado y valores nulos/no finitos."
+  },
+  "datos": {
+    "ruta": "data/processed/dataset_victimas_localidad_franja_fecha.parquet",
+    "sha256": "0e92fce1e9398e4b4ddc190126d605cb7c983d15ca614235fd07401302ee9a2d",
+    "universo": "Siniestros Con Heridos o Con Muertos según Gravedad_Indicador_Tradicional; conteo de siniestros, no de personas.",
+    "unidad": "Localidad × Franja_Horaria × Fecha_Acc",
+    "filas": 204560,
+    "siniestros": 85199,
+    "localidades": 20,
+    "franjas": 4,
+    "entrenamiento": {
+      "desde": "2018-01-01",
+      "hasta": "2022-12-31",
+      "filas": 146080,
+      "positivos": 24907
+    },
+    "evaluacion": {
+      "desde": "2023-01-01",
+      "hasta": "2024-12-31",
+      "filas": 58480,
+      "positivos": 11118,
+      "tipo": "retrospectiva"
+    }
+  },
+  "etiqueta": {
+    "nombre": "Alto_Riesgo",
+    "regla": "Num_Accidentes > cuantil 2/3 de su Localidad-Franja calculado solo en entrenamiento",
+    "archivo_umbrales": "models/victimas/umbrales_etiqueta_principal.csv",
+    "grupos_por_umbral": {
+      "0": 49,
+      "1": 28,
+      "2": 3
+    },
+    "advertencia": "El umbral del conteo es distinto del umbral 0,52 aplicado al score."
+  },
+  "seleccion": {
+    "origen": "notebooks/04C_Ajuste_Hiperparametros_Con_Victimas.ipynb",
+    "familia": "Random Forest, previamente elegida en 04B",
+    "configuraciones_evaluadas": 8,
+    "candidato": 3,
+    "criterio": "Mayor Average Precision media en cortes temporales expansivos",
+    "cortes": [
+      {
+        "train": "2018–2019",
+        "validacion": 2020
+      },
+      {
+        "train": "2018–2020",
+        "validacion": 2021
+      },
+      {
+        "train": "2018–2021",
+        "validacion": 2022
+      }
+    ],
+    "ap_media": 0.25519129781625294,
+    "ap_desviacion_entre_cortes": 0.06528578184268345,
+    "ap_media_base": 0.24926852317628714,
+    "criterio_umbral": "Máximo F1 agregado de predicciones fuera de muestra 2020–2022, después de elegir configuración",
+    "recalculo_por_corte": "Etiqueta y preprocesamiento ajustados con el pasado disponible",
+    "limitacion": "Las mismas validaciones se reutilizan para configuración y umbral; sus métricas son de selección, no una estimación independiente. 2023–2024 fue inspeccionado en el desarrollo."
+  },
+  "evaluacion": {
+    "notebook": "notebooks/05B_Evaluacion_Con_Victimas.ipynb",
+    "reporte": "reports/evaluation_victimas/metricas_globales.csv",
+    "metricas": {
+      "Modelo": "Random Forest ajustado",
+      "Umbral": 0.5199999999999999,
+      "F1": 0.4057890187111346,
+      "AUC_ROC": 0.6933242182043409,
+      "Average_Precision": 0.3098375996626644,
+      "Precision": 0.2940629673038839,
+      "Recall": 0.654434250764526,
+      "Especificidad": 0.6312022296355728,
+      "Balanced_Accuracy": 0.6428182402000494,
+      "Brier": 0.2220882670045042,
+      "Tasa_Predicha_Positiva": 0.4231019151846785,
+      "TN": 29895,
+      "FP": 17467,
+      "FN": 3842,
+      "TP": 7276
+    },
+    "brier_base_constante_train": 0.15435678122821342,
+    "f1_macro_localidades": 0.3473762910433183
+  },
+  "referencia_base": {
+    "nombre": "Random Forest base",
+    "artefacto": "models/victimas/pipeline_random_forest_victimas.pkl",
+    "sha256": "2791d159bd47b92c5b2ce1e5e438d453e6a02a69b9daafce8d885ee617e2b00d",
+    "metadata": "models/victimas/metadata_modelo.json",
+    "umbral_score": 0.55,
+    "hiperparametros": {
+      "bootstrap": true,
+      "ccp_alpha": 0,
+      "class_weight": "balanced",
+      "criterion": "gini",
+      "max_depth": 12,
+      "max_features": "sqrt",
+      "max_leaf_nodes": null,
+      "max_samples": null,
+      "min_impurity_decrease": 0,
+      "min_samples_leaf": 20,
+      "min_samples_split": 2,
+      "min_weight_fraction_leaf": 0,
+      "monotonic_cst": null,
+      "n_estimators": 200,
+      "n_jobs": -1,
+      "oob_score": false,
+      "random_state": 42,
+      "verbose": 0,
+      "warm_start": false
+    },
+    "metricas": {
+      "Modelo": "Random Forest base",
+      "Umbral": 0.5499999999999999,
+      "F1": 0.3981718464351005,
+      "AUC_ROC": 0.6853491848946648,
+      "Average_Precision": 0.303809579863017,
+      "Precision": 0.3010782416367155,
+      "Recall": 0.5876956287101996,
+      "Especificidad": 0.6797432540855538,
+      "Balanced_Accuracy": 0.6337194413978767,
+      "Brier": 0.2303972274924707,
+      "Tasa_Predicha_Positiva": 0.3711012311901505,
+      "TN": 32194,
+      "FP": 15168,
+      "FN": 4584,
+      "TP": 6534
+    },
+    "alias_historico": "models/victimas/pipeline_modelo_seleccionado.pkl",
+    "nota_alias": "Este alias contiene el modelo base de 04B. No es la entrada del modelo principal cerrado."
+  },
+  "versiones": {
+    "entrenamiento_declarado": {
+      "python": "3.12.14",
+      "scikit_learn": "1.9.0"
+    },
+    "entorno_verificacion": {
+      "python": "3.12.14",
+      "pandas": "3.0.3",
+      "numpy": "2.5.1",
+      "scikit-learn": "1.9.0",
+      "joblib": "1.5.3",
+      "pyarrow": "23.0.1"
+    }
+  },
+  "ficha_tecnica": "reports/modelo_principal/ficha_tecnica_modelo.md",
+  "evidencias": [
+    {
+      "ruta": "models/victimas/pipeline_random_forest_ajustado_victimas.pkl",
+      "sha256": "ae2aff29ce1e73f820cfccc9c11a5e1115b2ab4bb86ecc7f0b5bfd89dc31222a"
+    },
+    {
+      "ruta": "models/victimas/pipeline_random_forest_victimas.pkl",
+      "sha256": "2791d159bd47b92c5b2ce1e5e438d453e6a02a69b9daafce8d885ee617e2b00d"
+    },
+    {
+      "ruta": "models/victimas/pipeline_modelo_seleccionado.pkl",
+      "sha256": "2791d159bd47b92c5b2ce1e5e438d453e6a02a69b9daafce8d885ee617e2b00d"
+    },
+    {
+      "ruta": "models/victimas/metadata_modelo.json",
+      "sha256": "51c6acc6628a5031cb8fc0d6f07ff32165120216bd25f1d2845744eba549c2ed"
+    },
+    {
+      "ruta": "models/victimas/metadata_random_forest_ajustado.json",
+      "sha256": "a80c7c166a6147ae7c83bcc1d9e49d93e19d3dddd82e0dda4d12161c2db1331a"
+    },
+    {
+      "ruta": "data/processed/dataset_victimas_localidad_franja_fecha.parquet",
+      "sha256": "0e92fce1e9398e4b4ddc190126d605cb7c983d15ca614235fd07401302ee9a2d"
+    },
+    {
+      "ruta": "reports/evaluation_victimas/metricas_globales.csv",
+      "sha256": "a029f460ba259d74e7e55694f88c2adb5c5410419edc973f73e7d185a3b8f8f6"
+    },
+    {
+      "ruta": "reports/tuning_victimas/busqueda_temporal_resumen.csv",
+      "sha256": "35c489c174ed70e218ccaa32b1342db15811594cdcb59d3a4076e6679fd379a3"
+    },
+    {
+      "ruta": "reports/tuning_victimas/seleccion_umbral.csv",
+      "sha256": "275a76865529203909bf7bb9bae4e389dfab366a4899bf04366fe49f983f0818"
+    },
+    {
+      "ruta": "reports/evaluation_victimas/predicciones_random_forest_ajustado_2023_2024.parquet",
+      "sha256": "f3ee49606603b5d42b6c56ee0b33a0f01b1bef5936cbb57009b51d69abc348b1"
+    },
+    {
+      "ruta": "reports/evaluation_victimas/metricas_random_forest_ajustado_por_localidad.csv",
+      "sha256": "4cb63fba419d16821edc86f7c97293bb3bd41ac4b693804127daff93f9ff79ca"
+    },
+    {
+      "ruta": "reports/evaluation_victimas/metricas_random_forest_ajustado_por_franja.csv",
+      "sha256": "17509de0a288189c56a17893befbb9e50cfa169295a3319ceb790be08be1cb1d"
+    }
+  ],
+  "politica_actualizacion": "Si se reentrena o cambia la etiqueta, el dataset, el umbral o los resultados, repetir 05B y verificar, versionar y actualizar expresamente este cierre y su ficha."
+}
