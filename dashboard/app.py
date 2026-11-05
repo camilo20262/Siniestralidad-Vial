@@ -575,7 +575,7 @@ def about_page(s, theme='light'):
 def create_app(service=None):
     s=service if service is not None else load_data()
     app=Dash(__name__,assets_folder=str(Path(__file__).parent/'assets'),
-             title='Siniestralidad · Bogotá',update_title='Actualizando…',suppress_callback_exceptions=True,
+             title='Siniestralidad · Bogotá',update_title=None,suppress_callback_exceptions=True,
              meta_tags=[{'name':'viewport','content':'width=device-width, initial-scale=1'},
                         {'name':'description','content':'Exploración académica de siniestros con víctimas en Bogotá. Evaluación retrospectiva.'}])
     configure_index(app)
@@ -615,7 +615,7 @@ def create_app(service=None):
             for value,label in [('overview','Resumen'),('query','Consulta y mapa'),('history','Análisis histórico'),('evaluation','Evaluación'),('about','Metodología')]],
             inline=True,className='navigation',labelClassName='nav-tab',inputClassName='nav-radio'),**{'aria-label':'Secciones del dashboard'}),
         html.Main(html.Div([
-            html.Div(dcc.Loading(component,type='circle',color=charts.TEAL,delay_show=250),
+            html.Div(dcc.Loading(component,type='circle',color=charts.TEAL,delay_show=450,delay_hide=100,overlay_style={'visibility':'visible','filter':'none'}),
                      id=f'page-{name}',hidden=name!='overview',className='dashboard-page')
             for name,component in pages.items()
         ],id='page-content'),id='main-content',className='container'),
