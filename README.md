@@ -2,6 +2,55 @@
 
 Prototipo académico de aprendizaje automático para priorizar combinaciones de **localidad, franja horaria y fecha** asociadas con la ocurrencia o frecuencia elevada de siniestros con personas heridas o fallecidas en Bogotá. El periodo analizado es **2018–2024** y la metodología sigue CRISP-DM.
 
+## Guía de lectura para el jurado
+
+| Qué consultar | Punto de entrada |
+|---|---|
+| Documentación vigente | [Especificación ESP-MODELO-01](docs/ESPECIFICACION_VIGENTE.md) y [decisión de umbral](docs/decisiones/umbral_modelo.md) |
+| Modelo principal | [Ficha técnica](reports/modelo_principal/ficha_tecnica_modelo.md), [registro oficial](models/victimas/modelo_principal.json) y [catálogo de modelos](models/victimas/README.md) |
+| Métricas definitivas del cierre | [Métricas globales 2023–2024](reports/evaluation_victimas/metricas_globales.csv), [por localidad](reports/evaluation_victimas/metricas_random_forest_ajustado_por_localidad.csv) y [por franja](reports/evaluation_victimas/metricas_random_forest_ajustado_por_franja.csv) |
+| Notebooks originales | [Carpeta de notebooks](notebooks/) y [recorrido 02B → 03B → 04B → 04C → 05B](reports/README.md#notebooks-del-escenario-principal) |
+| Evaluación y límites | [Conclusión de 05B](reports/evaluation_victimas/conclusion_ejecutiva.md), [referencias históricas](reports/evaluation_victimas/comparacion_referencias_historicas.csv) e [incertidumbre exploratoria](reports/evaluation_victimas/bootstrap_rf_vs_referencia_resumen.csv) |
+| Evidencias históricas | [Índice de informes y auditorías](reports/README.md#evidencias-históricas) y [catálogo de legado](legacy/README.md) |
+| Reproducibilidad | [Guía y ejecuciones conservadas](reports/reproducibilidad/README.md) |
+| Dashboard | [Instalación, uso e interpretación](dashboard/README.md) y [sección Dashboard](#dashboard) |
+
+El cierre vigente corresponde a **RF ajustado, umbral 0,52**. Los informes
+fechados documentan el estado de cada ensayo o revisión; no sustituyen el
+registro oficial ni la especificación vigente. El [índice de reportes](reports/README.md)
+distingue resultados del cierre, evidencia complementaria y antecedentes.
+
+## Entregables y función de los archivos
+
+| Entregable | Archivos que lo sustentan |
+|---|---|
+| 1. Código fuente documentado y versionado | `src/`, `scripts/`, `notebooks/`, `dashboard/`, `tests/`, `.github/`, `config/` y los archivos de dependencias. |
+| 2. Dataset procesado | `data/processed/dataset_victimas_localidad_franja_fecha.parquet`; `data/raw/`, `data/reference/` y `src/preparacion.py` permiten reconstruirlo y documentar su procedencia. |
+| 3. Análisis exploratorio | `notebooks/02B_EDA_y_Analisis_Espacial_Con_Victimas.ipynb` y `reports/eda_victimas/`. Los notebooks 01 y 02 documentan la comprensión del negocio y la fuente. |
+| 4. Modelos entrenados | `models/victimas/pipeline_logistica_victimas.pkl`, `pipeline_random_forest_ajustado_victimas.pkl` y `pipeline_xgboost_victimas.pkl`, sus metadatos y los notebooks 04B y 04C. La evidencia de ajuste del RF está en `reports/tuning_victimas/`; la existencia de los otros pipelines no acredita por sí sola una búsqueda de hiperparámetros para ellos. |
+| 5. Evaluación y selección | Notebook 05B, `reports/modeling_victimas/`, `reports/tuning_victimas/`, `reports/evaluation_victimas/` y `reports/modelo_principal/`. |
+| 6–7. Dashboard y acceso en línea | `dashboard/`, `wsgi.py`, `requirements.txt`, datos auxiliares y modelo registrado. El despliegue de entrega es Railway; su URL figura en la sección Dashboard. |
+| 8. Manual de usuario | Secciones de uso, interpretación y diagnóstico de [dashboard/README.md](dashboard/README.md#guía-de-uso). Constituyen la guía disponible en el repositorio. |
+| 9. Manual técnico de instalación | Sección Ejecución reproducible de este documento y [guía de instalación del dashboard](dashboard/README.md#instalación-e-inicio), con versiones y dependencias. |
+| 10. Documento final de grado | Se entrega como documento académico aparte; no se encuentra versionado como Word o PDF en esta carpeta. |
+
+Los archivos identificados como históricos tienen una función académica concreta:
+el escenario de todos los siniestros sustenta el análisis de sensibilidad y la
+decisión de trabajar con víctimas; el RF base y los otros clasificadores permiten
+comparar y justificar el modelo seleccionado. Las auditorías y ejecuciones
+conservadas acreditan las comprobaciones realizadas. Sus índices explican qué
+consulta cada evidencia; no son entradas alternativas del dashboard.
+
+La limpieza de entrega retiró la maqueta estática, los despliegues alternativos,
+los generadores puntuales, las cachés y las copias de trabajo de ensayos antiguos.
+El 11 de noviembre de 2026 se retiraron también las copias históricas de código,
+reportes reconstruidos, configuraciones de kernels y registros operativos, además
+de las auditorías anteriores a la revisión técnica del 2 de octubre. Todo lo
+retirado quedó respaldado fuera del proyecto. Se conservan las fuentes vigentes,
+los artefactos oficiales, las pruebas automatizadas activas, los notebooks
+ejecutados y las evidencias de resultados, entorno e integridad. Consulte las
+condiciones para repetir ensayos en [reproducibilidad](reports/reproducibilidad/README.md).
+
 ## Escenario principal
 
 El escenario principal utiliza únicamente siniestros **con víctimas**. Esta decisión evita mezclar dos universos de registro no comparables: desde 2022, el IPAT dejó de ser obligatorio para accidentes con solo daños materiales. La cobertura anual de siniestros con víctimas se mantiene estable entre 2022 y 2024, mientras que los registros de solo daños caen de 12.557 a 1.115 entre 2022 y 2023.
@@ -69,7 +118,11 @@ Hallazgos que deben acompañar cualquier uso del prototipo:
 Siniestralidad_Vial/
 ├── data/
 │   ├── raw/                       # Fuente original
-│   └── processed/                 # Datasets preparados
+│   ├── processed/                 # Datasets preparados
+│   ├── reference/                 # Cartografía y procedencia
+│   └── dashboard/                 # Agregados descriptivos y manifiesto
+├── docs/                          # Especificación, decisiones y aclaraciones
+├── config/                        # Catálogo de artefactos
 ├── notebooks/
 │   ├── 01_Comprension_del_Negocio.ipynb
 │   ├── 02_Comprension_de_los_Datos.ipynb
@@ -86,14 +139,19 @@ Siniestralidad_Vial/
 │   └── victimas/                  # Pipeline vigente y comparadores históricos
 ├── legacy/                        # Manifiesto de artefactos conservados in situ
 ├── reports/
+│   ├── README.md                  # Índice de resultados y evidencias
 │   ├── data_quality/
 │   ├── eda_victimas/
 │   ├── modeling_victimas/
 │   ├── tuning_victimas/
 │   ├── evaluation_victimas/
-│   └── modelo_principal/          # Ficha técnica y comprobación del cierre
-├── src/                          # Carga e inferencia del modelo principal
-├── scripts/                      # Generación de notebooks y verificación
+│   ├── modelo_principal/          # Ficha técnica y comprobación del cierre
+│   ├── validacion_independiente_victimas/ # Evidencia complementaria
+│   ├── reproducibilidad/          # Guía, ensayos y notebooks ejecutados
+│   └── auditoria_proyecto/        # Auditoría técnica del 2 de octubre de 2026
+├── src/                           # Preparación, evaluación y consulta
+├── scripts/                       # Preparación, consulta, verificación y reproducción
+├── tests/                         # Pruebas automatizadas
 ├── dashboard/                     # Dashboard web interactivo
 ├── requirements.txt
 ├── requirements-dev.txt
@@ -212,7 +270,7 @@ su umbral 0,52; 2022 ya había sido inspeccionado en el desarrollo histórico y
 no se presenta como prueba prospectiva. Consulte la
 [evidencia separada](reports/validacion_independiente_victimas/conclusion_ejecutiva.md).
 
-La primera ejecución de 02B descarga la cartografía si falta; las siguientes verifican y reutilizan la copia local. Las dependencias geográficas y de notebooks están incluidas en `requirements-dev.txt`. Los antiguos scripts generadores se detienen si detectan estos notebooks ampliados, para evitar sobrescribirlos.
+La primera ejecución de 02B descarga la cartografía si falta; las siguientes verifican y reutilizan la copia local. Las dependencias geográficas y de notebooks están incluidas en `requirements-dev.txt`. Los antiguos generadores puntuales ya fueron retirados; se conservan los notebooks ampliados.
 
 ## Dashboard
 
@@ -227,7 +285,7 @@ Abra **http://127.0.0.1:8050**. Incluye resumen, consulta retrospectiva y mapa d
 las 20 localidades, filtros descriptivos por año/territorio/franja/actor,
 evaluación filtrada, referencias históricas, metodología y descargas con contexto.
 La [guía del dashboard](dashboard/README.md) explica instalación, uso, arquitectura,
-interpretación y diagnóstico. La maqueta `dashboard/dist/` se conserva como legado.
+interpretación y diagnóstico.
 
 Los datos oficiales y el modelo no se modifican. `data/dashboard/` contiene
 agregados descriptivos adicionales comprobados contra el EDA. La consulta solo
@@ -239,9 +297,6 @@ estado actual del repositorio, está disponible en Railway:
 ejecuta con Gunicorn y expone `/healthz` para comprobar el estado del servicio.
 Su alcance es exclusivamente retrospectivo para 2023–2024: es un prototipo
 académico accesible públicamente, no un sistema institucional en producción.
-`vercel.json` conserva Vercel como alternativa compatible y evaluada, pero no
-se presenta como despliegue público principal mientras su deployment vigente
-permanezca obsoleto y protegido.
 
 Verificación con datos reales: `python scripts/verificar_dashboard.py`.
 

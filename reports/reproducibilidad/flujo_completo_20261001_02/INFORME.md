@@ -1,5 +1,11 @@
 # Verificación integral del proyecto: EDA → modelos → dashboard
 
+> Disponibilidad de archivos, 11 de noviembre de 2026: este informe conserva los
+> resultados de su fecha. Las copias de trabajo de código, reportes, kernels y
+> registros operativos se retiraron a un respaldo externo. Los notebooks ejecutados
+> y los JSON de resultados, procedencia e integridad permanecen disponibles.
+> Consulte el [alcance de conservación](../README.md#evidencias-conservadas).
+
 Ejecución automática: **1 de octubre de 2026**. Revisión visual y cierre del
 informe: **2 de octubre de 2026**.
 

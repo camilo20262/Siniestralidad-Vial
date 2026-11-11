@@ -2,7 +2,7 @@
 
 Aplicación en Python Dash de solo lectura. Reutiliza el modelo académico
 `rf_victimas_bogota_v1.0`, umbral 0,52. No entrena ni modifica los datos oficiales.
-La maqueta anterior se conserva en `dist/`; no es la aplicación vigente.
+La entrega utiliza esta aplicación Dash y su despliegue en Railway.
 
 La [especificación vigente ESP-MODELO-01](../docs/ESPECIFICACION_VIGENTE.md)
 establece RF ajustado con umbral 0,52 para esta interfaz. El requisito anterior
@@ -48,10 +48,6 @@ El endpoint `/healthz` permite comprobar la disponibilidad del servicio. Tanto
 la consulta como la evaluación tienen alcance retrospectivo 2023–2024. La URL
 pública facilita la revisión del prototipo académico; no representa un sistema
 institucional en producción ni una autorización para uso operativo.
-
-El repositorio mantiene `vercel.json` y la entrada WSGI como alternativa
-compatible y evaluada para Vercel. No se considera el despliegue público
-principal mientras su deployment actual permanezca obsoleto y protegido.
 
 Los agregados `data/dashboard/` se incluyen en el repositorio. Si se trabaja con
 una copia en la que todavía no existen, se pueden construir una vez:

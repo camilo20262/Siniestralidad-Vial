@@ -17,8 +17,14 @@ El modelo principal de la tesis se identifica en **[modelo_principal.json](model
 | `pipeline_random_forest_victimas.pkl` | Histórico | Referencia base de 04B: 200 árboles, profundidad 12 y umbral 0,55 |
 | `metadata_modelo.json` | Histórico | Metadatos de 04B; su selección y umbral corresponden al modelo base |
 | `pipeline_modelo_seleccionado.pkl` | Histórico | Alias del modelo base de 04B; no identifica la versión principal actual |
-| `pipeline_logistica_victimas.pkl`, `pipeline_xgboost_victimas.pkl` | Histórico | Modelos comparativos de 04B |
+| `pipeline_logistica_victimas.pkl`, `pipeline_xgboost_victimas.pkl` | Comparación / entrega académica | Modelos de 04B necesarios para entregar los tres clasificadores y sustentar su comparación |
 | `modelo_*.pkl`, `preprocesador_*.pkl` | Histórico | Componentes separados del entrenamiento original de 04B |
+
+«Histórico» indica la relación con el modelo seleccionado para el dashboard,
+no que el archivo sea descartable. Los comparadores, componentes y metadatos
+conservan las salidas de entrenamiento y las evidencias referenciadas por los
+notebooks y verificadores. La optimización documentada en 04C corresponde al RF;
+no debe atribuirse una búsqueda equivalente a Logística o XGBoost sin su evidencia.
 
 Para nuevas integraciones, importar `cargar_modelo_principal` desde `src.modelo_principal` y usar `modelo.predecir(datos_preparados)`. Devuelve `Score_Priorizacion` y `Alerta_Modelo`; la alerta aplica el umbral registrado 0,52. No combine el clasificador ajustado con otro preprocesador ni use el alias histórico para cargar el principal.
 

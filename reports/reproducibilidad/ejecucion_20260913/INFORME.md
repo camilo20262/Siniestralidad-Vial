@@ -1,5 +1,11 @@
 # Informe de reproducibilidad — 13 de septiembre de 2026
 
+> Disponibilidad de archivos, 11 de noviembre de 2026: este informe conserva los
+> resultados de su fecha. Las copias de trabajo de código, reportes, kernels y
+> registros operativos se retiraron a un respaldo externo. Los notebooks ejecutados
+> y los JSON de resultados, procedencia e integridad permanecen disponibles.
+> Consulte el [alcance de conservación](../README.md#evidencias-conservadas).
+
 ## Resultado
 
 **Reproducción equivalente.** Se ejecutó completa la cadena 03B → 04B → 04C → 05B

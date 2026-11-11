@@ -1,4 +1,5 @@
-# Copias locales voluminosas y entorno regenerable. Se conservan en disco.
+# Copias locales voluminosas y entornos regenerables de nuevos ensayos.
+# Los de las ejecuciones históricas se retiraron a un respaldo externo.
 */.venv/
 */data/
 */models/**/*.pkl

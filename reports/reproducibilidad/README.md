@@ -1,9 +1,27 @@
 # Reproducción aislada de la cadena de víctimas
 
+[Inicio del proyecto](../../README.md) · [Índice de reportes](../README.md) · [Modelo principal](../../models/victimas/modelo_principal.json)
+
+## Consultar las evidencias existentes
+
+Leer los informes, JSON y salidas guardadas de los notebooks no requiere ejecutar
+modelos. Las carpetas siguientes conservan la evidencia de ensayos anteriores,
+no copias completas listas para ejecutarse. Los [notebooks originales](../../notebooks/)
+y el registro oficial permanecen separados de sus copias ejecutadas.
+
+| Ensayo | Estado registrado | Evidencias de entrada |
+|---|---|---|
+| `ejecucion_20260913` | Cadena 03B → 04B → 04C → 05B equivalente | [Informe](ejecucion_20260913/INFORME.md), [resultado](ejecucion_20260913/resultado.json) y [notebooks ejecutados](ejecucion_20260913/notebooks/) |
+| `flujo_completo_20261001` | Intento fallido; no acredita una reproducción completa | [Resultado y error conservados](flujo_completo_20261001/resultado.json) |
+| `flujo_completo_20261001_02` | Flujo integral verificado, con revisión visual posterior | [Informe](flujo_completo_20261001_02/INFORME.md), [resultado](flujo_completo_20261001_02/resultado.json), [notebooks ejecutados](flujo_completo_20261001_02/notebooks/) y [revisión visual](flujo_completo_20261001_02/revision_visual/resultado.json) |
+| `flujo_completo_20261002_cierre_pendientes` | Flujo integral verificado | [Resultado](flujo_completo_20261002_cierre_pendientes/resultado.json) y [registro de celdas](flujo_completo_20261002_cierre_pendientes/ejecuciones_notebooks.json); sus copias de notebooks están en el respaldo externo |
+
 La ejecución [ejecucion_20260913](ejecucion_20260913/INFORME.md) reconstruyó y
 comparó 03B → 04B → 04C → 05B en un entorno virtual nuevo, partiendo del Excel.
-Las cuatro copias conservan sus salidas; los notebooks y artefactos oficiales
-no se sobrescribieron.
+Los ensayos conservan sus resultados y evidencias disponibles; el intento fallido
+se identifica expresamente en la tabla. Las copias de datos, modelos binarios y
+entornos virtuales de esos ensayos se retiraron del proyecto durante la limpieza
+del 9 de noviembre de 2026. Los notebooks y artefactos oficiales no se modificaron.
 
 La [nota de procedencia de entornos](../../docs/PROCEDENCIA_ENTORNOS_MODELOS.md)
 aclara por qué el metadato base declara Python 3.14.5 mientras este ensayo y el
@@ -86,7 +104,14 @@ Las diferencias binarias entre archivos de modelos no implican por sí mismas
 diferencias predictivas. `NaN` en el parámetro `missing` de XGBoost se compara
 como el mismo valor especial, no como un cambio de configuración.
 
-Para repetir solamente la comparación de una ejecución completa:
+Para solicitar solamente la comparación de una ejecución de la cadena de cuatro
+notebooks, primero restaure desde los respaldos externos sus carpetas `data/`,
+`models/` y `reports/` en las rutas originales del ensayo. Las copias de datos y
+binarios se retiraron el 9 de noviembre; los metadatos locales y reportes
+reconstruidos se retiraron el 11 de noviembre de 2026. La comparación necesita
+además las dependencias del ensayo y un cierre oficial compatible; no basta con
+los informes conservados.
+Una vez restauradas esas entradas, el comando es:
 
 ```sh
 .venv/bin/python scripts/reproducir_cadena_aislada.py --run-name ejecucion_20260913 --compare-only
@@ -94,22 +119,80 @@ Para repetir solamente la comparación de una ejecución completa:
 
 Esta opción comprueba los hashes de los notebooks ejecutados, conserva una copia
 del resultado anterior y recalcula las comparaciones sin volver a entrenar.
+Lee los reportes, metadatos y cuatro pipelines del ensayo, y deserializa los
+pipelines usando el entorno que inicia el comando (`.venv/` de la raíz en el
+ejemplo). No utiliza el `.venv/` histórico del ensayo. Escribe un nuevo
+`resultado.json` y `estado.json`: no es una consulta de solo lectura.
+
+**Límite de la comparación histórica:** la comprobación final contrasta archivos
+oficiales con `integridad_oficial_antes.json` del ensayo. El cierre ha evolucionado
+desde septiembre: en la revisión del 13 de octubre se encontraron 12 diferencias
+de huella ya existentes antes de la limpieza documental. Por ello, el ejemplo
+puede terminar con `error_integridad_oficial` aunque no se reentrene ni se
+modifiquen modelos. La limpieza autorizada de temporales retiró además
+`data/.DS_Store`, `data/processed/.DS_Store` y `reports/.DS_Store`, que ese
+manifiesto también registra: ahora son 15 discrepancias en total, tres de ellas
+por temporales respaldados. Una comparación literal del estado antiguo requiere
+restaurar también esos archivos desde el respaldo, dentro de una copia de trabajo
+histórica; los manifiestos originales se conservan intactos.
+
+Para revisar el resultado histórico, consulte el JSON
+conservado; para reconstruir la versión actual, use una carpeta nueva. No altere
+el manifiesto histórico para hacer pasar esta comprobación. La opción exige la
+lista exacta de cuatro notebooks; no admite los ensayos integrales de cinco.
 
 ## Evidencias conservadas
 
-- `notebooks/`: cuatro notebooks ejecutados con sus salidas.
-- `reports/`: reportes y predicciones reconstruidos.
-- `resultado.json`: comparaciones e integridad de los archivos oficiales.
-- `comparacion_dataset.json`: comprobación exacta del dataset.
+- `notebooks/`: cuatro copias ejecutadas de septiembre y cinco del flujo integral `flujo_completo_20261001_02`, con sus salidas. Las cinco copias del ensayo del 2 de octubre se archivaron fuera del proyecto; sus celdas de código coinciden con las del flujo integral conservado.
+- `resultado.json`, comparaciones y verificaciones JSON: resultados, controles y estado de cada ejecución.
 - `ejecuciones_notebooks.json`: celdas ejecutadas, tiempos y hashes.
 - `procedencia.json`, `integridad_oficial_antes.json`: origen y huellas iniciales.
-- `entorno.json`, `dependencias_congeladas.txt`, `instalacion.log`: entorno y dependencias.
-- `adaptacion_registro_local.json`: alcance del registro local usado por 05B.
+- `entorno.json`, `dependencias_congeladas.txt`, requisitos y versión de Python: plataforma y dependencias históricas.
+- Informes, adaptación del registro y revisión visual: interpretación y evidencia del ensayo, sin promover sus artefactos al cierre oficial.
 
-Las copias de datos, modelos binarios, entorno y configuración del kernel se
-conservan localmente, pero se excluyen de Git para evitar duplicados voluminosos.
-No se eliminan archivos oficiales ni resultados de ejecuciones anteriores.
+El 11 de noviembre de 2026 se retiraron las copias de `dashboard/`, `src/`,
+`scripts/`, `reports/`, los metadatos de `models/`, `runtime/` y los archivos
+`.log` de estos ensayos. Eran archivos de trabajo históricos, no entradas del
+dashboard vigente. Todos quedaron respaldados fuera del proyecto. Los datos,
+modelos binarios y entornos virtuales de ensayo ya se habían retirado a un
+respaldo anterior. Los artefactos oficiales permanecen en las carpetas de la raíz.
+
+Los informes describen lo ocurrido en la fecha del ensayo. Sus menciones a
+archivos retirados no indican que esas copias sigan disponibles en este paquete.
+Los resultados y huellas permanecen sin reescribirlos. Las copias ejecutadas
+conservadas en el proyecto y las archivadas externamente mantienen su contenido
+original; el registro de cada ejecución permite distinguir sus fechas y salidas.
+
+## Consultar, reproducir y recomparar
+
+| Operación | Requisitos |
+|---|---|
+| Leer los resultados históricos | Informes, JSON y notebooks ejecutados conservados; no necesita cargar modelos. |
+| Reconstruir la versión actual | Scripts de la raíz, fuente y cartografía originales, dependencias actuales y una carpeta de ensayo nueva. |
+| Recomprobar un ensayo antiguo con `--compare-only` | Restaurar sus datos, modelos, metadatos y reportes desde los respaldos, junto con un entorno y cierre oficial compatibles. |
+
+Las pruebas del catálogo leen `ejecucion_20260913/resultado.json` y
+`entorno.json` en sus rutas actuales. Estas evidencias se conservan, al igual
+que los notebooks ejecutados de octubre citados desde los originales.
+
+Para reconstruir un entorno histórico hacen falta la versión de Python y la
+plataforma registradas, las dependencias congeladas y paquetes todavía
+disponibles. Instalar únicamente los requisitos actuales no acredita una réplica
+del entorno anterior ni garantiza modelos binariamente idénticos.
 
 Una reproducción exitosa acredita la reconstrucción de los resultados actuales;
 no constituye una nueva evaluación sobre datos nunca observados ni elimina las
 limitaciones metodológicas o de calibración documentadas.
+
+## Segunda depuración del 11 de noviembre de 2026
+
+Se archivaron externamente las cinco copias de notebooks del ensayo del 2 de
+octubre. No se necesitan para abrir ni ejecutar el dashboard, y repiten el código
+de los cinco notebooks ejecutados del 1 de octubre que enlazan las portadas
+oficiales. Los JSON de ambos ensayos, sus tiempos, hashes, entornos y resultados
+se mantienen; una ejecución no se presenta como evidencia de la otra.
+
+Se retiraron también dos reglas de exclusión de las copias de trabajo eliminadas
+y los requisitos y versión de Python del intento fallido. Su diagnóstico, estado
+y manifiesto de integridad siguen disponibles. Para restaurar exactamente un
+ensayo histórico se necesitan también los archivos del respaldo externo.
